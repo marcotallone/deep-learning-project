@@ -2,3 +2,9 @@
 *
 # Except this one
 !.gitignore
+
+# Except download.py script
+!download.py
+
+# Ignore API keys
+*.json
