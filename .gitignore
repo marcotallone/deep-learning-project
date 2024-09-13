@@ -1,6 +1,9 @@
 # Ignore all
 *
 
+# Exclude the datasets folder from tracking
+datasets/
+
 # Unignore all with extensions and Makefiles
 !*.*
 !Makefile*
