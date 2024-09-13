@@ -5,7 +5,7 @@
 datasets/*
 
 # Unignore the datasets directory itself
-!datasets/
+# !datasets/
 
 # Unignore all with extensions and Makefiles
 !*.*
