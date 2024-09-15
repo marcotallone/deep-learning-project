@@ -13,7 +13,6 @@ dependencies:
   - pillow
   - opencv
   - pytorch
-  - cudatoolkit=11.1  # Adjust this based on your CUDA version
   - pip
   - pip:
     - imageio
