@@ -32,11 +32,11 @@ DEVICE_AUTODETECT: bool = True
 BATCH_TRAIN: int = 32
 BATCH_VALID: int = 32
 EPOCHS: int = 12
-CRITERION: Union[th.nn.Module, Callable[[th.Tensor], th.Tensor]] = (
-	th.nn.CrossEntropyLoss(reduction="mean")
-)
-EVAL_CRITERION: Union[th.nn.Module, Callable[[th.Tensor], th.Tensor]] = (
-	th.nn.CrossEntropyLoss(reduction="sum")
+# CRITERION: Union[th.nn.Module, Callable[[th.Tensor], th.Tensor]] = (
+# 	th.nn.CrossEntropyLoss(reduction="mean")
+# )
+CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
+    th.nn.BCEWithLogitsLoss()
 )
 LR: float = 1e-3
 WEIGHT_DECAY: float = 1e-2
@@ -100,7 +100,7 @@ df = pd.DataFrame(data)
 
 # Save the DataFrame to a CSV file
 now = datetime.now()
-df.to_csv(f'loss_history_{now.strftime('%d%m%Y%H%M%S')}.csv', index=False)
+df.to_csv(f"loss_history_{now.strftime('%d%m%Y%H%M%S')}.csv", index=False)
 
 # Print final losses
 print("\nFinal losses:")
