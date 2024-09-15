@@ -1,0 +1,31 @@
+name: pytorch
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.11.5 # Adjust this based on your Python version
+  - numpy
+  - pandas
+  - matplotlib
+  - seaborn
+  - scikit-learn
+  - pillow
+  - opencv
+  - pytorch
+  - cudatoolkit=11.1  # Adjust this based on your CUDA version
+  - pip
+  - pip:
+    - imageio
+    - albumentations
+    - tqdm
+    - jupyter
+    - torchvision
+    - safetensors
+    - tqdm
+    - torchsummary
+    - h5py
+    - shutils
+    - imutils
+    - kaggle
+
