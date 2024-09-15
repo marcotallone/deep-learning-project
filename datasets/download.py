@@ -10,6 +10,9 @@ import os
 import imutils
 from kaggle.api.kaggle_api_extended import KaggleApi
 
+# Check that we are in the datasets directory otherwise error
+if os.path.basename(os.getcwd()) != 'datasets':
+    raise Exception("Please run this script from the datasets directory.")
 
 # Initialize Kaggle API --------------------------------------------------------
 # To use this: 
