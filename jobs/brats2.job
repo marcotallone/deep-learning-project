@@ -21,7 +21,7 @@ conda activate pytorch
 
 # Run the python script
 cd python
-python brats2.py
+python brats2.py >> output.out 2>> error.err
 
 echo "🏁 Job completed!"
 

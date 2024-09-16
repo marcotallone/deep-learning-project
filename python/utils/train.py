@@ -91,13 +91,13 @@ def train_unet(model: th.nn.Module,
         # Save the loss
         valid_loss_history.append(valid_loss)
 
-        print("\nTraining finished")
-        print(f"Training loss: {train_loss:.4f}")
-        print(f"Validation loss: {valid_loss:.4f}")
+    print("\nTraining finished")
+    print(f"Training loss: {train_loss:.4f}")
+    print(f"Validation loss: {valid_loss:.4f}")
 
-        # Save the model
-        now = datetime.now()
-        save_model(model, f"unet_{epoch}epochs_{now.strftime('%d%m%Y%H%M%S')}.pth")
+    # Save the model
+    now = datetime.now()
+    save_model(model, f"unet_{epoch}epochs_{now.strftime('%d%m%Y%H%M%S')}.pth")
 
     # Return the loss history
     return train_loss_history, valid_loss_history
