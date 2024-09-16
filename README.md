@@ -59,7 +59,7 @@
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | Stefano | Lusardi | SM3600003 | <stefano.lusardi@studenti.units.it> | <> | **SDIC** |
 | Marco | Tallone | SM3600002 | <marco.tallone@studenti.units.it> | <marcotallone85@gmail.com> | **SDIC** |
-| Piero | Zappi | SM3600004 | <piero.zappi@studenti.units.it> | <> | **SDIC** |
+| Piero | Zappi | SM3600004 | <piero.zappi@studenti.units.it> | <piero.z.2001@gmail.com> | **SDIC** |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
