@@ -19,7 +19,7 @@ from typing import List, Union, Callable, Tuple
 
 # Training function for U-Net models -------------------------------------------
 def train_unet(model: th.nn.Module,
-               loss: th.nn.Module,
+               loss_fn: th.nn.Module,
                optimizer: th.optim.Optimizer,
                train_loader: th.utils.data.DataLoader,
                valid_loader: th.utils.data.DataLoader,
@@ -36,7 +36,8 @@ def train_unet(model: th.nn.Module,
     
     # Loop over the epochs
     print("\nTraining the model...")
-    for epoch in trange(1, n_epochs + 1):
+    # for epoch in trange(1, n_epochs + 1): # with loading bar (not useful on ORFEO)
+    for epoch in range(1, n_epochs + 1):
 
         print(f"\nEpoch {epoch}/{n_epochs}") 
 
@@ -57,7 +58,7 @@ def train_unet(model: th.nn.Module,
 
             # Forward pass + loss computation
             yhat: th.Tensor = model(x)
-            loss: th.Tensor = loss(yhat, y)
+            loss: th.Tensor = loss_fn(yhat, y)
             train_loss += loss.item()
 
             # Backward pass
@@ -84,7 +85,7 @@ def train_unet(model: th.nn.Module,
 
                 # Forward pass + loss computation
                 yhat_e: th.Tensor = model(x_e)
-                loss_e: th.Tensor = loss(yhat_e, y_e)
+                loss_e: th.Tensor = loss_fn(yhat_e, y_e)
                 valid_loss += loss_e.item()
 
         # Save the loss

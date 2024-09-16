@@ -2,13 +2,13 @@
 
 #SBATCH --job-name=DL-EXAM
 #SBATCH -p GPU
+#SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --exclusive
 #   #SBATCH --cpus-per-task=4
 #SBATCH --time=0-02:00:00
 #SBATCH -A dssc
-#SBATCH --gres=gpu:1
 #	#SBATCH --mem-per-cpu=1500MB
 #SBATCH --output=output.out 
 #SBATCH --error=error.err
