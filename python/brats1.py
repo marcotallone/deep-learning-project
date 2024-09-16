@@ -25,6 +25,7 @@ from typing import List, Union, Callable, Tuple
 from utils.datasets import BrainScanDataset
 from utils.train import train_unet
 from models.unet import UNet
+from utils.analysis import count_parameters
 
 
 # Hyperparameters ---------------------------------------------------------------
@@ -80,7 +81,17 @@ print("\nBuilding the model...")
 
 # Initialize the U-Net model
 model: th.nn.Module = UNet()
+
+# Move the model to the device
+# (or devices in case there are multiple GPUs)
+if th.cuda.device_count() > 1:
+    print(f"Using {th.cuda.device_count()} GPUs")
+    model = th.nn.DataParallel(model)
 model.to(device)
+
+# Count the total number of parameters
+total_params = count_parameters(model)
+print(f'Total Parameters: {total_params:,}\n')
 
 # Initialize the optimizer
 optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)

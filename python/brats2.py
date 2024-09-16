@@ -81,7 +81,15 @@ print("\nBuilding the model...")
 
 # Initialize the U-Net model
 model: th.nn.Module = UNet2()
+
+# Move the model to the device
+# (or devices in case there are multiple GPUs)
+if th.cuda.device_count() > 1:
+    print(f"Using {th.cuda.device_count()} GPUs")
+    model = th.nn.DataParallel(model)
 model.to(device)
+
+# Count the total number of parameters
 total_params = count_parameters(model)
 print(f'Total Parameters: {total_params:,}\n')
 
@@ -103,7 +111,7 @@ df = pd.DataFrame(data)
 
 # Save the DataFrame to a CSV file
 now = datetime.now()
-df.to_csv(f"loss_history_{now.strftime('%d%m%Y%H%M%S')}.csv", index=False)
+df.to_csv(f"loss_history_unet2_{now.strftime('%d%m%Y%H%M%S')}.csv", index=False)
 
 # Print final losses
 print("\nFinal losses:")
