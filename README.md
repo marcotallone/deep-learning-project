@@ -11,7 +11,7 @@ List f thing TODO for the project:
 - [ ] Add residual/skip connections to the CNN models
 - [ ] Fix U-Net input images size and kernels parameters for faster training...
 - [ ] Visualize CNN layers/kernels to see if there is something interesting they observe
-- [ ] Compare CNN models (AlexNet, VGG, ...) one with the other
+- [ ] Compare CNN models (AlexNet, VGG, ...) one with the other (in particular prediction confidence before extracting softmax)
 - [ ] Find suitable metric for segmentation models predictions
 - [ ] Extend U-Nets model for segmentation to see if they can predict life expectancy of the patient from tumor prediction
 - [ ] Create a presentation for the project
