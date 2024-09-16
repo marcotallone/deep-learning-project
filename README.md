@@ -15,6 +15,7 @@ List f thing TODO for the project:
 - [ ] Find suitable metric for segmentation models predictions
 - [ ] Extend U-Nets model for segmentation to see if they can predict life expectancy of the patient from tumor prediction
 - [ ] Create a presentation for the project
+- [ ] See if the time a patient still has to live is predictable
 - [ ] ... **(add more things to do)**
 
 
