@@ -1,4 +1,4 @@
-# U-Net Model architecture definition
+# U-Net First Model architecture definition
 
 # Imports ----------------------------------------------------------------------
 
@@ -150,6 +150,19 @@ class bottleneck(th.nn.Module):
 
 # U-Net model ------------------------------------------------------------------
 class UNet(th.nn.Module):
+    """U-Net model architecture definition: first model
+
+    Parameters
+    ----------
+    in_channels: int, optional (default: 4)
+        Number of input channels
+    out_channels: int, optional (default: 3)
+        Number of output channels
+    n_filters: int, optional (default: 32)
+        Number of filters to use in the convolutional layers
+    activation: th.nn.Module, optional (default: th.nn.ReLU())
+        Activation function to use in the convolutional layers
+    """
 
     # Constructor
     def __init__(self,

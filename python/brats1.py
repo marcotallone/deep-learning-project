@@ -100,7 +100,7 @@ df = pd.DataFrame(data)
 
 # Save the DataFrame to a CSV file
 now = datetime.now()
-df.to_csv(f"loss_history_{now.strftime('%d%m%Y%H%M%S')}.csv", index=False)
+df.to_csv(f"loss_history_unet1_{now.strftime('%d%m%Y%H%M%S')}.csv", index=False)
 
 # Print final losses
 print("\nFinal losses:")
