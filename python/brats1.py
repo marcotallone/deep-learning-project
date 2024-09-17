@@ -88,13 +88,13 @@ for images, masks in valid_dataloader:
 print("\nBuilding the model...")
 
 # Initialize the U-Net model
-model: th.nn.Module = UNet()
+model: th.nn.Module = UNet(n_filters=16)
 
 # Move the model to the device
 # (or devices in case there are multiple GPUs)
-if th.cuda.device_count() > 1:
-    print(f"Using {th.cuda.device_count()} GPUs")
-    model = th.nn.DataParallel(model)
+# if th.cuda.device_count() > 1:
+#     print(f"Using {th.cuda.device_count()} GPUs")
+#     model = th.nn.DataParallel(model)
 model.to(device)
 
 # Count the total number of parameters
