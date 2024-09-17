@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 # Torch imports
 import torch as th
+import torch.nn.functional as F
 from torch import Tensor
 
 # Typining hints
@@ -147,21 +148,84 @@ def display_overlay(image: Tensor,
 
 # Prediction visualizer for U-Net models ---------------------------------------
 def display_prediction(model: th.nn.Module, 
-                       test_input: Tensor,
-                       test_target: Tensor, 
+                       image: Tensor,
+                       mask: Tensor, 
                        device: th.device = th.device("cpu")
                        ):
+    """Function to display the input image, predicted mask, and target mask.
+
+    Parameters
+    ----------
+    model: th.nn.Module
+        U-Net model to use for prediction
+    image: Tensor
+        Input image to predict the mask of shape [batch_size, channels, height, width]
+    mask: Tensor
+        Target mask of shape [batch_size, channels, height, width]
+    device: th.device, optional (default=th.device("cpu"))
+        Device to use for the prediction
+    """
 
     # Move the data to the device
-    test_input, test_target = test_input.to(device), test_target.to(device)
+    image, mask = image.to(device), mask.to(device)
 
     # Obtain the model's prediction
-    test_pred = th.sigmoid(model(test_input))
+    prediction = th.sigmoid(model(image))
 
     # Process the image and masks for visualization
-    mask_pred = test_pred.detach().cpu().numpy().squeeze(0)
-    mask_target = test_target.detach().cpu().numpy().squeeze(0)
+    pred_mask = prediction.detach().cpu().numpy().squeeze(0)
+    true_mask = mask.detach().cpu().numpy().squeeze(0)
 
     # Display the input image, predicted mask, and target mask
-    display_mask_channels(mask_pred, title='Predicted Mask Channels [RGB]')
-    display_mask_channels(mask_target, title='Ground Truth Mask Channels [RGB]')
+    display_mask_channels(pred_mask, title='Predicted Mask Channels [RGB]')
+    display_mask_channels(true_mask, title='Ground Truth Mask Channels [RGB]')
+
+
+# Dice Similarity Coefficient function -----------------------------------------
+def dice(pred: th.Tensor, target: th.Tensor, epsilon: float = 1e-6) -> List[float]:
+    """
+    Compute the Dice Coefficient for each channel separately and return them
+    individually as well as the average across all channels.
+
+    Parameters
+    ----------
+    pred : th.Tensor
+        The predicted mask of shape [batch_size, channels, height, width].
+    target : th.Tensor
+        The ground truth mask of shape [batch_size, channels, height, width].
+    epsilon : float, optional
+        A small value to avoid division by zero, by default 1e-6.
+
+    Returns
+    -------
+    List[float]
+        The Dice Coefficient for each RGB channel and the average Dice in 
+        the following order: [Dice_Red, Dice_Green, Dice_Blue, Average_Dice]
+    """
+    # Apply sigmoid to the predictions to get probabilities
+    pred = th.sigmoid(pred)
+
+    # Flatten the tensors to [batch_size, channels, height * width]
+    pred_flat = pred.view(pred.size(0), pred.size(1), -1)
+    target_flat = target.view(target.size(0), target.size(1), -1)
+
+    # Compute the intersection and union
+    intersection = (pred_flat * target_flat).sum(dim=2)
+    union = pred_flat.sum(dim=2) + target_flat.sum(dim=2)
+
+    # Compute the Dice Coefficient for each channel
+    dice = (2.0 * intersection + epsilon) / (union + epsilon)
+
+    # Compute the average Dice Coefficient across all channels
+    avg_dice = dice.mean().item()
+
+    # Return the Dice Coefficient for each channel and the average Dice Coefficient
+    return [dice[:, 0].mean().item(), dice[:, 1].mean().item(), dice[:, 2].mean().item(), avg_dice] 
+
+# Example usage
+# Assuming `model` is your U-Net model and `test_image` and `test_mask` are your input and ground truth tensors
+# model.eval()
+# with th.no_grad():
+#     test_pred = model(test_image.to(device))
+#     dice_score = dice_coefficient(test_pred, test_mask.to(device))
+#     print(f"Dice Coefficient: {dice_score:.4f}")
