@@ -27,6 +27,6 @@ end_time=$(date +%s)
 echo "Conda environment activated in $(($end_time - $start_time)) seconds"
 
 # Run the python training script
-python training/unet.py
+python training/unet_training.py
 
 echo "🏁 Job completed at $(date)!"

@@ -82,15 +82,17 @@ def train_unet(model: th.nn.Module,
         valid_loss_history.append(valid_loss)
 
         # Display current epoch loss
-        print(f"\nEpoch {epoch}/{n_epochs}")
+        print("\n------------------------")
+        print(f"Epoch {epoch}/{n_epochs}")
         print(f"Training loss:   {train_loss:.4f}")
         print(f"Validation loss: {valid_loss:.4f}")
 
         # Save the model parameters at the current epoch using safetensors
+        model_name = model.module.name if isinstance(model, th.nn.DataParallel) else model.name
         if save_path is not None:
-            save_model(model, os.path.join(save_path, f"{model.name}_e{epoch}.pth"))
+            save_model(model, os.path.join(save_path, f"{model_name}_e{epoch}.pth"))
         else:
-            save_model(model, f"{model.name}_e{epoch}.pth")
+            save_model(model, f"{model_name}_e{epoch}.pth")
 
     print("\nTraining concluded")
 
