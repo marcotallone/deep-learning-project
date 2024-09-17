@@ -4,7 +4,9 @@
 
 # Common Python imports
 import numpy as np
-from tqdm import trange
+# from tqdm import trange
+import time
+import tqdm as tqdm
 from datetime import datetime
 
 # Torch imports
@@ -36,10 +38,9 @@ def train_unet(model: th.nn.Module,
     
     # Loop over the epochs
     print("\nTraining the model...")
-    for epoch in trange(1, n_epochs + 1):
+    # for epoch in trange(1, n_epochs + 1):
+    for epoch in tqdm.tqdm(range(1, n_epochs + 1), desc="Epoch", position=0):
     # for epoch in range(1, n_epochs + 1):
-
-        print(f"\nEpoch {epoch}/{n_epochs}") 
 
         # Set the model to training mode
         model.train()
@@ -48,7 +49,8 @@ def train_unet(model: th.nn.Module,
         train_loss = 0.0
 
         # Loop over the batches in the training set
-        for x, y in train_loader:
+        # for x, y in train_loader:
+        for _, (x, y) in tqdm.tqdm(enumerate(train_loader), desc="Training Batch", position=1, leave=False, total=len(train_loader)):
 
             # Move the data to the device
             x, y = x.to(device), y.to(device)
@@ -78,7 +80,8 @@ def train_unet(model: th.nn.Module,
 
         # Loop over the batches in the validation set
         with th.no_grad():
-            for x_e, y_e in valid_loader:
+            # for x_e, y_e in valid_loader:
+            for _, (x_e, y_e) in tqdm.tqdm(enumerate(valid_loader), desc="Validation Batch", position=2, leave=False, total=len(valid_loader)):
 
                 # Move the data to the device
                 x_e, y_e = x_e.to(device), y_e.to(device)

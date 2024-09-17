@@ -76,6 +76,14 @@ valid_dataloader = DataLoader(valid_dataset, batch_size=BATCH_VALID, shuffle=Fal
 # Use this to generate test images to view later
 # test_input_iterator = iter(DataLoader(valid_dataset, batch_size=1, shuffle=False))
 
+# Verify image sizes
+for images, masks in train_dataloader:
+    print("Training batch - Images shape:", images.shape, "Masks shape:", masks.shape)
+    break
+for images, masks in valid_dataloader:
+    print("Validation batch - Images shape:", images.shape, "Masks shape:", masks.shape)
+    break
+
 # Define and train the model ---------------------------------------------------
 print("\nBuilding the model...")
 
@@ -91,7 +99,7 @@ model.to(device)
 
 # Count the total number of parameters
 total_params = count_parameters(model)
-print(f'Total Parameters: {total_params:,}\n')
+print(f'Total Parameters: {total_params:,}')
 
 # Initialize the optimizer
 optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)

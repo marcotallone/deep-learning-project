@@ -12,6 +12,7 @@ import h5py
 # Torch imports
 import torch as th
 from torch.utils.data import Dataset
+from torchvision import transforms
 
 # Typining hints
 from typing import List, Union, Callable, Tuple
@@ -31,6 +32,9 @@ class BrainScanDataset(Dataset):
         if deterministic:  # To always generate the same test images for consistency
             np.random.seed(1)
         np.random.shuffle(self.file_paths)
+
+		# Define the resize transformation to halven image size (less parameters later)
+        self.resize = transforms.Resize((128, 128))
         
     def __len__(self):
         return len(self.file_paths)
@@ -56,5 +60,13 @@ class BrainScanDataset(Dataset):
             # Convert to float and scale the whole image
             image = th.tensor(image, dtype=th.float32)
             mask = th.tensor(mask, dtype=th.float32) 
+
+			# Resize the image and mask
+            image = self.resize(image)
+            mask = self.resize(mask)
+
+			# Ensure the mask is binary after resizing
+            mask = (mask > 0.5).float()
+            
             
         return image, mask
