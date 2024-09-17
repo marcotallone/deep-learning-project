@@ -41,13 +41,13 @@ SAVE_PATH: str = "models/saved_models"
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 DEVICE_AUTODETECT: bool = True
-PERCENTAGE: float = 0.1
-SPLIT: int = 0.6
+PERCENTAGE: float = 0.5
+SPLIT: int = 0.7
 IMG_SIZE: int = 128
-N_FILTERS: int = 2
+N_FILTERS: int = 16
 BATCH_TRAIN: int = 64
 BATCH_VALID: int = 64
-EPOCHS: int = 1
+EPOCHS: int = 10
 CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
     th.nn.BCEWithLogitsLoss()
 )
@@ -132,7 +132,8 @@ data = {
     'validation': valid_loss_history
 }
 df = pd.DataFrame(data)
-df.to_csv(f"loss_history_{model.name}.csv", index=False)
+model_name = model.module.name if isinstance(model, th.nn.DataParallel) else model.name
+df.to_csv(f"loss_history_{model_name}.csv", index=False)
 
 # Print final losses
 print("\nFinal losses:")

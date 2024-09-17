@@ -17,11 +17,11 @@
 #│       ⚠ Sbatch this job from the root folder of the project ⚠            │#
 #└──────────────────────────────────────────────────────────────────────────┘#
 
+echo "Job started at $(date)"
+
 # Load cuda module
 module load cuda/12.1
 echo "CUDA module loaded"
-
-echo "Job started at $(date)"
 
 # Activate conda (change with your username and path)
 start_time=$(date +%s)
