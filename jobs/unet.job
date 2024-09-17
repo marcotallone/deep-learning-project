@@ -13,6 +13,10 @@
 #SBATCH --output=output.out 
 #SBATCH --error=error.err
 
+#┌──────────────────────────────────────────────────────────────────────────┐#
+#│       ⚠ Sbatch this job from the root folder of the project ⚠            │#
+#└──────────────────────────────────────────────────────────────────────────┘#
+
 # ⚠ Sbatch this job from the root folder of the project ⚠
 
 echo "Job started at $(date)"
