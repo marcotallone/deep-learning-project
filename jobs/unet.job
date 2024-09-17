@@ -17,8 +17,6 @@
 #│       ⚠ Sbatch this job from the root folder of the project ⚠            │#
 #└──────────────────────────────────────────────────────────────────────────┘#
 
-# ⚠ Sbatch this job from the root folder of the project ⚠
-
 echo "Job started at $(date)"
 
 # Activate conda (change with your username and path)
