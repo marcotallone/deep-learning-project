@@ -4,6 +4,7 @@
 
 # Common Python imports
 import numpy as np
+
 # from tqdm import trange
 import time
 import tqdm as tqdm
@@ -11,12 +12,10 @@ from datetime import datetime
 
 # Torch imports
 import torch as th
-from torch import Tensor
-from torch.utils.data import DataLoader
 from safetensors.torch import save_model
 
 # Typining hints
-from typing import List, Union, Callable, Tuple
+from typing import List, Tuple
 
 
 # Training function for U-Net models -------------------------------------------

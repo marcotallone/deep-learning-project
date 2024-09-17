@@ -2,24 +2,20 @@
 
 # Imports ----------------------------------------------------------------------
 
+print("\nImporting libraries...")
+
 # Common Python imports
 import os
 import numpy as np
 import pandas as pd
 from datetime import datetime
 
-# h5py to import h5 dataset files
-import h5py
-
 # Torch imports
 import torch as th
-from torch import Tensor
-from torch.utils.data import TensorDataset
-from torch.utils.data import Dataset, DataLoader
-from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
 
 # Typining hints
-from typing import List, Union, Callable, Tuple
+from typing import Union, Callable
 
 # Utils imports
 from utils.datasets import BrainScanDataset
@@ -43,6 +39,7 @@ LR: float = 1e-3
 WEIGHT_DECAY: float = 1e-2
 
 # Device setup
+print("\nSetting up the device...")
 device: th.device = th.device(
     "cuda" if th.cuda.is_available() and DEVICE_AUTODETECT else "cpu"
 )
