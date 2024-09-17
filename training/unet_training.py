@@ -36,6 +36,11 @@ from utils.analysis import count_parameters
 DATASETS: str = "datasets"
 SEGMENTATION: str = os.path.join(DATASETS, "segmentation/data")
 SAVE_PATH: str = "models/saved_models"
+SAVE_LOSS_PATH: str = "models/saved_losses"
+
+# Create the directories if they do not exist
+os.makedirs(SAVE_PATH, exist_ok=True)
+os.makedirs(SAVE_LOSS_PATH, exist_ok=True)
 
 
 # Hyperparameters --------------------------------------------------------------
@@ -133,7 +138,7 @@ data = {
 }
 df = pd.DataFrame(data)
 model_name = model.module.name if isinstance(model, th.nn.DataParallel) else model.name
-df.to_csv(f"loss_history_{model_name}.csv", index=False)
+df.to_csv(os.path.join(SAVE_LOSS_PATH, f"loss_history_{model_name}_e{EPOCHS}.csv"), index=False)
 
 # Print final losses
 print("\nFinal losses:")
