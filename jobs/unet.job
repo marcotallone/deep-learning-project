@@ -17,6 +17,10 @@
 #│       ⚠ Sbatch this job from the root folder of the project ⚠            │#
 #└──────────────────────────────────────────────────────────────────────────┘#
 
+# Load cuda module
+module load cuda/12.1
+echo "CUDA module loaded"
+
 echo "Job started at $(date)"
 
 # Activate conda (change with your username and path)
@@ -27,6 +31,7 @@ end_time=$(date +%s)
 echo "Conda environment activated in $(($end_time - $start_time)) seconds"
 
 # Run the python training script
+echo "🚀 Starting training..."
 python training/unet_training.py
 
 echo "🏁 Job completed at $(date)!"
