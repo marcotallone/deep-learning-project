@@ -127,6 +127,7 @@ List of things to be done for the project:
 - [ ] Create a presentation for the project
 - [ ] REMOVE TODO and USEFUL LINKS AT THE END
 - [ ] See if the time a patient still has to live is predictable
+- [ ] Review static typing in models definitions
 - [ ] ... **(add more things to do)**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

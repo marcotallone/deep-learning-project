@@ -1,4 +1,6 @@
-# U-Net First Model architecture definition
+# Classic U-Net model architecture
+# Inspired by the paper 'U-Net: Convolutional Networks for Biomedical Image Segmentation'
+# by Ronneberger et al. (2015)
 
 # Imports ----------------------------------------------------------------------
 
@@ -26,6 +28,7 @@ class encoder(th.nn.Module):
     activation: th.nn.Module, optional (default: th.nn.ReLU())
         Activation function to use in the convolutional layers
     """
+
     # Constructor
     def __init__(self, 
                  in_channels: int, 
@@ -125,6 +128,7 @@ class bottleneck(th.nn.Module):
     ) -> None:
         super().__init__()
         self.bottleneck_block: th.nn.Sequential = th.nn.Sequential(
+            # Convolutional layer 1
             th.nn.Conv2d(
                 in_channels = 8 * n_filters,
                 out_channels = 16 * n_filters,
@@ -133,6 +137,7 @@ class bottleneck(th.nn.Module):
                 padding = 1,
             ),
             activation,
+            # Convolutional layer 2
             th.nn.Conv2d(
                 in_channels = 16 * n_filters,
                 out_channels = 8 * n_filters,
@@ -148,20 +153,22 @@ class bottleneck(th.nn.Module):
         return self.bottleneck_block(x)
     
 
-# U-Net model ------------------------------------------------------------------
-class UNet(th.nn.Module):
-    """U-Net model architecture definition: first model
+# Classic U-Net model ----------------------------------------------------------
+class ClassicUNet(th.nn.Module):
+    """U-Net model architecture (Ronneberger et al., 2015)
 
     Parameters
     ----------
-    in_channels: int, optional (default: 4)
+    in_channels: int, optional (default: 4 [BraTS2020])
         Number of input channels
-    out_channels: int, optional (default: 3)
+    out_channels: int, optional (default: 3 [RGB])
         Number of output channels
     n_filters: int, optional (default: 32)
         Number of filters to use in the convolutional layers
     activation: th.nn.Module, optional (default: th.nn.ReLU())
         Activation function to use in the convolutional layers
+    name: str, optional (default: "ClassicUNet")
+        Name of the model
     """
 
     # Constructor
@@ -170,10 +177,12 @@ class UNet(th.nn.Module):
                 out_channels: int = 3,
                 n_filters: int = 32,
                 activation: th.nn.Module = th.nn.ReLU(),
+                name: str = "ClassicUNet",
     ) -> None:
-
-        # Call parent constructor
         super().__init__()
+
+        # Model name
+        self.name: str = name
 
         # Downsampling and Upsampling methods
         self.downsample: th.nn.MaxPool2d = th.nn.MaxPool2d(kernel_size=2, stride=2)

@@ -1,4 +1,5 @@
-# U-Net Second Model architecture definition
+# Improved U-Net model architecture definition
+# U-Net model enhanced with modern CNN techniques from multiple research papers
 
 # Imports ----------------------------------------------------------------------
 
@@ -34,7 +35,7 @@ class encoder(th.nn.Module):
                  activation: th.nn.Module = th.nn.ReLU(),
         ) -> None:
             super().__init__()
-            expansion_ratio = 4
+            expansion_ratio: int = 4
             self.encoder_block: th.nn.Sequential = th.nn.Sequential(
                 # Convolutional layer 1
                 th.nn.Conv2d(
@@ -114,7 +115,7 @@ class decoder(th.nn.Module):
                  activation: th.nn.Module = th.nn.ReLU(),
         ) -> None:
             super().__init__()
-            expansion_ratio = 4
+            expansion_ratio: int = 4
             self.decoder_block: th.nn.Sequential = th.nn.Sequential(
                 # Convolutional layer 1
                 th.nn.Conv2d(
@@ -192,6 +193,7 @@ class bottleneck(th.nn.Module):
         ) -> None:
             super().__init__()
             self.bottleneck_block: th.nn.Sequential = th.nn.Sequential(
+                # Convolutional layer 1
                 th.nn.Conv2d(     
                     in_channels=8*n_filters,
                     out_channels=8*n_filters,
@@ -201,6 +203,7 @@ class bottleneck(th.nn.Module):
                     groups=8*n_filters
                 ),
                 th.nn.BatchNorm2d(num_features=8*n_filters),
+                # Convolutional layer 2
                 th.nn.Conv2d(
                     in_channels=8*n_filters,
                     out_channels=4*8*n_filters, 
@@ -208,12 +211,14 @@ class bottleneck(th.nn.Module):
                     stride=1
                 ),
                 activation,
+                # Convolutional layer 3
                 th.nn.Conv2d(
                     in_channels=4*8*n_filters,
                     out_channels=8*n_filters,
                     kernel_size=1,
                     stride=1
                 ),
+                # Convolutional layer 4
                 th.nn.Conv2d(
                     in_channels=8*n_filters,
                     out_channels=8*n_filters,
@@ -223,6 +228,7 @@ class bottleneck(th.nn.Module):
                     groups=8*n_filters
                 ),
                 th.nn.BatchNorm2d(num_features=8*n_filters),
+                # Convolutional layer 5
                 th.nn.Conv2d(
                     in_channels=8*n_filters,
                     out_channels=4*8*n_filters,
@@ -230,6 +236,7 @@ class bottleneck(th.nn.Module):
                     stride=1
                 ),
                 activation,
+                # Convolutional layer 6
                 th.nn.Conv2d(
                     in_channels=4*8*n_filters,
                     out_channels=8*n_filters,
@@ -243,20 +250,22 @@ class bottleneck(th.nn.Module):
         return self.bottleneck_block(x)
 
 
-# U-Net model ------------------------------------------------------------------
-class UNet2(th.nn.Module):
-    """U-Net model architecture definition: second model
+# Improved U-Net model ---------------------------------------------------------
+class ImprovedUNet(th.nn.Module):
+    """Improved modern U-Net model architecture
 
     Parameters
     ----------
-    in_channels: int, optional (default: 4)
+    in_channels: int, optional (default: 4 [BraTS2020])
         Number of input channels
-    out_channels: int, optional (default: 3)
+    out_channels: int, optional (default: 3 [RGB])
         Number of output channels
     n_filters: int, optional (default: 32)
         Number of filters to use in the convolutional layers
     activation: th.nn.Module, optional (default: th.nn.ReLU())
         Activation function to use in the convolutional layers
+    name: str, optional (default: "ImprovedUNet")
+        Name of the model
     """
 
     # Constructor
@@ -265,8 +274,12 @@ class UNet2(th.nn.Module):
                  out_channels: int = 3,
                  n_filters: int = 32,
                  activation: th.nn.Module = th.nn.ReLU(),
-        ) -> None:
+                 name: str = "ImprovedUNet",
+    ) -> None:
         super().__init__()
+
+        # Model name
+        self.name: str = name
         
         # Downsampling and Upsampling methods
         self.downsample: th.nn.MaxPool2d = th.nn.MaxPool2d(kernel_size=2, stride=2)
@@ -287,7 +300,7 @@ class UNet2(th.nn.Module):
         self.decoder2: decoder = decoder(2 * n_filters, 1 * n_filters, activation)
         self.decoder1: decoder = decoder(1 * n_filters, 1 * n_filters, activation)
 
-        # Output block
+        # Output convolutional layer
         self.output: th.nn.Conv2d = th.nn.Conv2d(
             in_channels=1 * n_filters,
             out_channels=out_channels,
@@ -297,7 +310,7 @@ class UNet2(th.nn.Module):
         )
 
     # Forward pass
-    def forward(self, x):
+    def forward(self, x: Tensor) -> Tensor:
         # Encoder
         skip_1 = self.encoder1(x)
         x      = self.downsample(skip_1)

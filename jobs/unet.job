@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#SBATCH --job-name=unet-train
+#SBATCH -p GPU
+#SBATCH --gres=gpu:2
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=24
+#   #SBATCH --exclusive
+#SBATCH --time=0-02:00:00
+#SBATCH -A dssc
+#	#SBATCH --mem-per-cpu=1500MB
+#SBATCH --output=output.out 
+#SBATCH --error=error.err
+
+# ⚠ Sbatch this job from the root folder of the project ⚠
+
+echo "Job started at $(date)"
+
+# Activate conda (change with your username and path)
+start_time=$(date +%s)
+eval "$(/u/dssc/mtallone/scratch/miniconda/bin/conda shell.bash hook)" &>> error.err
+conda activate pytorch &>> error.err
+end_time=$(date +%s)
+echo "Conda environment activated in $(($end_time - $start_time)) seconds"
+
+# Run the python training script
+python training/unet.py
+
+echo "🏁 Job completed at $(date)!"
