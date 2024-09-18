@@ -182,16 +182,16 @@ def display_prediction(model: th.nn.Module,
 
 
 # Dice Similarity Coefficient function -----------------------------------------
-def dice(pred: th.Tensor, target: th.Tensor, epsilon: float = 1e-6) -> List[float]:
+def dice(pred_mask: th.Tensor, true_mask: th.Tensor, epsilon: float = 1e-6) -> List[float]:
     """
     Compute the Dice Coefficient for each channel separately and return them
     individually as well as the average across all channels.
 
     Parameters
     ----------
-    pred : th.Tensor
+    pred_mask : th.Tensor
         The predicted mask of shape [batch_size, channels, height, width].
-    target : th.Tensor
+    true_mask : th.Tensor
         The ground truth mask of shape [batch_size, channels, height, width].
     epsilon : float, optional
         A small value to avoid division by zero, by default 1e-6.
@@ -203,11 +203,11 @@ def dice(pred: th.Tensor, target: th.Tensor, epsilon: float = 1e-6) -> List[floa
         the following order: [Dice_Red, Dice_Green, Dice_Blue, Average_Dice]
     """
     # Apply sigmoid to the predictions to get probabilities
-    pred = th.sigmoid(pred)
+    pred_mask = th.sigmoid(pred_mask)
 
     # Flatten the tensors to [batch_size, channels, height * width]
-    pred_flat = pred.view(pred.size(0), pred.size(1), -1)
-    target_flat = target.view(target.size(0), target.size(1), -1)
+    pred_flat = pred_mask.view(pred_mask.size(0), pred_mask.size(1), -1)
+    target_flat = true_mask.view(true_mask.size(0), true_mask.size(1), -1)
 
     # Compute the intersection and union
     intersection = (pred_flat * target_flat).sum(dim=2)
@@ -221,11 +221,3 @@ def dice(pred: th.Tensor, target: th.Tensor, epsilon: float = 1e-6) -> List[floa
 
     # Return the Dice Coefficient for each channel and the average Dice Coefficient
     return [dice[:, 0].mean().item(), dice[:, 1].mean().item(), dice[:, 2].mean().item(), avg_dice] 
-
-# Example usage
-# Assuming `model` is your U-Net model and `test_image` and `test_mask` are your input and ground truth tensors
-# model.eval()
-# with th.no_grad():
-#     test_pred = model(test_image.to(device))
-#     dice_score = dice_coefficient(test_pred, test_mask.to(device))
-#     print(f"Dice Coefficient: {dice_score:.4f}")
