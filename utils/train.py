@@ -4,7 +4,13 @@
 
 # Common Python imports
 import os
+from re import L
+import sys
+import numpy as np
 import tqdm as tqdm
+
+# Add the root directory of the project to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Torch imports
 import torch as th
@@ -16,6 +22,8 @@ from safetensors.torch import save_model
 # Typining hints
 from typing import List, Tuple
 
+# Assessment metrics
+from utils.metrics import *
 
 # Training function for U-Net models -------------------------------------------
 def train_unet(model: th.nn.Module,
@@ -26,15 +34,21 @@ def train_unet(model: th.nn.Module,
                n_epochs: int,
                device: th.device = th.device("cpu"),
                save_path: str = None
-) -> Tuple[List[float], List[float]]:
+) -> Tuple[List[float], List[float], List[List[float]], List[List[float]], List[List[float]], List[List[float]], List[List[float]], List[List[float]]]:
     
-    # If given create the directory to store the weights
-    if save_path is not None:
-        os.makedirs(save_path, exist_ok=True)
+    # If given create the directory to store the model weights
+    if save_path is not None: os.makedirs(save_path, exist_ok=True)
     
-    # Initialize the loss history
-    train_loss_history: List[float] = []
-    valid_loss_history: List[float] = []
+    # Initialize the lists for the tracking metrics
+    train_losses: List[float] = []
+    valid_losses: List[float] = []
+    dice_scores: List[List[float]] = []
+    iou_scores: List[List[float]] = []
+    accuracy_scores: List[List[float]] = []
+    fpr_scores: List[List[float]] = []
+    fnr_scores: List[List[float]] = []
+    precision_scores: List[List[float]] = []
+    recall_scores: List[List[float]] = []
     
     # Move the model to the device
     model.to(device)
@@ -65,6 +79,13 @@ def train_unet(model: th.nn.Module,
         # Validation loop ------------------------------------------
         model.eval() # Set the model to evaluation mode
         valid_loss = 0.0 # Track validation loss
+        dice_coeff: List[List[float]] = [] # Trach Dice coeff for each batch
+        iou: List[List[float]] = [] # Track IoU for each batch
+        accuracy: List[List[float]] = [] # Track accuracy for each batch
+        fpr: List[List[float]] = [] # Track false positive rate for each batch
+        fnr: List[List[float]] = [] # Track false negative rate for each batch
+        precision: List[List[float]] = [] # Track precision for each batch
+        recall: List[List[float]] = [] # Track recall for each batch
         with th.no_grad():
             for _, (x_e, y_e) in tqdm.tqdm(enumerate(valid_loader), 
                                            desc="Validation Batch", 
@@ -76,10 +97,26 @@ def train_unet(model: th.nn.Module,
                 yhat_e: Tensor = model(x_e) # Forward pass
                 loss_e: Tensor = loss_fn(yhat_e, y_e) # Loss computation
                 valid_loss += loss_e.item() # Track the loss
+                dice_coeff.append(dice(yhat_e, y_e)) # Track the Dice coefficient
+                iou.append(IoU(yhat_e, y_e))
+                accuracy.append(accuracy2D(yhat_e, y_e)) # Track the accuracy
+                fpr.append(fpr2D(yhat_e, y_e)) # Track the false positive rate
+                fnr.append(fnr2D(yhat_e, y_e)) # Track the false negative rate
+                precision.append(precision2D(yhat_e, y_e)) # Track the precision
+                recall.append(recall2D(yhat_e, y_e)) # Track the recall
 
         # Track the validation loss at the end of the epoch
-        train_loss_history.append(train_loss)
-        valid_loss_history.append(valid_loss)
+        train_losses.append(train_loss)
+        valid_losses.append(valid_loss)
+
+        # Compute the averages of other metrics across all batches
+        dice_scores.append(np.mean(dice_coeff, axis=0).tolist())
+        iou_scores.append(np.mean(iou, axis=0).tolist())
+        accuracy_scores.append(np.mean(accuracy, axis=0).tolist())
+        fpr_scores.append(np.mean(fpr, axis=0).tolist())
+        fnr_scores.append(np.mean(fnr, axis=0).tolist())
+        precision_scores.append(np.mean(precision, axis=0).tolist())
+        recall_scores.append(np.mean(recall, axis=0).tolist())
 
         # Display current epoch loss
         print("\n------------------------")
@@ -96,6 +133,6 @@ def train_unet(model: th.nn.Module,
 
     print("\nTraining concluded")
 
-    # Return the loss history
-    return train_loss_history, valid_loss_history
+    # Return the tracking metrics
+    return train_losses, valid_losses, dice_scores, iou_scores, accuracy_scores, fpr_scores, fnr_scores, precision_scores, recall_scores
             

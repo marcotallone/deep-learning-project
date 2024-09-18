@@ -36,11 +36,11 @@ from utils.analysis import count_parameters
 DATASETS: str = "datasets"
 SEGMENTATION: str = os.path.join(DATASETS, "segmentation/data")
 SAVE_PATH: str = "models/saved_models"
-SAVE_LOSS_PATH: str = "models/saved_losses"
+SAVE_METRICS_PATH: str = "models/saved_metrics"
 
 # Create the directories if they do not exist
 os.makedirs(SAVE_PATH, exist_ok=True)
-os.makedirs(SAVE_LOSS_PATH, exist_ok=True)
+os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
 
 
 # Hyperparameters --------------------------------------------------------------
@@ -118,7 +118,7 @@ print(f'Total Parameters: {total_params:,}')
 optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)
 
 # Train the model
-train_loss_history, valid_loss_history = train_unet(
+train_losses, valid_losses, dice_scores, iou_scores, accuracy_scores, fpr_scores, fnr_scores, precision_scores, recall_scores = train_unet(
     model=model,
     loss_fn=CRITERION,
     optimizer=optimizer,
@@ -130,17 +130,52 @@ train_loss_history, valid_loss_history = train_unet(
 )
 
 
-# Save losses ------------------------------------------------------------------
+# Save losses and metrics in a dataframe ---------------------------------------
 data = {
-    'epoch': list(range(1, len(train_loss_history) + 1)),
-    'train': train_loss_history,
-    'validation': valid_loss_history
+    'epoch': list(range(1, len(train_losses) + 1)),
+    'train_loss': train_losses,
+    'validation_loss': valid_losses,
+    'dice_red': dice_scores[0][0], 'dice_green': dice_scores[0][1], 'dice_blue': dice_scores[0][2], 'dice_average': dice_scores[0][3],
+    'iou_red': iou_scores[0][0], 'iou_green': iou_scores[0][1], 'iou_blue': iou_scores[0][2], 'iou_average': iou_scores[0][3],
+    'accuracy_red': accuracy_scores[0][0], 'accuracy_green': accuracy_scores[0][1], 'accuracy_blue': accuracy_scores[0][2], 'accuracy_average': accuracy_scores[0][3],
+    'fpr_red': fpr_scores[0][0], 'fpr_green': fpr_scores[0][1], 'fpr_blue': fpr_scores[0][2], 'fpr_average': fpr_scores[0][3],
+    'fnr_red': fnr_scores[0][0], 'fnr_green': fnr_scores[0][1], 'fnr_blue': fnr_scores[0][2], 'fnr_average': fnr_scores[0][3],
+    'precision_red': precision_scores[0][0], 'precision_green': precision_scores[0][1], 'precision_blue': precision_scores[0][2], 'precision_average': precision_scores[0][3],
+    'recall_red': recall_scores[0][0], 'recall_green': recall_scores[0][1], 'recall_blue': recall_scores[0][2], 'recall_average': recall_scores[0][3]
 }
 df = pd.DataFrame(data)
 model_name = model.module.name if isinstance(model, th.nn.DataParallel) else model.name
-df.to_csv(os.path.join(SAVE_LOSS_PATH, f"loss_history_{model_name}_e{EPOCHS}.csv"), index=False)
+df.to_csv(os.path.join(SAVE_METRICS_PATH, f"metrics_{model_name}_e{EPOCHS}.csv"), index=False)
 
-# Print final losses
+
+# Print final losses and metrics ----------------------------------------------
 print("\nFinal losses:")
-print(f"Train loss: {train_loss_history[-1]:.4f}")
-print(f"Validation loss: {valid_loss_history[-1]:.4f}")
+print(f"Train loss: {train_losses[-1]:.4f}")
+print(f"Validation loss: {valid_losses[-1]:.4f}")
+
+# Convert final metrics to percentage format
+dice_final = [score * 100 for score in dice_scores[-1]]
+iou_final = [score * 100 for score in iou_scores[-1]]
+accuracy_final = [score * 100 for score in accuracy_scores[-1]]
+fpr_final = [score * 100 for score in fpr_scores[-1]]
+fnr_final = [score * 100 for score in fnr_scores[-1]]
+precision_final = [score * 100 for score in precision_scores[-1]]
+recall_final = [score * 100 for score in recall_scores[-1]]
+
+# Create a DataFrame to display the metrics
+metrics = {
+	'Dice': dice_final,
+	'IoU': iou_final,
+	'Accuracy': accuracy_final,
+	'FPR': fpr_final,
+	'FNR': fnr_final,
+	'Precision': precision_final,
+	'Recall': recall_final
+}
+rows = ['Red', 'Green', 'Blue', 'Average']
+df = pd.DataFrame(metrics, index=rows)
+pd.options.display.float_format = '{:.2f}'.format
+
+print("\nPerformance metrics (%)")
+print("------------------------------------------------------------")
+print(df)

@@ -4,6 +4,7 @@
 
 # Common Python imports
 import os
+from re import L
 import numpy as np
 
 # h5py to import h5 dataset files
@@ -37,30 +38,30 @@ class SegmentationPreprocessing(Dataset):
 
     # Constructor
     def __init__(self, 
-                 file_paths: List[str],
+                 directory: List[str],
                  resize: Tuple[int, int] = (240,240),
                  deterministic: bool = False,
     ) -> None:
         
         # Store the file paths
-        self.file_paths = file_paths
+        self.directory = directory
 
         # Generate the same test images (for consistency)
         if deterministic: np.random.seed(1)
-        np.random.shuffle(self.file_paths)
+        np.random.shuffle(self.directory)
 
 		# Define the resize transformation
         self.resize = transforms.Resize((resize[0], resize[1]))
         
     # Len method
     def __len__(self) -> int:
-        return len(self.file_paths)
+        return len(self.directory)
     
     # Get item method
     def __getitem__(self, index: int) -> Tuple[th.Tensor, th.Tensor]:
 
         # Load h5 file, get image and mask (ground truth)
-        file_path: str = self.file_paths[index]
+        file_path: str = self.directory[index]
         with h5py.File(file_path, 'r') as file:
             image = file['image'][()]
             mask  = file['mask'][()]
@@ -88,6 +89,7 @@ class SegmentationPreprocessing(Dataset):
             mask = (mask > 0.5).float()
             
         return image, mask
+
 
 # Loading function for the BraTS2020 dataset
 def load_segmentation(directory: str,
@@ -125,6 +127,8 @@ def load_segmentation(directory: str,
 
     # Build .h5 file paths from directory containing .h5 files
     h5_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.h5')]
+
+    # Shuffle the files randomly
     np.random.seed(42)
     np.random.shuffle(h5_files)
 
@@ -149,3 +153,73 @@ def load_segmentation(directory: str,
     valid_dataloader = DataLoader(valid_dataset, batch_size=valid_batch_size, shuffle=False)
 
     return train_dataloader, valid_dataloader
+    
+
+# Load single ------------------------------------------------------------------
+def load_single(directory: str,
+                index: int,
+                resize: Tuple[int, int] = (240, 240)
+) -> Tuple[List[th.Tensor], List[th.Tensor]]:
+    """Function to load the whole MRI scan for a single patient from the dataset.
+
+    Parameters
+    ----------
+    directory : str
+        Directory containing the .h5 files
+    index : int
+        Index of the file to load, i.e. the patient number. Can range from 1 to 369.
+    resize : Tuple[int, int], optional
+        Tuple with the new size of the images (height, width), by default (240, 240)
+
+    Returns
+    -------
+    Tuple[List[th.Tensor], List[th.Tensor]]
+        Tuple containing the list of images and masks for the MRI scan.   
+        Each MRI scan consists in ~155 images and masks.
+    """
+
+    # Check the index is within the range otherwise raise an error
+    if index < 1 or index > 369:
+        raise ValueError("Index must be between 1 and 369.")
+
+    # Collect the .h5 files for the patient: then start with 'volume_{index}' and end with '.h5' 
+    h5_files = [os.path.join(directory, f'volume_{index}_slice_{i}.h5') for i in range(155)]
+
+    # Preprocess the images and masks
+    images, masks = [], []
+    for i in range(len(h5_files)):
+
+        # Load h5 file, get image and mask (ground truth)
+        file_path: str = h5_files[i]
+        with h5py.File(file_path, 'r') as file:
+            image = file['image'][()]
+            mask  = file['mask'][()]
+            
+            # Reshape: (H, W, C) -> (C, H, W)
+            image = image.transpose((2, 0, 1))
+            mask = mask.transpose((2, 0, 1))
+            
+            # Adjusting pixel values for each channel in the image between 0 and 255
+            for i in range(image.shape[0]):         # Iterate over channels
+                min_val  = np.min(image[i])         # Find the min value in the channel
+                image[i] = image[i] - min_val       # Shift values to ensure min is 0
+                max_val  = np.max(image[i]) + 1e-4  # Find max value to scale max to 1 now.
+                image[i] = image[i] / max_val       # Scale values to ensure max is 1
+
+            # Convert to float and scale the whole image
+            image: Tensor = th.tensor(image, dtype=th.float32)
+            mask: Tensor = th.tensor(mask, dtype=th.float32)
+
+            # Resize the image and mask
+            resize_transformation = transforms.Resize((resize[0], resize[1]))
+            image = resize_transformation(image)
+            mask = resize_transformation(mask)
+
+            # Ensure the mask is binary after resizing
+            mask = (mask > 0.5).float()
+
+            # Append the images and masks
+            images.append(image)
+            masks.append(mask)
+
+    return images, masks

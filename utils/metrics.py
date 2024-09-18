@@ -53,6 +53,51 @@ def dice(pred_mask: Tensor, true_mask: Tensor, epsilon: float = 1e-6) -> List[fl
     return [dice[:, 0].mean().item(), dice[:, 1].mean().item(), dice[:, 2].mean().item(), avg_dice] 
 
 
+# IoU (Intersection over Union or Jaccard Index) -------------------------------
+def IoU(pred_mask: Tensor, true_mask: Tensor, threshold: float = 0.5) -> List[float]:
+    """
+    Compute the pixel-wise Intersection over Union (IoU) for each channel separately and return a list containing
+    the IoU for the red, green, and blue channels, as well as the average IoU.
+
+    Parameters
+    ----------
+    pred_mask : Tensor
+        The predicted tensor of shape [batch_size, channels, height, width].
+    true_mask : Tensor
+        The ground truth tensor of shape [batch_size, channels, height, width].
+    threshold : float, optional
+        The threshold to binarize the predicted mask, by default 0.5.
+
+    Returns
+    -------
+    List[float]
+        The pixel-wise IoU for each RGB channel and the average IoU in 
+        the following order: [IoU_Red, IoU_Green, IoU_Blue, Average_IoU]
+    """
+
+    # Apply sigmoid to the predictions to get probabilities
+    pred_mask = th.sigmoid(pred_mask)
+
+    # Binarize the predictions using the threshold
+    pred_bin = (pred_mask > threshold).float()
+
+    # Flatten the tensors to compute the IoU
+    pred_flat = pred_bin.view(pred_mask.size(0), pred_mask.size(1), -1)
+    target_flat = true_mask.view(true_mask.size(0), true_mask.size(1), -1)
+
+    # Compute the intersection and union
+    intersection = (pred_flat * target_flat).sum(dim=2)
+    union = pred_flat.sum(dim=2) + target_flat.sum(dim=2) - intersection
+
+    # Compute the IoU for each channel
+    iou = intersection / (union + 1e-6)
+
+    # Compute the average IoU across all channels
+    avg_iou = iou.mean().item()
+
+    # Return the IoU for each channel and the average IoU
+    return [iou[:, 0].mean().item(), iou[:, 1].mean().item(), iou[:, 2].mean().item(), avg_iou]
+
 # 2D Acuracy -------------------------------------------------------------------
 def accuracy2D(pred_mask: Tensor, true_mask: Tensor, threshold: float = 0.5) -> list[float]:
     """
