@@ -21,8 +21,8 @@ from typing import Union, Callable
 
 # Model import
 from models.classic_unet import ClassicUNet
-# from models.improved_unet import ImprovedUNet
-# from models.attention_unet import AttentionUNet
+from models.improved_unet import ImprovedUNet
+from models.attention_unet import AttentionUNet
 
 # Dataset loader
 from utils.datasets import load_segmentation
@@ -86,6 +86,9 @@ train_dataloader, valid_dataloader = load_segmentation(
 print(f"Total examples:      {len(train_dataloader.dataset) + len(valid_dataloader.dataset)} examples")
 print(f"Train-Test split:    {SPLIT*100:.0f}% - {(1-SPLIT)*100:.0f}%") 
 print(f"Train-Test examples: {len(train_dataloader.dataset)} - {len(valid_dataloader.dataset)}")
+
+# Stop here (debug)
+sys.exit(0)
 
 # Verify image sizes
 for images, masks in train_dataloader:

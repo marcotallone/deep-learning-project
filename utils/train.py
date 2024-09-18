@@ -34,7 +34,42 @@ def train_unet(model: th.nn.Module,
                n_epochs: int,
                device: th.device = th.device("cpu"),
                save_path: str = None
-) -> Tuple[List[float], List[float], List[List[float]], List[List[float]], List[List[float]], List[List[float]], List[List[float]], List[List[float]]]:
+) -> Tuple[List[float], 
+           List[float],
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]]]:
+    """Training function for U-Net models
+
+    Parameters
+    ----------
+    model: th.nn.Module
+        U-Net model to train
+    loss_fn: th.nn.Module
+        Loss function to use
+    optimizer: Optimizer
+        Optimizer to use
+    train_loader: DataLoader
+        DataLoader for the training set
+    valid_loader: DataLoader
+        DataLoader for the validation set
+    n_epochs: int
+        Number of epochs to train the model
+    device: th.device, optional (default=th.device("cpu"))
+        Device to use for training
+    save_path: str, optional (default=None)
+        Path to save the model weights
+
+    Returns
+    -------
+    Tuple[List[float], ..., List[List[float]]
+        Tuple with lists containing the training losses, validation losses, Dice scores, 
+        IoU scores, accuracy scores, FPR scores, FNR scores, precision scores, and recall scores
+        for each epoch
+    """
     
     # If given create the directory to store the model weights
     if save_path is not None: os.makedirs(save_path, exist_ok=True)

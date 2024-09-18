@@ -126,18 +126,36 @@ def load_segmentation(directory: str,
     """
 
     # Build .h5 file paths from directory containing .h5 files
-    h5_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.h5')]
+    if np.isclose(percentage, 1):
+        # Pick all the files
+        h5_files = [os.path.join(directory, f) for f in os.listdir(directory) if f.endswith('.h5')]
+    else:
+        # Pick just a percentage of the files starting from the "middle" ones for each patient
+        h5_files = []
+        num_slices = 155  # Total number of slices per patient
+        num_patients = 369  # Total number of patients
+        num_files_per_patient = int(num_slices * percentage)  # Number of files to pick per patient
+        middle_index = num_slices // 2  # Middle index
+
+        for i in range(1, num_patients + 1):
+            patient_files = [f for f in os.listdir(directory) if f.startswith(f'volume_{i}_slice_') and f.endswith('.h5')]
+            patient_files.sort(key=lambda x: int(x.split('_')[-1].split('.')[0]))  # Sort by slice number
+
+            start_index = middle_index - num_files_per_patient // 2
+            end_index = start_index + num_files_per_patient
+
+            selected_files = patient_files[start_index:end_index]
+            h5_files.extend([os.path.join(directory, f) for f in selected_files])
+
+            # Print the selected files in order for debugging
+            print(f"Selected files for patient {i}:")
+            for f in selected_files:
+                print(f"\t{f}")
+
 
     # Shuffle the files randomly
     np.random.seed(42)
     np.random.shuffle(h5_files)
-
-    if deterministic: 
-        # Remove the last files to use only a percentage of the dataset
-        h5_files = h5_files[:int(percentage * len(h5_files))]
-    else:
-        # Randomly sample a percentage of the dataset
-        h5_files = np.random.choice(h5_files, int(percentage * len(h5_files)), replace=False)
 
     # Split the dataset into train and validation sets
     split_index = int(split * len(h5_files))
