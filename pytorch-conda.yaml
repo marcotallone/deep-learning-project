@@ -27,4 +27,5 @@ dependencies:
     - shutils
     - imutils
     - kaggle
+    - ImageMagic
 

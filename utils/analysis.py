@@ -1,5 +1,4 @@
 # Utilities functions to conduct model analysis and data visualization
-# TODO: complete functions to visualize layers and add typing hints
 
 # Imports ----------------------------------------------------------------------
 
@@ -9,11 +8,7 @@ import matplotlib.pyplot as plt
 
 # Torch imports
 import torch as th
-import torch.nn.functional as F
 from torch import Tensor
-
-# Typining hints
-from typing import List
 
 
 # Parameters counter -----------------------------------------------------------
@@ -149,7 +144,8 @@ def display_overlay(image: Tensor,
 # Prediction visualizer for U-Net models ---------------------------------------
 def display_prediction(model: th.nn.Module, 
                        image: Tensor,
-                       mask: Tensor, 
+                       mask: Tensor,
+                       threshold: float = 0.5,
                        device: th.device = th.device("cpu")
                        ):
     """Function to display the input image, predicted mask, and target mask.
@@ -162,6 +158,8 @@ def display_prediction(model: th.nn.Module,
         Input image to predict the mask of shape [batch_size, channels, height, width]
     mask: Tensor
         Target mask of shape [batch_size, channels, height, width]
+    threshold: float, optional (default=0.5)
+        Threshold to binarize the predicted mask
     device: th.device, optional (default=th.device("cpu"))
         Device to use for the prediction
     """
@@ -172,52 +170,15 @@ def display_prediction(model: th.nn.Module,
     # Obtain the model's prediction
     prediction = th.sigmoid(model(image))
 
+    # Binarize the prediction using a threshold of 0.5
+    bin_prediction = (prediction > threshold).float()
+
     # Process the image and masks for visualization
     pred_mask = prediction.detach().cpu().numpy().squeeze(0)
+    bin_pred_mask = bin_prediction.detach().cpu().numpy().squeeze(0)
     true_mask = mask.detach().cpu().numpy().squeeze(0)
 
     # Display the input image, predicted mask, and target mask
     display_mask_channels(pred_mask, title='Predicted Mask Channels [RGB]')
+    display_mask_channels(bin_pred_mask, title='Binarized Predicted Mask Channels [RGB]')
     display_mask_channels(true_mask, title='Ground Truth Mask Channels [RGB]')
-
-
-# Dice Similarity Coefficient function -----------------------------------------
-def dice(pred_mask: th.Tensor, true_mask: th.Tensor, epsilon: float = 1e-6) -> List[float]:
-    """
-    Compute the Dice Coefficient for each channel separately and return them
-    individually as well as the average across all channels.
-
-    Parameters
-    ----------
-    pred_mask : th.Tensor
-        The predicted mask of shape [batch_size, channels, height, width].
-    true_mask : th.Tensor
-        The ground truth mask of shape [batch_size, channels, height, width].
-    epsilon : float, optional
-        A small value to avoid division by zero, by default 1e-6.
-
-    Returns
-    -------
-    List[float]
-        The Dice Coefficient for each RGB channel and the average Dice in 
-        the following order: [Dice_Red, Dice_Green, Dice_Blue, Average_Dice]
-    """
-    # Apply sigmoid to the predictions to get probabilities
-    pred_mask = th.sigmoid(pred_mask)
-
-    # Flatten the tensors to [batch_size, channels, height * width]
-    pred_flat = pred_mask.view(pred_mask.size(0), pred_mask.size(1), -1)
-    target_flat = true_mask.view(true_mask.size(0), true_mask.size(1), -1)
-
-    # Compute the intersection and union
-    intersection = (pred_flat * target_flat).sum(dim=2)
-    union = pred_flat.sum(dim=2) + target_flat.sum(dim=2)
-
-    # Compute the Dice Coefficient for each channel
-    dice = (2.0 * intersection + epsilon) / (union + epsilon)
-
-    # Compute the average Dice Coefficient across all channels
-    avg_dice = dice.mean().item()
-
-    # Return the Dice Coefficient for each channel and the average Dice Coefficient
-    return [dice[:, 0].mean().item(), dice[:, 1].mean().item(), dice[:, 2].mean().item(), avg_dice] 
