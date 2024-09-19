@@ -68,7 +68,7 @@
 
 Deep learning models are widely used in medical imaging for their ability to learn complex patterns and features from images. In particular, convolutional neural networks (CNNs) have for long time been the most common models used for image **classification**, i.e. the task of assigning a label to an image and **segmentation**, i.e. the task of identifying and delineating the boundaries of objects in an image. In recent times, however, transformers models have been introduced in the field of computer vision and have shown to be very effective in the former tasks.\
 This project aims to develop multiple deep learning models for brain tumor classification and segmentation on magnetic resonance imaging (MRI) images using CNN, U-Net, and VIT models in order to compare their performance as well as their strengths and weaknesses.\
-Given an input MRI image, the **classification** task in this context consists in predicting the type of tumor present in the scan if any. Anomg the possible tumor classes found in the adopted dataset, the implemented networks were trained to classify between *glioma*, *meningioma*, *pituitary*, and *no tumor* classes.\
+Given an input MRI image, the **classification** task in this context consists in predicting the type of tumor present in the scan if any. Among the possible tumor classes found in the adopted dataset, the implemented networks were trained to classify between *glioma*, *meningioma*, *pituitary*, and *no tumor* classes.\
 On the other hand, the **segmentation** task consists in identifying different tumor regions in input MRI images. In this case, in fact, the dataset consisted of images labelled with multiple masks highlighting *necrotic and non-enhancing tumour core (NCR/NET)*, *edema (ED)*, and *enhancing tumour (ET)* regions respectively.\
 For the development of the models, the following two datasets have been used:
 
@@ -97,7 +97,29 @@ The project is structured as follows:
 
 ```bash
 .
-├── ...
+├──📁 datasets              # Dataset folders
+│  ├── download.py          # Datasets download script 
+│  ├──📁 classification     # Classification data
+│  └──📁 segmentation       # Segmentation data (BraTS2020)
+├──🖼️ images                # Other images
+├──📁 jobs                  # SLURM Jobs
+│  └── unet.job
+├── LICENSE                 # License
+├── models                  # Models implementations
+│  ├── attention_unet.py
+│  ├── classic_unet.py
+│  ├── improved_unet.py
+│  ├──📁 saved_metrics      # Performance metrics
+│  └──📁 saved_models       # Saved model weights
+├──📓 notebooks             # Jupiter Notebooks
+│  ├── segmentation.ipynb
+│  └── classification.ipynb
+├──📁 papers                # Research papers/References
+├──🐍 pytorch-conda.yaml    # Conda environment
+├──📜 README.md             # This file
+├──📁 training              # Training scripts
+│  └── unet_training.py
+└──⚙ utils                 # Utility scripts
 ```
   
 ### Built With
@@ -114,21 +136,29 @@ The project is structured as follows:
 
 List of things to be done for the project:
 
+#### Classification
+
 - [x] Create a CNN model for classification
-- [x] Create a U-Net model for segmentation
-- [ ] Create a VIT model for classification
-- [ ] Write README file with all the information
+- [x] Create a VIT model for classification
 - [ ] Add residual/skip connections to the CNN models
-- [ ] Fix U-Net input images size and kernels parameters for faster training...
 - [ ] Visualize CNN layers/kernels to see if there is something interesting they observe
 - [ ] Compare CNN models (AlexNet, VGG, ...) one with the other (in particular prediction confidence before extracting softmax)
-- [ ] Find suitable metric for segmentation models predictions
+
+#### Segmentation
+
+- [x] Create a U-Net model for segmentation
+- [x] Fix U-Net input images size and kernels parameters for faster training...
+- [x] Find suitable metric for segmentation models predictions
+- [ ] Visualize UNet models attention blocks to see if they are focusing on the right regions
 - [ ] Extend U-Nets model for segmentation to see if they can predict life expectancy of the patient from tumor prediction
-- [ ] Create a presentation for the project
+- [ ] See if the time a patient still has to live is predictable (**you mean as above???**)
+
+#### General
+
+- [ ] Write README file with all the information
+- [ ] Do presentation for the project
 - [ ] REMOVE TODO and USEFUL LINKS AT THE END
-- [ ] See if the time a patient still has to live is predictable
 - [ ] Review static typing in models definitions
-- [ ] ... **(add more things to do)**
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -145,7 +175,7 @@ List of things to be done for the project:
 
 - [Trasformers in Pytorch](https://www.kaggle.com/code/auxeno/transformers-from-scratch-dl)
 
-- [VIT - Transformers for images in Pytorch (video)](https://www.youtube.com/watch?v=ovB0ddFtzzA) -->
+- [VIT - Transformers for images in Pytorch (video)](https://www.youtube.com/watch?v=ovB0ddFtzzA)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -154,12 +184,66 @@ List of things to be done for the project:
 
 ### Requirements
 
+There are no particular requirements for running the provided project scripts aside having installed a working and updated version of `Python` and `Jupyter Notebook` on your machine as well as having installed all the required libraries you can find in the scripts and notebooks imports.\
+We developed the project with `Python 3.11`.\
+Among the less common Python libraries used, we instead mention:
+
+- `torch` version 2.4.1+cu121 for Neural Networks models
+- `tqdm` version 4.66.5 for nice progress bars
+- `safetensors` version 0.4.5 for safe tensors operations
+- `h5py` version 3.11.0 for handling HDF5 files
+- `kaggle` (API package) version 1.6.17
+- `imutils` version 0.5.4 for image processing utilities
+
+To quickly download the datasets, we provide a [`download.py`](./datasets/download.py) script that will download the datasets from the provided links and extract them in the `datasets` folder while also performing the necessary preprocessing steps. In order to correctly use the script you wil need to have installed the `kaggle` Python package and have a valid Kaggle API token in your home directory. More information on how to get the Kaggle API token can be found [here](https://www.kaggle.com/docs/api).
+
+>[!WARNING]
+> Downloading the datasets from Kaggle manually and placing them in the `datasets/` folder is also possible but mind that it might be necessary to update the paths to the data in all the scripts depending on how you named the folders and files.
+
+Moreover, in case you want to attempt training the models using the provided SLURM jobs in a HPC cluster (such as [ORFEO](https://orfeo-doc.areasciencepark.it/)) you will of course also need the correct credentials and permissions to access the cluster and submit jobs.
+
 ### Installation
+
+All the necessary libraries can be easily installed using the `pip` package manager.\
+Additionally we provide a [conda environment `yaml` file](./pytorch-conda.yaml) containing all the necessary libraries for the project. To create the environment you need to have installed a working `conda` version and then create the environment with the following command:
+
+```bash
+conda env create -f pytorch-conda.yaml
+```
+
+After the environment has been created you can activate it with:
+
+```bash
+conda activate pytorch
+```
+
+In case you want to run the scripts in a HPC cluster these steps might be necessary. Refer to your cluster documentation for Python packages usage and installation.
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage Examples
+
+The [`notebooks/`](./notebooks) folder contains multiple Jupiter Notebooks with examples of how to use the implemented models for both classification and segmentation tasks.\
+Alternatively you can run the training python scripts provided in the [`trinining/`](./training) folder from command line with:
+
+```bash
+python training/train_script.py
+```
+
+>[!WARNING]
+> Remember to always run python scripts from the **root folder** of the project in order to correctly import the necessary modules and packages.
+
+For an example on how to define and use one of the provided models refer to each model documentation in the [`models/`](./models) folder. For instance, defining a model can be as easy as shown in lines 100-105 of the [`training_unet.py`](./training/training_unet.py) script:
+
+```python
+# Select and initialize the U-Net model
+model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
+```
+
+All the implemented modules ave been fully documented so always refer to the documentation for more information on how to use them.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
