@@ -87,9 +87,6 @@ print(f"Total examples:      {len(train_dataloader.dataset) + len(valid_dataload
 print(f"Train-Test split:    {SPLIT*100:.0f}% - {(1-SPLIT)*100:.0f}%") 
 print(f"Train-Test examples: {len(train_dataloader.dataset)} - {len(valid_dataloader.dataset)}")
 
-# Stop here (debug)
-sys.exit(0)
-
 # Verify image sizes
 for images, masks in train_dataloader:
     print("Training batch   - Images shape:", images.shape, "Masks shape:", masks.shape)

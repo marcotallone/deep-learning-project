@@ -148,9 +148,9 @@ def load_segmentation(directory: str,
             h5_files.extend([os.path.join(directory, f) for f in selected_files])
 
             # Print the selected files in order for debugging
-            print(f"Selected files for patient {i}:")
-            for f in selected_files:
-                print(f"\t{f}")
+            # print(f"Selected files for patient {i}:")
+            # for f in selected_files:
+            #     print(f"\t{f}")
 
 
     # Shuffle the files randomly
