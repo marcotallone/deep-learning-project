@@ -326,7 +326,7 @@ To address this issue, we implemented a second U-Net model that we called `Impro
 
 - **Separable Convolutions**: Instead of using the standard convolutional layers, this model uses separable convolutions, factorized in depthwise and pointwise convolutions. [TODO: Add reference]
 - **Batch Normalization**: Batch normalization layers have been added after each convolutional layer to speed up training and improve the model's generalization capabilities.
-- **Larger Kernel Size**: as found by *LiU et al* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [TODO: Add reference], using larger kernel sizes can improve CNNs performance. I particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
+- **Larger Kernel Size**: as found by *Liu et al.* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [TODO: Add reference], using larger kernel sizes can improve CNNs performance. I particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
 - **Inverse Bottleneck**: The bottleneck layer has been replaced by an inverse bottleneck layer that first expands the number of channels before compressing them back to the original size. [TODO: Add reference]
 - **Additive Skip Connections**: Instead of concatenating the skip connections, this model uses an additive skip connection that sums the output of the encoder blocks with the decoder blocks.
 
