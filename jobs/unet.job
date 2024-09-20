@@ -10,8 +10,8 @@
 #SBATCH --time=0-02:00:00
 #SBATCH -A dssc
 #	#SBATCH --mem-per-cpu=1500MB
-#SBATCH --output=output.out 
-#SBATCH --error=error.err
+#SBATCH --output=output1.out 
+#SBATCH --error=error1.err
 
 #┌──────────────────────────────────────────────────────────────────────────┐#
 #│       ⚠ Sbatch this job from the root folder of the project ⚠            │#
