@@ -99,7 +99,7 @@ The project is structured as follows:
 ```bash
 .
 ├──📁 datasets              # Dataset folders
-│  ├──⏬ download.py          # Datasets download script 
+│  ├──⏬ download.py        # Datasets download script 
 │  ├──📁 classification     # Classification data
 │  └──📁 segmentation       # Segmentation data (BraTS2020)
 ├──🖼️ images                # Other images
