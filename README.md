@@ -261,12 +261,12 @@ This dataset is the result of the combination of data originally taken from 3 da
 - [Br35H Brain Tumor Detection](https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection?select=no)
 
 > [!NOTE]
-> As a result of the combination, the original size of the images in this dataset is different as some images exhibit white borders while others don't. You can resize the image to the desired size after preprocessing and removing the extra margins. These operations are automatically done by the provided [`download.py`](./datasets/download.py) script while will uniform all images to 256x256 pixels images.
+> As a result of the combination, the original size of the images in this dataset is different as some images exhibit white borders while others don't. You can resize the image to the desired size after preprocessing and removing the extra margins. These operations are automatically done by the provided [`download.py`](./datasets/download.py) script that will uniform all images to 256x256 pixels images.
 
 As stated above, after preprocessing all images are in `.jpg` format and have been resized to 256x256 resolution. However, due to the large amount of computation required to elaborate such images with our models, in most cases we shrinked the images down to 128x128 pixels.\
 After an initial analysis of the dataset, we found that the 4 classes present in the dataset have the following distribution:
 
-TODO: Add class distribution plot
+<!-- TODO: Add class distribution plot -->
 
 ### BraTS 2020 Dataset (Segmentation)
 
@@ -290,7 +290,7 @@ As shown in the implemented Python notebooks, data can be loaded as multi-channe
 
 ![Multimodal MRI scans and associated mask channels (RGB) for the first patient](images/segmentation_example.gif)
 
-After preprocessing images and masks for each channel are of size 240x240 pixels, but, for the same reasons mentioned above, in most cases we shrinked the images down to 124x124 pixels.\
+After preprocessing images and masks for each channel are of size 240x240 pixels, but, for the same reasons mentioned above, in most cases we shrinked the images down to 128x128 pixels.\
 As stated in the original dataset description, the usage of the dataset is free without restrictions for research purposes, provided that the necessary references [<a href="#ref1">1</a>, <a href="#ref2">2</a>, <a href="#ref3">3</a>, <a href="#ref4">4</a>, <a href="#ref5">5</a>] are cited.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -301,6 +301,28 @@ As stated in the original dataset description, the usage of the dataset is free 
 ### Classification Models
 
 ### Segmentation Models
+
+As previously anticipated 3 models have been implemented to perform the segmentation task on the BraTS 2020 dataset. These models are all based on the U-Net architecture. U-Net models consist in an **encoder** part, which compresses input images into a lower dimensional representation, and a symmetrical **decoder** part, which expands the compressed representation back to the original image size. The encoder part is usually composed of a series of convolutional layers with pooling layers in between, while the decoder part is composed of a series of convolutional layers with upsampling layers in between. Between the encoder and the decoder lies the **bottleneck** layer, which elaborates the most abstract representation of the input data and acts as a bridge between the two parts.\
+The main difference between the 3 models described below lies in the way the encoder and decoder parts are implemented and how the skip connections are managed.
+
+#### Classic U-Net Model
+
+The first implemented U-Net model is an adaptation of the one proposed by *Ronneberger et al.* in their original paper [*U-Net: Convolutional Networks for Biomedical Image Segmentation*](./papers/U-Net-CNN.pdf) [TODO: add end reference]. The model is schematically depicted in the figure below while the full implementation can be found in the [`classic_unet.py`](./models/classic_unet.py) script.
+
+![Classic U-Net model](images/unet-architecture.png)
+<!-- TODO: re-draw this image in tikz as the model it's not exactly like the one in the paper -->
+
+In short, this model consists of 4 encoder blocks and, symmetrically, 4 decoder blocks connected by a bottleneck layer.\
+Each encoder block is composed of 2 convolutional layers that perform a same convolution operation with kernels of size 3, followed by a ReLU activation function. Between one encoder block and the next the number of channels doubles every time, and a max pooling operation is then performed to reduce the spatial dimensions of the input data. The first encoder blocks, in fact, converts the 4 channels of the input images into the `n_filters` channels selected when the model is instantiated (in the original paper `n_filters=64`). The overall number of parameters in the model is of course decided by the value selected for this variable.\
+Then a bottleneck layer follows and performs once again some same convolutions before the upscaling phase.\
+The decoder is instead composed of the 4 decoder blocks which also perform same convolutions again with kernel size of 3 and ReLU non-linearities, but this time are alterated by bilinear upsampling operations to bring back the image to the original size.\
+As portrayed by the gray arrows in the above image, skip connections are implemented from each encoder block to the symmetrical decoder counterpart to facilitate the training process.\
+In our implementation, the model performs the segmentation task by taking in input the MRI scans of shape 128x128x4 and outputs a mask prediction of shape 128x128x3 to be compared with the ground truth mask layers described above.
+
+#### Improved U-Net
+
+
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
