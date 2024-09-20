@@ -84,10 +84,11 @@ With the data at our disposal, we have developed the following models:
   - A VIT model
 
 - For the **segmentation** task:
-  - U-Net model 1
-  - U-Net model 2
-  - U-Net model 3
+  - [`ClassicUNet`](./models/classic_unet.py) model
+  - [`ImprovedUNet`](./models/improved_unet.py) model
+  - [`AttentionUNet`](./models/attention_unet.py) model
 
+All the implemented models come wiht trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\
 Further details about the datasets and the implemented models are given below, after installation instructions, dependencies requirements and usage examples.
 <!-- TODO: Add datasets detailed description and models description and performance -->
 
@@ -105,7 +106,7 @@ The project is structured as follows:
 ├──📁 jobs                  # SLURM Jobs
 │  └── unet.job
 ├── LICENSE                 # License
-├── models                  # Models implementations
+├──🤖 models                # Models implementations
 │  ├── attention_unet.py
 │  ├── classic_unet.py
 │  ├── improved_unet.py
@@ -227,7 +228,7 @@ In case you want to run the scripts in a HPC cluster these steps might be necess
 ## Usage Examples
 
 The [`notebooks/`](./notebooks) folder contains multiple Jupiter Notebooks with examples of how to use the implemented models for both classification and segmentation tasks.\
-Alternatively you can run the training python scripts provided in the [`trinining/`](./training) folder from command line with:
+Alternatively you can run the training python scripts provided in the [`training/`](./training) folder from command line with:
 
 ```bash
 python training/train_script.py
@@ -243,7 +244,7 @@ For an example on how to define and use one of the provided models refer to each
 model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
 ```
 
-All the implemented modules ave been fully documented so always refer to the documentation for more information on how to use them.
+All the implemented modules have been fully documented with docstrings so always refer to the documentation for more information on how to use them.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -252,7 +253,45 @@ All the implemented modules ave been fully documented so always refer to the doc
 
 ### Brain Tumor MRI Dataset (Classification)
 
+The [Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset) is a dataset containing a total of 7023 images of human brain MRI images which are classified into 4 classes: glioma, meningioma, no tumor and pituitary. The dataset is divided into two folders, one for training and one for testing, each containing subfolders for each class. Hence, the main task proposed by this dataset is the implementation og machine learning algorithms for the (multi-class) classification of brain tumors from MRI images.\
+This dataset is the result of the combination of data originally taken from 3 datasets, mainly:
+
+- [Figshare Brain Tumor Dataset](https://figshare.com/articles/dataset/brain_tumor_dataset/1512427)
+- [Sartaj Brain Tumor Classification](https://www.kaggle.com/datasets/sartajbhuvaji/brain-tumor-classification-mri)
+- [Br35H Brain Tumor Detection](https://www.kaggle.com/datasets/ahmedhamada0/brain-tumor-detection?select=no)
+
+> [!NOTE]
+> As a result of the combination, the original size of the images in this dataset is different as some images exhibit white borders while others don't. You can resize the image to the desired size after preprocessing and removing the extra margins. These operations are automatically done by the provided [`download.py`](./datasets/download.py) script while will uniform all images to 256x256 pixels images.
+
+As stated above, after preprocessing all images are in `.jpg` format and have been resized to 256x256 resolution. However, due to the large amount of computation required to elaborate such images with our models, in most cases we shrinked the images down to 128x128 pixels.\
+After an initial analysis of the dataset, we found that the 4 classes present in the dataset have the following distribution:
+
+TODO: Add class distribution plot
+
 ### BraTS 2020 Dataset (Segmentation)
+
+The [BraTS 2020 Dataset](https://www.kaggle.com/datasets/awsaf49/brats2020-training-data) is a dataset containing a total of 57195 multimodal magnetic resonance imaging (MRI) scans of of intrinsically heterogeneous (in appearance, shape, and histology) brain tumors, namely gliomas. The scans have been collected from a total of 369 patients, labelled as **"volumes"**. Each volume then consists of 155 horizontal **slices** of the brain, hence the total amount of data in the dataset is 369x155 = 57195 images.\
+Furthermore, the scans of each brain slice are not simple images, but are actually multimodal MRI scans, meaning that the given images comes with 4 different channels, each representing a different MRI modality:
+
+1. **T1-weighted (T1)**: A high resolution image of the brain's anatomy. It's good for visualising the structure of the brain but not as sensitive to tumour tissue as other sequences.
+2. **T1-weighted post contrast (T1c)**: After the injection of a contrast agent (usually gadolinium), T1-weighted images are taken again. The contrast agent enhances areas with a high degree of vascularity and blood-brain barrier breakdown, which is typical in tumour tissue, making this sequence particularly useful for highlighting malignant tumours.
+3. **T2-weighted (T2)**: T2 images provide excellent contrast of the brain's fluid spaces and are sensitive to edema (swelling), which often surrounds tumours. It helps in visualizing both the tumour and changes in nearby tissue.
+4. **Fluid Attenuated Inversion Recovery (FLAIR)**: This sequence suppresses the fluid signal, making it easier to see peritumoral edema (swelling around the tumour) and differentiate it from the cerebrospinal fluid. It's particularly useful for identifying lesions near or within the ventricles.
+
+The original data also have a **mask** associated to each slice. In fact, all the scans have been segmented manually, by one to four raters, following the same annotation protocol, and their annotations were approved by experienced neuro-radiologists. These annotations highlight areas of interest within the brain scans, specifically focusing on abnormal tissue related to brain tumours. In particular, each mask comes with 3 channels:
+
+1. <span style="color: red;"><b>Necrotic and Non-Enhancing Tumour Core (NCR/NET)</b></span>: This masks out the necrotic (dead) part of the tumour, which doesn't enhance with contrast agent, and the non-enhancing tumour core.
+2. <span style="color: green;"><b>Edema (ED)</b></span>: This channel masks out the edema, the swelling or accumulation of fluid around the tumour.
+3. <span style="color: blue;"><b>Enhancing Tumour (ET)</b></span>: This masks out the enhancing tumour, which is the region of the tumour that shows uptake of contrast material and is often considered the most aggressive part of the tumour.
+
+The main task proposed by this dataset is therefore the implementation of machine learning algorithms for the segmentation of brain tumours from MRI images. However the dataset also comes with metadata information for each volume, such as the patient's age, survival days, and more. This allows for the development of more complex models that can for instance predict the patient's life expectancy from the tumour segmentation itself.\
+The original scans are available in `HDF5` (`.h5`) format to save memory space and to speed up the data loading process. The provided [`download.py`](./datasets/download.py) script will automatically download and extract the data in the correct folder.\
+As shown in the implemented Python notebooks, data can be loaded as multi-channel images and each channel, both for the input scan and for the ground truth mask, can be visualized independently as shown in the animated GIF below which represents the 155 scans for the first patient as well as the overlay of the 3 masks channel in the last picture.
+
+![Multimodal MRI scans and associated mask channels (RGB) for the first patient](images/segmentation_example.gif)
+
+After preprocessing images and masks for each channel are of size 240x240 pixels, but, for the same reasons mentioned above, in most cases we shrinked the images down to 124x124 pixels.\
+As stated in the original dataset description, the usage of the dataset is free without restrictions for research purposes, provided that the necessary references [<a href="#ref1">1</a>, <a href="#ref2">2</a>, <a href="#ref3">3</a>, <a href="#ref4">4</a>, <a href="#ref5">5</a>] are cited.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -301,6 +340,21 @@ Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more informati
 
 <!-- REFERENCES -->
 ## References
+
+<a id="ref1"></a>
+[1] B. H. Menze, A. Jakab, S. Bauer, J. Kalpathy-Cramer, K. Farahani, J. Kirby, et al. "The Multimodal Brain Tumor Image Segmentation Benchmark (BRATS)", IEEE Transactions on Medical Imaging 34(10), 1993-2024 (2015) DOI: 10.1109/TMI.2014.2377694
+
+<a id="ref2"></a>
+[2] S. Bakas, H. Akbari, A. Sotiras, M. Bilello, M. Rozycki, J.S. Kirby, et al., "Advancing The Cancer Genome Atlas glioma MRI collections with expert segmentation labels and radiomic features", Nature Scientific Data, 4:170117 (2017) DOI: 10.1038/sdata.2017.117
+
+<a id="ref3"></a>
+[3] S. Bakas, M. Reyes, A. Jakab, S. Bauer, M. Rempfler, A. Crimi, et al., "Identifying the Best Machine Learning Algorithms for Brain Tumor Segmentation, Progression Assessment, and Overall Survival Prediction in the BRATS Challenge", arXiv preprint arXiv:1811.02629 (2018)
+
+<a id="ref4"></a>
+[4] S. Bakas, H. Akbari, A. Sotiras, M. Bilello, M. Rozycki, J. Kirby, et al., "Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-GBM collection", The Cancer Imaging Archive, 2017. DOI: 10.7937/K9/TCIA.2017.KLXWJJ1Q
+
+<a id="ref5"></a>
+[5] S. Bakas, H. Akbari, A. Sotiras, M. Bilello, M. Rozycki, J. Kirby, et al., "Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-LGG collection", The Cancer Imaging Archive, 2017. DOI: 10.7937/K9/TCIA.2017.GJQ7R0EF
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
