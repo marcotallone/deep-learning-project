@@ -99,7 +99,7 @@ The project is structured as follows:
 ```bash
 .
 ├──📁 datasets              # Dataset folders
-│  ├── download.py          # Datasets download script 
+│  ├──⏬ download.py          # Datasets download script 
 │  ├──📁 classification     # Classification data
 │  └──📁 segmentation       # Segmentation data (BraTS2020)
 ├──🖼️ images                # Other images
@@ -218,7 +218,7 @@ After the environment has been created you can activate it with:
 conda activate pytorch
 ```
 
-In case you want to run the scripts in a HPC cluster these steps might be necessary. Refer to your cluster documentation for Python packages usage and installation.
+In case you want to run the scripts in a HPC cluster these steps might be necessary. Refer to your cluster documentation for Python packages usage and installation. For completeness we link the relevant [documentation for the ORFEO cluster](https://orfeo-doc.areasciencepark.it/HPC/python-environment/) that we used for the project.
 
 
 
