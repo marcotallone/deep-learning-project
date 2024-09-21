@@ -45,13 +45,13 @@ os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 DEVICE_AUTODETECT: bool = True
-PERCENTAGE: float = 0.01
+PERCENTAGE: float = 0.5
 SPLIT: float = 0.7
 IMG_SIZE: int = 128
-N_FILTERS: int = 2
+N_FILTERS: int = 32
 BATCH_TRAIN: int = 64
 BATCH_VALID: int = 64
-EPOCHS: int = 3
+EPOCHS: int = 10
 CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
     th.nn.BCEWithLogitsLoss()
 )
@@ -103,9 +103,9 @@ for images, masks in valid_dataloader:
 print("\nBuilding the model...")
 
 # Select and initialize the U-Net model
-# model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
+model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
 # model: th.nn.Module = ImprovedUNet(n_filters=N_FILTERS)
-model: th.nn.Module = AttentionUNet(n_filters=N_FILTERS)
+# model: th.nn.Module = AttentionUNet(n_filters=N_FILTERS)
 
 # Move the model to the device (or devices)
 if th.cuda.device_count() > 1:
