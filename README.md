@@ -141,9 +141,9 @@ List of things to be done for the project:
 
 - [x] Create a CNN model for classification
 - [x] Create a VIT model for classification
-- [ ] Add residual/skip connections to the CNN models
-- [ ] Visualize CNN layers/kernels to see if there is something interesting they observe
-- [ ] Compare CNN models (AlexNet, VGG, ...) one with the other (in particular prediction confidence before extracting softmax)
+- [x] Add residual/skip connections to the CNN models
+- [x] Visualize CNN layers/kernels to see if there is something interesting they observe
+- [x] Compare CNN models (AlexNet, VGG, ...) one with the other (in particular prediction confidence before extracting softmax)
 
 #### Segmentation
 
@@ -152,7 +152,6 @@ List of things to be done for the project:
 - [x] Find suitable metric for segmentation models predictions
 - [ ] Visualize UNet models attention blocks to see if they are focusing on the right regions
 - [ ] Extend U-Nets model for segmentation to see if they can predict life expectancy of the patient from tumor prediction
-- [ ] See if the time a patient still has to live is predictable (**you mean as above???**)
 
 #### General
 
