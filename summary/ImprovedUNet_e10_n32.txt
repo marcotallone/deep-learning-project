@@ -1,0 +1,378 @@
+Job started at Sat Sep 21 02:43:48 PM CEST 2024
+CUDA module loaded
+Conda environment activated in 6 seconds
+🚀 Starting training...
+
+Importing libraries...
+
+Setting hyperparameters...
+
+Setting up the device...
+Using device: cuda
+
+Loading the BraTS2020 dataset...
+Total examples:      28413 examples
+Train-Test split:    70% - 30%
+Train-Test examples: 19889 - 8524
+Training batch   - Images shape: torch.Size([64, 4, 128, 128]) Masks shape: torch.Size([64, 3, 128, 128])
+Validation batch - Images shape: torch.Size([64, 4, 128, 128]) Masks shape: torch.Size([64, 3, 128, 128])
+
+Building the model...
+Total Parameters: 3,082,739
+
+Training the model...
+
+------------------------
+Epoch 1/10
+Training loss:   11.9397
+Validation loss: 1.5708
+Dice [R]:        0.0987
+Dice [G]:        0.3425
+Dice [B]:        0.1165
+Dice [Avg]:      0.1859
+IoU [R]:         0.0000
+IoU [G]:         0.3230
+IoU [B]:         0.0000
+IoU [Avg]:       0.1077
+Accuracy [R]:    0.9954
+Accuracy [G]:    0.9936
+Accuracy [B]:    0.9959
+Accuracy [Avg]:  0.9950
+FPR [R]:         0.0000
+FPR [G]:         0.0024
+FPR [B]:         0.0000
+FPR [Avg]:       0.0008
+FNR [R]:         0.4517
+FNR [G]:         0.3132
+FNR [B]:         0.4414
+FNR [Avg]:       0.4021
+Precision [R]:   0.0000
+Precision [G]:   0.4650
+Precision [B]:   0.0000
+Precision [Avg]: 0.1550
+Recall [R]:      0.0000
+Recall [G]:      0.3961
+Recall [B]:      0.0000
+Recall [Avg]:    0.1320
+------------------------
+
+------------------------
+Epoch 2/10
+Training loss:   2.6511
+Validation loss: 0.8880
+Dice [R]:        0.2252
+Dice [G]:        0.4294
+Dice [B]:        0.2639
+Dice [Avg]:      0.3062
+IoU [R]:         0.2122
+IoU [G]:         0.4029
+IoU [B]:         0.2394
+IoU [Avg]:       0.2848
+Accuracy [R]:    0.9981
+Accuracy [G]:    0.9958
+Accuracy [B]:    0.9984
+Accuracy [Avg]:  0.9974
+FPR [R]:         0.0009
+FPR [G]:         0.0016
+FPR [B]:         0.0003
+FPR [Avg]:       0.0009
+FNR [R]:         0.1949
+FNR [G]:         0.2418
+FNR [B]:         0.1756
+FNR [Avg]:       0.2041
+Precision [R]:   0.2856
+Precision [G]:   0.5328
+Precision [B]:   0.3462
+Precision [Avg]: 0.3882
+Recall [R]:      0.2568
+Recall [G]:      0.4675
+Recall [B]:      0.2658
+Recall [Avg]:    0.3300
+------------------------
+
+------------------------
+Epoch 3/10
+Training loss:   1.8401
+Validation loss: 0.7564
+Dice [R]:        0.2464
+Dice [G]:        0.4586
+Dice [B]:        0.2925
+Dice [Avg]:      0.3325
+IoU [R]:         0.2294
+IoU [G]:         0.4333
+IoU [B]:         0.2744
+IoU [Avg]:       0.3124
+Accuracy [R]:    0.9984
+Accuracy [G]:    0.9961
+Accuracy [B]:    0.9987
+Accuracy [Avg]:  0.9978
+FPR [R]:         0.0005
+FPR [G]:         0.0020
+FPR [B]:         0.0005
+FPR [Avg]:       0.0010
+FNR [R]:         0.1935
+FNR [G]:         0.1916
+FNR [B]:         0.1241
+FNR [Avg]:       0.1698
+Precision [R]:   0.3174
+Precision [G]:   0.5295
+Precision [B]:   0.3441
+Precision [Avg]: 0.3970
+Recall [R]:      0.2582
+Recall [G]:      0.5176
+Recall [B]:      0.3173
+Recall [Avg]:    0.3644
+------------------------
+
+------------------------
+Epoch 4/10
+Training loss:   1.5427
+Validation loss: 0.7080
+Dice [R]:        0.2693
+Dice [G]:        0.4648
+Dice [B]:        0.3099
+Dice [Avg]:      0.3480
+IoU [R]:         0.2529
+IoU [G]:         0.4238
+IoU [B]:         0.2914
+IoU [Avg]:       0.3227
+Accuracy [R]:    0.9984
+Accuracy [G]:    0.9965
+Accuracy [B]:    0.9989
+Accuracy [Avg]:  0.9979
+FPR [R]:         0.0011
+FPR [G]:         0.0008
+FPR [B]:         0.0004
+FPR [Avg]:       0.0008
+FNR [R]:         0.1411
+FNR [G]:         0.2484
+FNR [B]:         0.1162
+FNR [Avg]:       0.1686
+Precision [R]:   0.3065
+Precision [G]:   0.5787
+Precision [B]:   0.3643
+Precision [Avg]: 0.4165
+Recall [R]:      0.3106
+Recall [G]:      0.4609
+Recall [B]:      0.3253
+Recall [Avg]:    0.3656
+------------------------
+
+------------------------
+Epoch 5/10
+Training loss:   1.3938
+Validation loss: 0.5586
+Dice [R]:        0.2812
+Dice [G]:        0.5021
+Dice [B]:        0.3237
+Dice [Avg]:      0.3690
+IoU [R]:         0.2630
+IoU [G]:         0.4712
+IoU [B]:         0.3058
+IoU [Avg]:       0.3466
+Accuracy [R]:    0.9989
+Accuracy [G]:    0.9971
+Accuracy [B]:    0.9990
+Accuracy [Avg]:  0.9983
+FPR [R]:         0.0004
+FPR [G]:         0.0011
+FPR [B]:         0.0005
+FPR [Avg]:       0.0007
+FNR [R]:         0.1629
+FNR [G]:         0.1828
+FNR [B]:         0.0888
+FNR [Avg]:       0.1448
+Precision [R]:   0.3420
+Precision [G]:   0.5790
+Precision [B]:   0.3555
+Precision [Avg]: 0.4255
+Recall [R]:      0.2888
+Recall [G]:      0.5265
+Recall [B]:      0.3526
+Recall [Avg]:    0.3893
+------------------------
+
+------------------------
+Epoch 6/10
+Training loss:   1.2680
+Validation loss: 0.5753
+Dice [R]:        0.2858
+Dice [G]:        0.4955
+Dice [B]:        0.3243
+Dice [Avg]:      0.3685
+IoU [R]:         0.2673
+IoU [G]:         0.4520
+IoU [B]:         0.3079
+IoU [Avg]:       0.3424
+Accuracy [R]:    0.9989
+Accuracy [G]:    0.9970
+Accuracy [B]:    0.9990
+Accuracy [Avg]:  0.9983
+FPR [R]:         0.0004
+FPR [G]:         0.0007
+FPR [B]:         0.0006
+FPR [Avg]:       0.0006
+FNR [R]:         0.1574
+FNR [G]:         0.2232
+FNR [B]:         0.0820
+FNR [Avg]:       0.1542
+Precision [R]:   0.3430
+Precision [G]:   0.5952
+Precision [B]:   0.3515
+Precision [Avg]: 0.4299
+Recall [R]:      0.2944
+Recall [G]:      0.4861
+Recall [B]:      0.3594
+Recall [Avg]:    0.3799
+------------------------
+
+------------------------
+Epoch 7/10
+Training loss:   1.1994
+Validation loss: 0.5408
+Dice [R]:        0.2897
+Dice [G]:        0.5171
+Dice [B]:        0.3305
+Dice [Avg]:      0.3791
+IoU [R]:         0.2716
+IoU [G]:         0.4891
+IoU [B]:         0.3156
+IoU [Avg]:       0.3588
+Accuracy [R]:    0.9990
+Accuracy [G]:    0.9971
+Accuracy [B]:    0.9991
+Accuracy [Avg]:  0.9984
+FPR [R]:         0.0004
+FPR [G]:         0.0018
+FPR [B]:         0.0006
+FPR [Avg]:       0.0009
+FNR [R]:         0.1546
+FNR [G]:         0.1299
+FNR [B]:         0.0749
+FNR [Avg]:       0.1198
+Precision [R]:   0.3467
+Precision [G]:   0.5597
+Precision [B]:   0.3572
+Precision [Avg]: 0.4212
+Recall [R]:      0.2971
+Recall [G]:      0.5794
+Recall [B]:      0.3665
+Recall [Avg]:    0.4143
+------------------------
+
+------------------------
+Epoch 8/10
+Training loss:   1.1217
+Validation loss: 0.5336
+Dice [R]:        0.2933
+Dice [G]:        0.5154
+Dice [B]:        0.3381
+Dice [Avg]:      0.3823
+IoU [R]:         0.2710
+IoU [G]:         0.4677
+IoU [B]:         0.3194
+IoU [Avg]:       0.3527
+Accuracy [R]:    0.9990
+Accuracy [G]:    0.9971
+Accuracy [B]:    0.9991
+Accuracy [Avg]:  0.9984
+FPR [R]:         0.0002
+FPR [G]:         0.0007
+FPR [B]:         0.0005
+FPR [Avg]:       0.0005
+FNR [R]:         0.1611
+FNR [G]:         0.2076
+FNR [B]:         0.0787
+FNR [Avg]:       0.1492
+Precision [R]:   0.3517
+Precision [G]:   0.6079
+Precision [B]:   0.3650
+Precision [Avg]: 0.4415
+Recall [R]:      0.2906
+Recall [G]:      0.5016
+Recall [B]:      0.3627
+Recall [Avg]:    0.3850
+------------------------
+
+------------------------
+Epoch 9/10
+Training loss:   1.0616
+Validation loss: 0.4851
+Dice [R]:        0.2941
+Dice [G]:        0.5265
+Dice [B]:        0.3397
+Dice [Avg]:      0.3868
+IoU [R]:         0.2692
+IoU [G]:         0.4934
+IoU [B]:         0.3206
+IoU [Avg]:       0.3611
+Accuracy [R]:    0.9990
+Accuracy [G]:    0.9975
+Accuracy [B]:    0.9991
+Accuracy [Avg]:  0.9985
+FPR [R]:         0.0004
+FPR [G]:         0.0010
+FPR [B]:         0.0006
+FPR [Avg]:       0.0007
+FNR [R]:         0.1615
+FNR [G]:         0.1648
+FNR [B]:         0.0694
+FNR [Avg]:       0.1319
+Precision [R]:   0.3526
+Precision [G]:   0.5900
+Precision [B]:   0.3581
+Precision [Avg]: 0.4336
+Recall [R]:      0.2902
+Recall [G]:      0.5445
+Recall [B]:      0.3721
+Recall [Avg]:    0.4023
+------------------------
+
+------------------------
+Epoch 10/10
+Training loss:   1.0304
+Validation loss: 0.4727
+Dice [R]:        0.3061
+Dice [G]:        0.5413
+Dice [B]:        0.3349
+Dice [Avg]:      0.3941
+IoU [R]:         0.2888
+IoU [G]:         0.5128
+IoU [B]:         0.3116
+IoU [Avg]:       0.3711
+Accuracy [R]:    0.9990
+Accuracy [G]:    0.9976
+Accuracy [B]:    0.9991
+Accuracy [Avg]:  0.9986
+FPR [R]:         0.0006
+FPR [G]:         0.0012
+FPR [B]:         0.0002
+FPR [Avg]:       0.0007
+FNR [R]:         0.1030
+FNR [G]:         0.1287
+FNR [B]:         0.1092
+FNR [Avg]:       0.1137
+Precision [R]:   0.3289
+Precision [G]:   0.5872
+Precision [B]:   0.3885
+Precision [Avg]: 0.4349
+Recall [R]:      0.3487
+Recall [G]:      0.5806
+Recall [B]:      0.3322
+Recall [Avg]:    0.4205
+------------------------
+
+Training concluded
+
+Final losses:
+Train loss: 1.0304
+Validation loss: 0.4727
+
+Performance metrics (%)
+------------------------------------------------------------
+         Dice   IoU  Accuracy  FPR   FNR  Precision  Recall
+Red     30.61 28.88     99.90 0.06 10.30      32.89   34.87
+Green   54.13 51.28     99.76 0.12 12.87      58.72   58.06
+Blue    33.49 31.16     99.91 0.02 10.92      38.85   33.22
+Average 39.41 37.11     99.86 0.07 11.37      43.49   42.05
+🏁 Job completed at Sat Sep 21 03:46:42 PM CEST 2024!
