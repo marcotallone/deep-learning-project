@@ -19,7 +19,6 @@ from typing import Callable, Union
 # Torch imports
 import torch as th
 
-
 # Model import
 from models.classic_unet import ClassicUNet
 from models.improved_unet import ImprovedUNet
@@ -46,10 +45,10 @@ os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 DEVICE_AUTODETECT: bool = True
-PERCENTAGE: float = 0.01
+PERCENTAGE: float = 0.5
 SPLIT: float = 0.7
 IMG_SIZE: int = 128
-N_FILTERS: int = 2
+N_FILTERS: int = 16
 BATCH_TRAIN: int = 64
 BATCH_VALID: int = 64
 EPOCHS: int = 10

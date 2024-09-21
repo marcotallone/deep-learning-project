@@ -316,13 +316,24 @@ In short, this model consists of 4 encoder blocks and, symmetrically, 4 decoder 
 Each encoder block is composed of 2 convolutional layers that perform a same convolution operation with kernels of size 3, followed by a ReLU activation function. Between one encoder block and the next the number of channels doubles every time, and a max pooling operation is then performed to reduce the spatial dimensions of the input data. The first encoder blocks, in fact, converts the 4 channels of the input images into the `n_filters` channels selected when the model is instantiated (in the original paper `n_filters=64`). The overall number of parameters in the model is of course decided by the value selected for this variable.\
 Then a bottleneck layer follows and performs once again some same convolutions before the upscaling phase.\
 The decoder is instead composed of the 4 decoder blocks which also perform same convolutions again with kernel size of 3 and ReLU non-linearities, but this time are alterated by bilinear upsampling operations to bring back the image to the original size.\
-As portrayed by the gray arrows in the above image, skip connections are implemented from each encoder block to the symmetrical decoder counterpart to facilitate the training process.\
+As portrayed by the gray arrows in the above image, skip connections are implemented from each encoder block to the symmetrical decoder counterpart to facilitate the training process. The skip connections are implemented by concatenating the output of the encoder block with the input of the decoder block.\
 In our implementation, the model performs the segmentation task by taking in input the MRI scans of shape 128x128x4 and outputs a mask prediction of shape 128x128x3 to be compared with the ground truth mask layers described above.
 
 #### Improved U-Net
 
+As previously stated the total number of parameters of the previous model depends on the choice of the `n_filters` variable. However, in general, this number easily surpasses the milion parameters mark (e.g. setting `n_filters=16` already results in 1,375,043 parameters) which directly impacts training performace and inhibits possible improvements.\
+To address this issue, we implemented a second U-Net model that we called `ImprovedUNet` which aims to reduce the number of parameters while maintaining the same performance, if not improving it. The model starts from the same base architecture of the previous one but has some improvements taken from ideas in different research papers. In particular this model differs from the previous in the following ways:
 
+- **Separable Convolutions**: Instead of using the standard convolutional layers, this model uses separable convolutions, factorized in depthwise and pointwise convolutions. [TODO: Add reference]
+- **Batch Normalization**: Batch normalization layers have been added after each convolutional layer to speed up training and improve the model's generalization capabilities.
+- **Larger Kernel Size**: as found by *Liu et al.* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [TODO: Add reference], using larger kernel sizes can improve CNNs performance. I particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
+- **Inverse Bottleneck**: The bottleneck layer has been replaced by an inverse bottleneck layer that first expands the number of channels before compressing them back to the original size. [TODO: Add reference]
+- **Additive Skip Connections**: Instead of concatenating the skip connections, this model uses an additive skip connection that sums the output of the encoder blocks with the decoder blocks.
 
+These improvements significantly contribute in reducing the total numer of parameters (with `n_filters=16` the model now has 799,075 parameters). The model performs the segmentation task just like the previous one.\
+The full implementation of the model can be found in the [`improved_unet.py`](./models/improved_unet.py) script.
+
+#### Attention U-Net
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
