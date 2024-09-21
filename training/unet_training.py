@@ -14,7 +14,7 @@ import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Typining hints
-from typing import Callable, Union
+from typing import Callable, Union, List
 
 # Torch imports
 import torch as th
@@ -45,13 +45,13 @@ os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 DEVICE_AUTODETECT: bool = True
-PERCENTAGE: float = 0.5
+PERCENTAGE: float = 0.01
 SPLIT: float = 0.7
 IMG_SIZE: int = 128
-N_FILTERS: int = 16
+N_FILTERS: int = 2
 BATCH_TRAIN: int = 64
 BATCH_VALID: int = 64
-EPOCHS: int = 10
+EPOCHS: int = 3
 CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
     th.nn.BCEWithLogitsLoss()
 )
@@ -144,38 +144,101 @@ optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)
 
 
 # Save losses and metrics in a dataframe ---------------------------------------
+
+# Create lists
+dice_red: List[float] = []
+dice_green: List[float] = []
+dice_blue: List[float] = []
+dice_average: List[float] = []
+iou_red: List[float] = []
+iou_green: List[float] = []
+iou_blue: List[float] = []
+iou_average: List[float] = []
+accuracy_red: List[float] = []
+accuracy_green: List[float] = []
+accuracy_blue: List[float] = []
+accuracy_average: List[float] = []
+fpr_red: List[float] = []
+fpr_green: List[float] = []
+fpr_blue: List[float] = []
+fpr_average: List[float] = []
+fnr_red: List[float] = []
+fnr_green: List[float] = []
+fnr_blue: List[float] = []
+fnr_average: List[float] = []
+precision_red: List[float] = []
+precision_green: List[float] = []
+precision_blue: List[float] = []
+precision_average: List[float] = []
+recall_red: List[float] = []
+recall_green: List[float] = []
+recall_blue: List[float] = []
+recall_average: List[float] = []
+
+# Fill the lists
+for i in range(EPOCHS):
+    dice_red.append(dice_scores[i][0])
+    dice_green.append(dice_scores[i][1])
+    dice_blue.append(dice_scores[i][2])
+    dice_average.append(dice_scores[i][3])
+    iou_red.append(iou_scores[i][0])
+    iou_green.append(iou_scores[i][1])
+    iou_blue.append(iou_scores[i][2])
+    iou_average.append(iou_scores[i][3])
+    accuracy_red.append(accuracy_scores[i][0])
+    accuracy_green.append(accuracy_scores[i][1])
+    accuracy_blue.append(accuracy_scores[i][2])
+    accuracy_average.append(accuracy_scores[i][3])
+    fpr_red.append(fpr_scores[i][0])
+    fpr_green.append(fpr_scores[i][1])
+    fpr_blue.append(fpr_scores[i][2])
+    fpr_average.append(fpr_scores[i][3])
+    fnr_red.append(fnr_scores[i][0])
+    fnr_green.append(fnr_scores[i][1])
+    fnr_blue.append(fnr_scores[i][2])
+    fnr_average.append(fnr_scores[i][3])
+    precision_red.append(precision_scores[i][0])
+    precision_green.append(precision_scores[i][1])
+    precision_blue.append(precision_scores[i][2])
+    precision_average.append(precision_scores[i][3])
+    recall_red.append(recall_scores[i][0])
+    recall_green.append(recall_scores[i][1])
+    recall_blue.append(recall_scores[i][2])
+    recall_average.append(recall_scores[i][3])
+
+
 data = {
     "epoch": list(range(1, len(train_losses) + 1)),
     "train_loss": train_losses,
     "validation_loss": valid_losses,
-    "dice_red": dice_scores[0][0],
-    "dice_green": dice_scores[0][1],
-    "dice_blue": dice_scores[0][2],
-    "dice_average": dice_scores[0][3],
-    "iou_red": iou_scores[0][0],
-    "iou_green": iou_scores[0][1],
-    "iou_blue": iou_scores[0][2],
-    "iou_average": iou_scores[0][3],
-    "accuracy_red": accuracy_scores[0][0],
-    "accuracy_green": accuracy_scores[0][1],
-    "accuracy_blue": accuracy_scores[0][2],
-    "accuracy_average": accuracy_scores[0][3],
-    "fpr_red": fpr_scores[0][0],
-    "fpr_green": fpr_scores[0][1],
-    "fpr_blue": fpr_scores[0][2],
-    "fpr_average": fpr_scores[0][3],
-    "fnr_red": fnr_scores[0][0],
-    "fnr_green": fnr_scores[0][1],
-    "fnr_blue": fnr_scores[0][2],
-    "fnr_average": fnr_scores[0][3],
-    "precision_red": precision_scores[0][0],
-    "precision_green": precision_scores[0][1],
-    "precision_blue": precision_scores[0][2],
-    "precision_average": precision_scores[0][3],
-    "recall_red": recall_scores[0][0],
-    "recall_green": recall_scores[0][1],
-    "recall_blue": recall_scores[0][2],
-    "recall_average": recall_scores[0][3],
+    "dice_red": dice_red,
+    "dice_green": dice_green,
+    "dice_blue": dice_blue,
+    "dice_average": dice_average,
+    "iou_red": iou_red,
+    "iou_green": iou_green,
+    "iou_blue": iou_blue,
+    "iou_average": iou_average,
+    "accuracy_red": accuracy_red,
+    "accuracy_green": accuracy_green,
+    "accuracy_blue": accuracy_blue,
+    "accuracy_average": accuracy_average,
+    "fpr_red": fpr_red,
+    "fpr_green": fpr_green,
+    "fpr_blue": fpr_blue,
+    "fpr_average": fpr_average,
+    "fnr_red": fnr_red,
+    "fnr_green": fnr_green,
+    "fnr_blue": fnr_blue,
+    "fnr_average": fnr_average,
+    "precision_red": precision_red,
+    "precision_green": precision_green,
+    "precision_blue": precision_blue,
+    "precision_average": precision_average,
+    "recall_red": recall_red,
+    "recall_green": recall_green,
+    "recall_blue": recall_blue,
+    "recall_average": recall_average,
 }
 df = pd.DataFrame(data)
 model_name = model.module.name if isinstance(model, th.nn.DataParallel) else model.name
