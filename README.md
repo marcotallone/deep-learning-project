@@ -325,7 +325,7 @@ To address this issue, we implemented a second U-Net model that we called `Impro
 
 - **Separable Convolutions**: Instead of using the standard convolutional layers, this model uses separable convolutions, factorized in depthwise and pointwise convolutions. [TODO: Add reference]
 - **Batch Normalization**: Batch normalization layers have been added after each convolutional layer to speed up training and improve the model's generalization capabilities.
-- **Larger Kernel Size**: as found by *Liu et al.* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [TODO: Add reference], using larger kernel sizes can improve CNNs performance. I particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
+- **Larger Kernel Size**: as found by *Liu et al.* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [TODO: Add reference], using larger kernel sizes can improve CNNs performance. In particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
 - **Inverse Bottleneck**: The bottleneck layer has been replaced by an inverse bottleneck layer that first expands the number of channels before compressing them back to the original size. [TODO: Add reference]
 - **Additive Skip Connections**: Instead of concatenating the skip connections, this model uses an additive skip connection that sums the output of the encoder blocks with the decoder blocks.
 
@@ -333,6 +333,25 @@ These improvements significantly contribute in reducing the total numer of param
 The full implementation of the model can be found in the [`improved_unet.py`](./models/improved_unet.py) script.
 
 #### Attention U-Net
+
+The final model proposed for the segmentation task tries to incorporate in the U-Net architecture the **attention** mechanism typical of transformer models. The model, called `AttentionUNet`, is based on the paper [*Attention U-Net: Learning Where to Look for the Pancreas*](./papers/Attention-UNet.pdf) [TODO: Add reference] by *Oktay et al.*. The model is schematically depicted in the figure below while the full implementation can be found in the [`attention_unet.py`](./models/attention_unet.py) script.
+
+![Attention U-Net model](images/attention-unet-architecture.png)
+
+This model builds on top of the improvements already introduced in the previous one and adds the attention mechanism to the skip connections. The basic idea is to give the network the possibility to learn where to focus its attention when performing the segmentation task and hence giving higher priority to certain regions of the input images, possibly where the tumours are more often found. In practice this is done by implementing a *soft attention* mechanism for which, at each skip connection, the model learns a weight for each pixel of the input image. These weights are then used to multiply the output of the encoder block before summing it to the output of the decoder block. Accordingly, areas of high interest will have higher weights associated while less important areas will have lower weights. These weights are of course added parameters to the model and can be learned during training.\
+The introduction of this mechanism should, in general, be beneficial for U-Nets model and it's possible to intuitively understand why. If we look at the classical U-Net architecture we can say that the *encoder* has a very good understanding of the spatial context of the input image as it deals with the original input representation and compresses it into a lower dimensional representation. On the other hand, the *decoder* has good feature representation as the input that travel through the network has been compressed and, ideally, it's most abstract representation is passed to the decoder by the bottleneck layer. However, the decoder has poor spatial representation as this is imprecisely recreated during the upsampling phase (in our case with bilinear upsampling). To counteract this problem, the U-Net uses skip connections that combine spatial information from the downsampling path of the encoder with the upsampling path. However, this brings across many redundant low-level feature extractions, as feature representation is poor in the initial layers. Here, the previously described attention mechanism should help the model ignore these redundant features and only focus on the most important ones.\
+In practice, this mechanism is implemented as **attention gates** at the skip connections of the decoder part as shown above. Each attention gate, depicted in the image below, takes two inputs:
+
+- the *query* or *gate* tensor **g** derived from the decoder feature map, i.e. from the lower resolution representation of the input image which should however have better feature representation as the input has travelled deeper into the network and has been compressed by the bottleneck layer
+- the *key* tensor **x** taken from the encoder feature map of higher resolution which has better spatial representation but poorer feature representation
+
+![Attention gate mechanism](images/attention-gate.png)
+
+From a transformer point of view, the task is basically **to extract the regions in the encoder's features that are relevant to the query from the decoder**. The query and the key interact to produce the *attention map* which highlights areas where to focus on. The latter is produced by aligning the query tensor to the key one: this results in a set of weights that represent the importance of each of the decoder's features in the encoder's output.\
+This attention map the acts on the encoder's output **x** itself (the **value**) since it's applied to this value through element-wise multiplication that scales the features accordingly. Features that are considered relevant by the attention map (high weights) are emphasized, while others (low weights) are diminished.
+In summary, this produces a weighted feature representation where the attention is directed toward the most informative parts of the input, hence refining the information flow in the network and improving the quality of the segmentation output.\
+<!-- TODO: picture of the attention map of big model -->
+Moreover, all of these benefits come with a limited increase in the number of parameters to pay (with `n_filters=16` the model now has 843,319 parameters), making this model the most efficient of the three.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
