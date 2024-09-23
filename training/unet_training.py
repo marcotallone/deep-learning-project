@@ -6,7 +6,9 @@ print("\nImporting libraries...")
 
 # Common Python imports
 import os
+from re import L
 import sys
+from tkinter import LAST
 
 import pandas as pd
 
@@ -18,6 +20,7 @@ from typing import Callable, Union, List
 
 # Torch imports
 import torch as th
+from safetensors.torch import load_model, load_file
 
 # Model import
 from models.classic_unet import ClassicUNet
@@ -29,13 +32,13 @@ from utils.datasets import load_segmentation
 
 # Utils imports
 from utils.train import train_unet
-from utils.analysis import count_parameters
+from utils.analysis import count_parameters, remove_module_prefix
 
 # Datasets directories (relative to the project root) --------------------------
 DATASETS: str = "datasets"
 SEGMENTATION: str = os.path.join(DATASETS, "segmentation/data")
-SAVE_PATH: str = "models/saved_models"
-SAVE_METRICS_PATH: str = "models/saved_metrics"
+SAVE_PATH: str = "models/saved_models_full"
+SAVE_METRICS_PATH: str = "models/saved_metrics_full"
 
 # Create the directories if they do not exist
 os.makedirs(SAVE_PATH, exist_ok=True)
@@ -45,9 +48,9 @@ os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 DEVICE_AUTODETECT: bool = True
-PERCENTAGE: float = 0.5
-SPLIT: float = 0.7
-IMG_SIZE: int = 128
+PERCENTAGE: float = 1
+SPLIT: float = 0.9
+IMG_SIZE: int = 240
 N_FILTERS: int = 32
 BATCH_TRAIN: int = 64
 BATCH_VALID: int = 64
@@ -58,6 +61,13 @@ CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
 LR: float = 1e-3
 WEIGHT_DECAY: float = 1e-2
 
+# Pre-load interrupted training
+LOAD_SAVED_MODEL: bool = True
+SAVED_MODEL_FILE: str = os.path.join(SAVE_PATH, "AttentionUNet_e3.pth")
+LAST_EPOCH: int = 3
+
+if not LOAD_SAVED_MODEL: # Set the last epoch to 0 if not loading a saved model
+    LAST_EPOCH = 0
 
 # Device setup -----------------------------------------------------------------
 print("\nSetting up the device...")
@@ -103,9 +113,9 @@ for images, masks in valid_dataloader:
 print("\nBuilding the model...")
 
 # Select and initialize the U-Net model
-model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
+# model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
 # model: th.nn.Module = ImprovedUNet(n_filters=N_FILTERS)
-# model: th.nn.Module = AttentionUNet(n_filters=N_FILTERS)
+model: th.nn.Module = AttentionUNet(n_filters=N_FILTERS)
 
 # Move the model to the device (or devices)
 if th.cuda.device_count() > 1:
@@ -119,6 +129,16 @@ print(f"Total Parameters: {total_params:,}")
 
 # Initialize the optimizer
 optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)
+
+# Load a saved model if required
+if LOAD_SAVED_MODEL:
+    saved_dict = load_file(SAVED_MODEL_FILE)
+    model_dict = remove_module_prefix(saved_dict)
+    try:
+        model.load_state_dict(model_dict)
+        print(f"Model loaded from {SAVED_MODEL_FILE}")
+    except Exception as e:
+        print(f"Model not loaded: {e}")
 
 # Train the model
 (
@@ -138,6 +158,7 @@ optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)
     train_loader=train_dataloader,
     valid_loader=valid_dataloader,
     n_epochs=EPOCHS,
+    start_epoch=LAST_EPOCH,
     device=device,
     save_path=SAVE_PATH,
 )
@@ -176,7 +197,7 @@ recall_blue: List[float] = []
 recall_average: List[float] = []
 
 # Fill the lists
-for i in range(EPOCHS):
+for i in range(EPOCHS-LAST_EPOCH):
     dice_red.append(dice_scores[i][0])
     dice_green.append(dice_scores[i][1])
     dice_blue.append(dice_scores[i][2])

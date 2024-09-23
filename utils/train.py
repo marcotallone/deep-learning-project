@@ -32,6 +32,7 @@ def train_unet(model: th.nn.Module,
                train_loader: DataLoader,
                valid_loader: DataLoader,
                n_epochs: int,
+               start_epoch: int = 0,
                device: th.device = th.device("cpu"),
                save_path: str = None
 ) -> Tuple[List[float], 
@@ -58,6 +59,8 @@ def train_unet(model: th.nn.Module,
         DataLoader for the validation set
     n_epochs: int
         Number of epochs to train the model
+    start_epoch: int, optional (default=0)
+        Epoch to start training from
     device: th.device, optional (default=th.device("cpu"))
         Device to use for training
     save_path: str, optional (default=None)
@@ -91,8 +94,8 @@ def train_unet(model: th.nn.Module,
     print("\nTraining the model...")
 
     # Loop over the epochs
-    for epoch in tqdm.tqdm(range(1, n_epochs + 1), desc="Epoch", position=0): 
-        # or:   for epoch in range(1, n_epochs + 1):
+    for epoch in tqdm.tqdm(range(start_epoch + 1, n_epochs + 1), desc="Epoch", position=0): 
+        # or:   for epoch in range(start_epoch + 1, n_epochs + 1):
 
         # Training loop ------------------------------------
         model.train() # Set the model to training mode
