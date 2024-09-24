@@ -299,6 +299,9 @@ As stated in the original dataset description, the usage of the dataset is free 
 
 ### Classification Models
 
+The comparison between the models has been done considering accuracy, loss and confidence in the training. For what concerns the test set, which gives more interesting scores to be compared, we considered accuracy and confidence.
+Confidence gives us a measure of how much the model is sure of the prediction it is making. It is calculated passing the outputs of the model through a softmax function and extracting the maximum value, which is the probability of the class predicted by the model. The higher the confidence, the more the model is sure of the prediction it is making.
+
 ### Segmentation Models
 
 As previously anticipated 3 models have been implemented to perform the segmentation task on the BraTS 2020 dataset. These models are all based on the U-Net architecture. U-Net models consist in an **encoder** part, which compresses input images into a lower dimensional representation, and a symmetrical **decoder** part, which expands the compressed representation back to the original image size. The encoder part is usually composed of a series of convolutional layers with pooling layers in between, while the decoder part is composed of a series of convolutional layers with upsampling layers in between. Between the encoder and the decoder lies the **bottleneck** layer, which elaborates the most abstract representation of the input data and acts as a bridge between the two parts.\
