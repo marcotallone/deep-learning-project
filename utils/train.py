@@ -159,6 +159,8 @@ def train_unet(model: th.nn.Module,
         # Display current epoch loss
         print("\n------------------------")
         print(f"Epoch {epoch}/{n_epochs}")
+        print(f"Current LR:      {optimizer.param_groups[0]['lr']:.8f}")
+        print("Metrics:")
         print(f"Training loss:   {train_loss:.4f}")
         print(f"Validation loss: {valid_loss:.4f}")
         print(f"Dice [R]:        {dice_scores[-1][0]:.4f}")

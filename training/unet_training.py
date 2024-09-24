@@ -41,14 +41,15 @@ PERCENTAGE: float = 0.5
 SPLIT: float = 0.9
 IMG_SIZE: int = 240
 N_FILTERS: int = 32
-BATCH_TRAIN: int = 64
-BATCH_VALID: int = 64
+BATCH_TRAIN: int = 32
+BATCH_VALID: int = 32
 EPOCHS: int = 10
 CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
     th.nn.BCEWithLogitsLoss()
 )
 LR: float = 1e-3
 WEIGHT_DECAY: float = 1e-2
+GAMMA: float = 0.95
 
 # Datasets directories (relative to the project root) --------------------------
 DATASETS: str = "datasets"
@@ -128,6 +129,11 @@ print(f"Total Parameters: {total_params:,}")
 
 # Initialize the optimizer
 optimizer: th.optim.Optimizer = th.optim.Adam(model.parameters(), lr=LR)
+
+# Define a scheduler
+scheduler: th.optim.lr_scheduler.LRScheduler = th.optim.lr_scheduler.ExponentialLR(
+    optimizer=optimizer, gamma=GAMMA
+)
 
 # Load a saved model if required
 if LOAD_SAVED_MODEL:
