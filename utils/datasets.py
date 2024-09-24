@@ -66,7 +66,7 @@ class SegmentationPreprocessing(Dataset):
             image = file['image'][()]
             mask  = file['mask'][()]
             
-            # Reshape: (H, W, C) -> (C, H, W)
+            # Reshape: (H, W, C) -> (C, H, W) for PyTorch
             image = image.transpose((2, 0, 1))
             mask = mask.transpose((2, 0, 1))
             

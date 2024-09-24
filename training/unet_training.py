@@ -34,24 +34,13 @@ from utils.datasets import load_segmentation
 from utils.train import train_unet
 from utils.analysis import count_parameters, remove_module_prefix
 
-# Datasets directories (relative to the project root) --------------------------
-DATASETS: str = "datasets"
-SEGMENTATION: str = os.path.join(DATASETS, "segmentation/data")
-SAVE_PATH: str = "models/saved_models_full"
-SAVE_METRICS_PATH: str = "models/saved_metrics_full"
-
-# Create the directories if they do not exist
-os.makedirs(SAVE_PATH, exist_ok=True)
-os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
-
-
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 DEVICE_AUTODETECT: bool = True
-PERCENTAGE: float = 1
+PERCENTAGE: float = 0.5
 SPLIT: float = 0.9
 IMG_SIZE: int = 240
-N_FILTERS: int = 32
+N_FILTERS: int = 64
 BATCH_TRAIN: int = 64
 BATCH_VALID: int = 64
 EPOCHS: int = 10
@@ -61,10 +50,20 @@ CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
 LR: float = 1e-3
 WEIGHT_DECAY: float = 1e-2
 
+# Datasets directories (relative to the project root) --------------------------
+DATASETS: str = "datasets"
+SEGMENTATION: str = os.path.join(DATASETS, "segmentation/data")
+SAVE_PATH: str = f"models/saved_models_e{EPOCHS}_n{N_FILTERS}_{IMG_SIZE}"
+SAVE_METRICS_PATH: str = f"models/saved_metrics_e{EPOCHS}_n{N_FILTERS}_{IMG_SIZE}"
+
+# Create the directories if they do not exist
+os.makedirs(SAVE_PATH, exist_ok=True)
+os.makedirs(SAVE_METRICS_PATH, exist_ok=True)
+
 # Pre-load interrupted training
 LOAD_SAVED_MODEL: bool = False
 SAVED_MODEL_FILE: str = os.path.join(SAVE_PATH, "AttentionUNet_e3.pth")
-LAST_EPOCH: int = 3
+LAST_EPOCH: int = 0
 
 if not LOAD_SAVED_MODEL: # Set the last epoch to 0 if not loading a saved model
     LAST_EPOCH = 0
