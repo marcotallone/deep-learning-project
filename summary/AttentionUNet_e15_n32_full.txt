@@ -1,0 +1,107 @@
+Job started at Tue Sep 24 12:18:06 PM CEST 2024
+CUDA module loaded
+Conda environment activated in 72 seconds
+🚀 Starting training...
+
+Importing libraries...
+
+Setting hyperparameters...
+
+Setting up the device...
+Using device: cuda
+
+Loading the BraTS2020 dataset...
+Total examples:      57195 examples
+Train-Test split:    90% - 10%
+Train-Test examples: 51475 - 5720
+Training batch   - Images shape: torch.Size([64, 4, 240, 240]) Masks shape: torch.Size([64, 3, 240, 240])
+Validation batch - Images shape: torch.Size([64, 4, 240, 240]) Masks shape: torch.Size([64, 3, 240, 240])
+
+Building the model...
+Total Parameters: 3,258,263
+Model loaded from models/saved_models_full/AttentionUNet_e13.pth
+
+Training the model...
+
+------------------------
+Epoch 14/15
+Training loss:   1.2761
+Validation loss: 0.1487
+Dice [R]:        0.1780
+Dice [G]:        0.3198
+Dice [B]:        0.2029
+Dice [Avg]:      0.2336
+IoU [R]:         0.1615
+IoU [G]:         0.2976
+IoU [B]:         0.1808
+IoU [Avg]:       0.2133
+Accuracy [R]:    0.9995
+Accuracy [G]:    0.9988
+Accuracy [B]:    0.9996
+Accuracy [Avg]:  0.9993
+FPR [R]:         0.0002
+FPR [G]:         0.0005
+FPR [B]:         0.0001
+FPR [Avg]:       0.0003
+FNR [R]:         0.0821
+FNR [G]:         0.0861
+FNR [B]:         0.0546
+FNR [Avg]:       0.0743
+Precision [R]:   0.1979
+Precision [G]:   0.3444
+Precision [B]:   0.2104
+Precision [Avg]: 0.2509
+Recall [R]:      0.1801
+Recall [G]:      0.3319
+Recall [B]:      0.1962
+Recall [Avg]:    0.2360
+------------------------
+
+------------------------
+Epoch 15/15
+Training loss:   1.2733
+Validation loss: 0.1528
+Dice [R]:        0.1995
+Dice [G]:        0.3177
+Dice [B]:        0.2892
+Dice [Avg]:      0.2688
+IoU [R]:         0.1546
+IoU [G]:         0.2958
+IoU [B]:         0.1833
+IoU [Avg]:       0.2112
+Accuracy [R]:    0.9995
+Accuracy [G]:    0.9988
+Accuracy [B]:    0.9996
+Accuracy [Avg]:  0.9993
+FPR [R]:         0.0001
+FPR [G]:         0.0004
+FPR [B]:         0.0003
+FPR [Avg]:       0.0003
+FNR [R]:         0.1002
+FNR [G]:         0.0952
+FNR [B]:         0.0391
+FNR [Avg]:       0.0782
+Precision [R]:   0.2067
+Precision [G]:   0.3507
+Precision [B]:   0.2006
+Precision [Avg]: 0.2527
+Recall [R]:      0.1620
+Recall [G]:      0.3228
+Recall [B]:      0.2117
+Recall [Avg]:    0.2322
+------------------------
+
+Training concluded
+
+Final losses:
+Train loss: 1.2733
+Validation loss: 0.1528
+
+Performance metrics (%)
+------------------------------------------------------------
+         Dice   IoU  Accuracy  FPR   FNR  Precision  Recall
+Red     19.95 15.46     99.95 0.01 10.02      20.67   16.20
+Green   31.77 29.58     99.88 0.04  9.52      35.07   32.28
+Blue    28.92 18.33     99.96 0.03  3.91      20.06   21.17
+Average 26.88 21.12     99.93 0.03  7.82      25.27   23.22
+🏁 Job completed at Tue Sep 24 02:15:57 PM CEST 2024!
