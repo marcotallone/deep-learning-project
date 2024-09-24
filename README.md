@@ -363,6 +363,12 @@ Moreover, all of these benefits come with a limited increase in the number of pa
 
 ### Classification Models
 
+| Net | Training Loss | Training accuracy | Training confidence | Test accuracy | Test confidence |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| Custom Net | 2.6 E-03 | 1.0 | 1.0 | 0.98 | 1.0 |
+| Alex | 3.8 E-03 | 1.0 | 1.0 | 0.93 | 1.0 |
+| VGG16 | 2.6 E-06 | 1.0 | 1.0 | 0.95 | 1.0 |
+
 ### Segmentation Models
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
