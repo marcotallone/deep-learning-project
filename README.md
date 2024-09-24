@@ -299,6 +299,26 @@ As stated in the original dataset description, the usage of the dataset is free 
 
 ### Classification Models
 
+#### Convolutional Neural Network (CNN) Model
+
+As previously stated, we developed a CNN model to perform the classification task on the Brain Tumor MRI Dataset. The model was implemented starting from the AlexNet architecture and then simplified to improve its performance. The model is composed of four convolutional layers, each followed by a Mish activation function and a max pooling operation. Each convolutional layer has different channel sizes and kernel sizes to extract different features from the input images, as well as different strides and padding to control the output size. Before applying the activation function, batch normalization layers are added to speed up the training and improve the model's generalization capabilities. The output of the last convolutional layer is flattened and passed through three fully connected layers with a Mish activation function and a dropout layer to prevent overfitting. The last fully connected layer outputs the final prediction of the model.
+
+The model performs the classification task by taking in input the MRI scans of shape 128x128x3 and outputs a prediction of the class of the tumor. The model is trained using the cross-entropy loss function and the Adam optimizer, along with a learning rate scheduler to improve the training process. L2 regularization is also applied to the model's parameters to prevent overfitting.
+
+#### VIT Model
+
+A Vision Transformer (VIT) model has been implemented to perform the classification task on the Brain Tumor MRI Dataset. The model's architecture is composed of the following components:
+
+- **Patch Embeddings**: the input image is divided into patches of size 16x16 pixels; each patch is then flattened and projected into a lower-dimensional space using a linear layer.
+- **Positional Encodings**: positional encodings are added to the patch embeddings to provide the model with information about the spatial relationships between the patches. A class token is also added to the sequence of embeddings to represent the entire image.
+- **Transformer Encoder**: the patch embeddings are passed through a stack of transformer encoder layers. Specifically, the model has 10 transformer encoder layers, each composed of a multi-head self-attention mechanism followed by a feedforward neural network. Layer normalization and residual connections are applied after each encoder layer to stabilize the training process and improve the model's performance.
+- **Dropout**: dropout layers are used throughout the model to prevent overfitting and improve the model's generalization capabilities by randomly setting a fraction of the input units to zero during training.
+- **Classification Head**: the output of the final transformer encoder layer is passed through a classification head; in particular, this head consists of a layer normalization, a linear layer to map the encoded features to the number of classes, and a dropout layer to further prevent overfitting.
+
+Also this model performs the classification task by taking in input the MRI scans of shape 128x128x3 and outputs a prediction of the class of the tumor. The model is trained using the cross-entropy loss function and the Adam optimizer, along with a learning rate scheduler to improve the training process. L2 regularization is also applied to the model's parameters to prevent overfitting.
+
+#### Comparison
+
 The comparison between the models has been done considering accuracy, loss and confidence in the training. For what concerns the test set, which gives more interesting scores to be compared, we considered accuracy and confidence.
 Confidence gives us a measure of how much the model is sure of the prediction it is making. It is calculated passing the outputs of the model through a softmax function and extracting the maximum value, which is the probability of the class predicted by the model. The higher the confidence, the more the model is sure of the prediction it is making.
 
