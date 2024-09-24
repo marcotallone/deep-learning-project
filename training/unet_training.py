@@ -62,7 +62,7 @@ LR: float = 1e-3
 WEIGHT_DECAY: float = 1e-2
 
 # Pre-load interrupted training
-LOAD_SAVED_MODEL: bool = True
+LOAD_SAVED_MODEL: bool = False
 SAVED_MODEL_FILE: str = os.path.join(SAVE_PATH, "AttentionUNet_e3.pth")
 LAST_EPOCH: int = 3
 
