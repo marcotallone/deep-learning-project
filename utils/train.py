@@ -203,3 +203,79 @@ def train_unet(model: th.nn.Module,
     # Return the tracking metrics
     return train_losses, valid_losses, dice_scores, iou_scores, accuracy_scores, fpr_scores, fnr_scores, precision_scores, recall_scores
             
+
+# Evaluation function for U-Net models -----------------------------------------
+def validate_unet(model: th.nn.Module,
+                  loss_fn: th.nn.Module,
+                  valid_loader: DataLoader,
+                  device: th.device = th.device("cpu")
+) -> Tuple[List[float], 
+           List[float],
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]], 
+           List[List[float]]]:
+    """Evaluation function for U-Net models"""
+
+    # Initialize the lists for the tracking metrics
+    valid_losses: List[float] = []
+    dice_scores: List[List[float]] = []
+    iou_scores: List[List[float]] = []
+    accuracy_scores: List[List[float]] = []
+    fpr_scores: List[List[float]] = []
+    fnr_scores: List[List[float]] = []
+    precision_scores: List[List[float]] = []
+    recall_scores: List[List[float]] = []
+
+    # Move the model to the device
+    model.to(device)
+
+    print("\nEvaluating the model...")
+
+    # Validation loop ------------------------------------------
+    model.eval() # Set the model to evaluation mode
+
+    valid_loss = 0.0 # Track validation loss
+    dice_coeff: List[List[float]] = [] # Trach Dice coeff for each batch
+    iou: List[List[float]] = [] # Track IoU for each batch
+    accuracy: List[List[float]] = [] # Track accuracy for each batch
+    fpr: List[List[float]] = [] # Track false positive rate for each batch
+    fnr: List[List[float]] = [] # Track false negative rate for each batch
+    precision: List[List[float]] = [] # Track precision for each batch
+    recall: List[List[float]] = [] # Track recall for each batch
+
+    with th.no_grad():
+        for _, (x_e, y_e) in tqdm.tqdm(enumerate(valid_loader), 
+                                       desc="Validation Batch", 
+                                       position=0, 
+                                       leave=False, 
+                                       total=len(valid_loader)):
+            # or:   for x_e, y_e in valid_loader:
+            x_e, y_e = x_e.to(device), y_e.to(device) # Move the data to the device
+            yhat_e: Tensor = model(x_e) # Forward pass
+            loss_e: Tensor = loss_fn(yhat_e, y_e)
+            valid_loss += loss_e.item()
+            dice_coeff.append(dice(yhat_e, y_e))
+            iou.append(IoU(yhat_e, y_e))
+            accuracy.append(accuracy2D(yhat_e, y_e))
+            fpr.append(fpr2D(yhat_e, y_e))
+            fnr.append(fnr2D(yhat_e, y_e))
+            precision.append(precision2D(yhat_e, y_e))
+            recall.append(recall2D(yhat_e, y_e))
+
+    # Track the validation loss at the end of the epoch
+    valid_losses.append(valid_loss)
+
+    # Compute the averages of other metrics across all batches
+    dice_scores.append(np.mean(dice_coeff, axis=0).tolist())
+    iou_scores.append(np.mean(iou, axis=0).tolist())
+    accuracy_scores.append(np.mean(accuracy, axis=0).tolist())
+    fpr_scores.append(np.mean(fpr, axis=0).tolist())
+    fnr_scores.append(np.mean(fnr, axis=0).tolist())
+    precision_scores.append(np.mean(precision, axis=0).tolist())
+    recall_scores.append(np.mean(recall, axis=0).tolist())
+
+    # Return the tracking metrics
+    return valid_losses, dice_scores, iou_scores, accuracy_scores, fpr_scores, fnr_scores, precision_scores, recall_scores
+    
