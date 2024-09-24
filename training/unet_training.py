@@ -34,25 +34,38 @@ from utils.analysis import count_parameters, remove_module_prefix
 # Hyperparameters --------------------------------------------------------------
 print("\nSetting hyperparameters...")
 
-PERCENTAGE: float   = 0.01
-SPLIT: float        = 0.5
-N_FILTERS: int      = 2
-IMG_SIZE: int       = 64
-EPOCHS: int         = 6
+PERCENTAGE: float   = 0.5
+SPLIT: float        = 0.9
+N_FILTERS: int      = 32
+IMG_SIZE: int       = 240
+EPOCHS: int         = 10
 BATCH_TRAIN: int    = 32
 BATCH_VALID: int    = 32
 LR: float           = 2e-3
 WEIGHT_DECAY: float = 1e-2
 GAMMA: float        = 0.9
 
+print(f"Percentage:   {PERCENTAGE}")
+print(f"Split:        {SPLIT}")
+print(f"N Filters:    {N_FILTERS}")
+print(f"Image Size:   {IMG_SIZE}")
+print(f"Epochs:       {EPOCHS}")
+print(f"Train Batch:  {BATCH_TRAIN}")
+print(f"Valid Batch:  {BATCH_VALID}")
+print(f"LR:           {LR}")
+print(f"Weight Decay: {WEIGHT_DECAY}")
+print(f"Gamma:        {GAMMA}")
 
 # Other training options -------------------------------------------------------
 # Resume previous training from checkpoint
-RESUME_TRAINING: bool = True
+RESUME_TRAINING: bool = False
 if RESUME_TRAINING:
-    START_EPOCH: int = 3
+    START_EPOCH: int = 10
 else:
     START_EPOCH: int = 0
+
+print(f"Resume Training: {RESUME_TRAINING}")
+print(f"Start Epoch:     {START_EPOCH}")
 
 # Loss function
 CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
