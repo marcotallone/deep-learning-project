@@ -77,7 +77,7 @@ def display_image_channels(image: Tensor, title='Image Channels'):
 	fig, axes = plt.subplots(2, 2, figsize=(10, 10))
 	for idx, ax in enumerate(axes.flatten()):
 		channel_image = image[idx, :, :]  # Transpose the array to display the channel
-		ax.imshow(channel_image, cmap='magma')
+		ax.imshow(channel_image, cmap='gray')
 		ax.axis('off')
 		ax.set_title(channel_names[idx], fontsize=15)
 	plt.tight_layout()
@@ -244,7 +244,7 @@ def display_scan(scan_index: int,
 	for idx in range(4):
 		ax = fig.add_subplot(gs[0, idx])
 		channel_image = image[idx, :, :]
-		ax.imshow(channel_image, cmap='magma')
+		ax.imshow(channel_image, cmap='gray')
 		ax.axis('off')
 		ax.set_title(image_channels[idx], fontsize=labels_fontsize)
 
@@ -348,153 +348,199 @@ def display_animated(patient_index: int,
 
 
 # Plot performance metrics vs epochs -------------------------------------------
-def plot_metrics(df: pd.DataFrame, model: th.nn.Module) -> None:
+def plot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> None:
 	"""
-	Function to plot the performance metrics of a U-Net model against the epochs.
+	Function to plot the performance metrics of a U-Net model against the epochs
+	for either the training or validation set.
 	"""
 
 	# Plot all the classic U-Net metrics against the epochs
 
-	fig, ax = plt.subplots(4, 2, figsize=(15, 20))
-	fig.suptitle(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Metrics through Epochs", fontsize=16, y=1)
+	if set_name == 'train' or set_name == 'training':
 
-	# Loss
-	sns.lineplot(data=df, x='epoch', y='train_loss', label='Train Loss', ax=ax[0, 0], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='validation_loss', label='Validation Loss', ax=ax[0, 0], marker='o', color='orange')
-	ax[0, 0].set_title("Train and Validation Loss")
-	ax[0, 0].set_xlabel("Epochs")
-	ax[0, 0].set_ylabel("Loss")
-	ax[0, 0].legend()
+		fig, ax = plt.subplots(4, 2, figsize=(15, 20))
+		fig.suptitle(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Training Metrics through Epochs", fontsize=16, y=1)
 
-	# Accuracy
-	sns.lineplot(data=df, x='epoch', y='accuracy_red', label='NEC', ax=ax[0, 1], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='accuracy_green', label='ED', ax=ax[0, 1], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='accuracy_blue', label='ET', ax=ax[0, 1], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='accuracy_average', label='Average', ax=ax[0, 1], marker='o', color='black', linestyle='--')
-	ax[0, 1].set_title("Accuracy")
-	ax[0, 1].set_xlabel("Epochs")
-	ax[0, 1].set_ylabel("Accuracy")
-	ax[0, 1].legend()
+		# Loss
+		sns.lineplot(data=df, x='epoch', y='train_loss', label='Train Loss', ax=ax[0, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='validation_loss', label='Validation Loss', ax=ax[0, 0], marker='o', color='orange')
+		ax[0, 0].set_title("Train and Validation Loss")
+		ax[0, 0].set_xlabel("Epochs")
+		ax[0, 0].set_ylabel("Loss")
+		ax[0, 0].legend()
 
-	# Dice
-	sns.lineplot(data=df, x='epoch', y='dice_red', label='NEC', ax=ax[1, 0], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='dice_green', label='ED', ax=ax[1, 0], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='dice_blue', label='ET', ax=ax[1, 0], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='dice_average', label='Average', ax=ax[1, 0], marker='o', color='black', linestyle='--')
-	ax[1, 0].set_title("Dice Coefficient")
-	ax[1, 0].set_xlabel("Epochs")
-	ax[1, 0].set_ylabel("Dice")
-	ax[1, 0].legend()
+		# Accuracy
+		sns.lineplot(data=df, x='epoch', y='accuracy_red', label='NEC', ax=ax[0, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='accuracy_green', label='ED', ax=ax[0, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='accuracy_blue', label='ET', ax=ax[0, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='accuracy_average', label='Average', ax=ax[0, 1], marker='o', color='black', linestyle='--')
+		ax[0, 1].set_title("Accuracy")
+		ax[0, 1].set_xlabel("Epochs")
+		ax[0, 1].set_ylabel("Accuracy")
+		ax[0, 1].legend()
 
-	# IoU
-	sns.lineplot(data=df, x='epoch', y='iou_red', label='NEC', ax=ax[1, 1], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='iou_green', label='ED', ax=ax[1, 1], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='iou_blue', label='ET', ax=ax[1, 1], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='iou_average', label='Average', ax=ax[1, 1], marker='o', color='black', linestyle='--')
-	ax[1, 1].set_title("Intersection over Union")
-	ax[1, 1].set_xlabel("Epochs")
-	ax[1, 1].set_ylabel("IoU")
-	ax[1, 1].legend()
+		# Dice
+		sns.lineplot(data=df, x='epoch', y='dice_red', label='NEC', ax=ax[1, 0], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='dice_green', label='ED', ax=ax[1, 0], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='dice_blue', label='ET', ax=ax[1, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='dice_average', label='Average', ax=ax[1, 0], marker='o', color='black', linestyle='--')
+		ax[1, 0].set_title("Dice Coefficient")
+		ax[1, 0].set_xlabel("Epochs")
+		ax[1, 0].set_ylabel("Dice")
+		ax[1, 0].legend()
 
-	# FPR
-	sns.lineplot(data=df, x='epoch', y='fpr_red', label='NEC', ax=ax[2, 0], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='fpr_green', label='ED', ax=ax[2, 0], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='fpr_blue', label='ET', ax=ax[2, 0], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='fpr_average', label='Average', ax=ax[2, 0], marker='o', color='black', linestyle='--')
-	ax[2, 0].set_title("False Positive Rate")
-	ax[2, 0].set_xlabel("Epochs")
-	ax[2, 0].set_ylabel("FPR")
-	ax[2, 0].legend()
+		# IoU
+		sns.lineplot(data=df, x='epoch', y='iou_red', label='NEC', ax=ax[1, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='iou_green', label='ED', ax=ax[1, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='iou_blue', label='ET', ax=ax[1, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='iou_average', label='Average', ax=ax[1, 1], marker='o', color='black', linestyle='--')
+		ax[1, 1].set_title("Intersection over Union")
+		ax[1, 1].set_xlabel("Epochs")
+		ax[1, 1].set_ylabel("IoU")
+		ax[1, 1].legend()
 
-	# FNR
-	sns.lineplot(data=df, x='epoch', y='fnr_red', label='NEC', ax=ax[2, 1], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='fnr_green', label='ED', ax=ax[2, 1], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='fnr_blue', label='ET', ax=ax[2, 1], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='fnr_average', label='Average', ax=ax[2, 1], marker='o', color='black', linestyle='--')
-	ax[2, 1].set_title("False Negative Rate")
-	ax[2, 1].set_xlabel("Epochs")
-	ax[2, 1].set_ylabel("FNR")
-	ax[2, 1].legend()
+		# FPR
+		sns.lineplot(data=df, x='epoch', y='fpr_red', label='NEC', ax=ax[2, 0], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='fpr_green', label='ED', ax=ax[2, 0], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='fpr_blue', label='ET', ax=ax[2, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='fpr_average', label='Average', ax=ax[2, 0], marker='o', color='black', linestyle='--')
+		ax[2, 0].set_title("False Positive Rate")
+		ax[2, 0].set_xlabel("Epochs")
+		ax[2, 0].set_ylabel("FPR")
+		ax[2, 0].legend()
 
-	# Precision
-	sns.lineplot(data=df, x='epoch', y='precision_red', label='NEC', ax=ax[3, 0], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='precision_green', label='ED', ax=ax[3, 0], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='precision_blue', label='ET', ax=ax[3, 0], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='precision_average', label='Average', ax=ax[3, 0], marker='o', color='black', linestyle='--')
-	ax[3, 0].set_title("Precision")
-	ax[3, 0].set_xlabel("Epochs")
-	ax[3, 0].set_ylabel("Precision")
-	ax[3, 0].legend()
+		# FNR
+		sns.lineplot(data=df, x='epoch', y='fnr_red', label='NEC', ax=ax[2, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='fnr_green', label='ED', ax=ax[2, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='fnr_blue', label='ET', ax=ax[2, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='fnr_average', label='Average', ax=ax[2, 1], marker='o', color='black', linestyle='--')
+		ax[2, 1].set_title("False Negative Rate")
+		ax[2, 1].set_xlabel("Epochs")
+		ax[2, 1].set_ylabel("FNR")
+		ax[2, 1].legend()
 
-	# Recall
-	sns.lineplot(data=df, x='epoch', y='recall_red', label='NEC', ax=ax[3, 1], marker='o', color='red')
-	sns.lineplot(data=df, x='epoch', y='recall_green', label='ED', ax=ax[3, 1], marker='o', color='green')
-	sns.lineplot(data=df, x='epoch', y='recall_blue', label='ET', ax=ax[3, 1], marker='o', color='blue')
-	sns.lineplot(data=df, x='epoch', y='recall_average', label='Average', ax=ax[3, 1], marker='o', color='black', linestyle='--')
-	ax[3, 1].set_title("Recall")
-	ax[3, 1].set_xlabel("Epochs")
-	ax[3, 1].set_ylabel("Recall")
-	ax[3, 1].legend()
+		# Precision
+		sns.lineplot(data=df, x='epoch', y='precision_red', label='NEC', ax=ax[3, 0], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='precision_green', label='ED', ax=ax[3, 0], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='precision_blue', label='ET', ax=ax[3, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='precision_average', label='Average', ax=ax[3, 0], marker='o', color='black', linestyle='--')
+		ax[3, 0].set_title("Precision")
+		ax[3, 0].set_xlabel("Epochs")
+		ax[3, 0].set_ylabel("Precision")
+		ax[3, 0].legend()
 
-	plt.tight_layout()
-	plt.show()
+		# Recall
+		sns.lineplot(data=df, x='epoch', y='recall_red', label='NEC', ax=ax[3, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='recall_green', label='ED', ax=ax[3, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='recall_blue', label='ET', ax=ax[3, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='recall_average', label='Average', ax=ax[3, 1], marker='o', color='black', linestyle='--')
+		ax[3, 1].set_title("Recall")
+		ax[3, 1].set_xlabel("Epochs")
+		ax[3, 1].set_ylabel("Recall")
+		ax[3, 1].legend()
+
+		plt.tight_layout()
+		plt.show()
+
+	elif set_name == 'valid' or set_name == 'validation':
+
+		fig, ax = plt.subplots(4, 2, figsize=(15, 20))
+		fig.suptitle(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Validation Metrics through Epochs", fontsize=16, y=1)
+
+		# Loss
+		sns.lineplot(data=df, x='epoch', y='train_loss', label='Train Loss', ax=ax[0, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='validation_loss', label='Validation Loss', ax=ax[0, 0], marker='o', color='orange')
+		ax[0, 0].set_title("Train and Validation Loss")
+		ax[0, 0].set_xlabel("Epochs")
+		ax[0, 0].set_ylabel("Loss")
+		ax[0, 0].legend()
+
+		# Accuracy
+		sns.lineplot(data=df, x='epoch', y='accuracy_red_e', label='NEC', ax=ax[0, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='accuracy_green_e', label='ED', ax=ax[0, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='accuracy_blue_e', label='ET', ax=ax[0, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='accuracy_average_e', label='Average', ax=ax[0, 1], marker='o', color='black', linestyle='--')
+		ax[0, 1].set_title("Accuracy")
+		ax[0, 1].set_xlabel("Epochs")
+		ax[0, 1].set_ylabel("Accuracy")
+		ax[0, 1].legend()
+
+		# Dice
+		sns.lineplot(data=df, x='epoch', y='dice_red_e', label='NEC', ax=ax[1, 0], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='dice_green_e', label='ED', ax=ax[1, 0], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='dice_blue_e', label='ET', ax=ax[1, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='dice_average_e', label='Average', ax=ax[1, 0], marker='o', color='black', linestyle='--')
+		ax[1, 0].set_title("Dice Coefficient")
+		ax[1, 0].set_xlabel("Epochs")
+		ax[1, 0].set_ylabel("Dice")
+		ax[1, 0].legend()
+
+		# IoU
+		sns.lineplot(data=df, x='epoch', y='iou_red_e', label='NEC', ax=ax[1, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='iou_green_e', label='ED', ax=ax[1, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='iou_blue_e', label='ET', ax=ax[1, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='iou_average_e', label='Average', ax=ax[1, 1], marker='o', color='black', linestyle='--')
+		ax[1, 1].set_title("Intersection over Union")
+		ax[1, 1].set_xlabel("Epochs")
+		ax[1, 1].set_ylabel("IoU")
+		ax[1, 1].legend()
+
+		# FPR
+		sns.lineplot(data=df, x='epoch', y='fpr_red_e', label='NEC', ax=ax[2, 0], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='fpr_green_e', label='ED', ax=ax[2, 0], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='fpr_blue_e', label='ET', ax=ax[2, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='fpr_average_e', label='Average', ax=ax[2, 0], marker='o', color='black', linestyle='--')
+		ax[2, 0].set_title("False Positive Rate")
+		ax[2, 0].set_xlabel("Epochs")
+		ax[2, 0].set_ylabel("FPR")
+		ax[2, 0].legend()
+
+		# FNR
+		sns.lineplot(data=df, x='epoch', y='fnr_red_e', label='NEC', ax=ax[2, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='fnr_green_e', label='ED', ax=ax[2, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='fnr_blue_e', label='ET', ax=ax[2, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='fnr_average_e', label='Average', ax=ax[2, 1], marker='o', color='black', linestyle='--')
+		ax[2, 1].set_title("False Negative Rate")
+		ax[2, 1].set_xlabel("Epochs")
+		ax[2, 1].set_ylabel("FNR")
+		ax[2, 1].legend()
+
+		# Precision
+		sns.lineplot(data=df, x='epoch', y='precision_red_e', label='NEC', ax=ax[3, 0], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='precision_green_e', label='ED', ax=ax[3, 0], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='precision_blue_e', label='ET', ax=ax[3, 0], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='precision_average_e', label='Average', ax=ax[3, 0], marker='o', color='black', linestyle='--')
+		ax[3, 0].set_title("Precision")
+		ax[3, 0].set_xlabel("Epochs")
+		ax[3, 0].set_ylabel("Precision")
+		ax[3, 0].legend()
+
+		# Recall
+		sns.lineplot(data=df, x='epoch', y='recall_red_e', label='NEC', ax=ax[3, 1], marker='o', color='red')
+		sns.lineplot(data=df, x='epoch', y='recall_green_e', label='ED', ax=ax[3, 1], marker='o', color='green')
+		sns.lineplot(data=df, x='epoch', y='recall_blue_e', label='ET', ax=ax[3, 1], marker='o', color='blue')
+		sns.lineplot(data=df, x='epoch', y='recall_average_e', label='Average', ax=ax[3, 1], marker='o', color='black', linestyle='--')
+		ax[3, 1].set_title("Recall")
+		ax[3, 1].set_xlabel("Epochs")
+		ax[3, 1].set_ylabel("Recall")
+		ax[3, 1].legend()
+
+		plt.tight_layout()
+		plt.show()
+
+	else:
+		raise ValueError("The set_name parameter must be either 'train' or 'valid'.")
+
 
 # Barplot of the performance metrics -------------------------------------------
-def barplot_metrics(df: pd.DataFrame, model: th.nn.Module) -> None:
+def barplot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> None:
 	"""
 	Function to plot the final performance metrics of a U-Net model as a barplot.
+	for either the training or validation set.
 	"""
 
-	# Convert dataframe format collecting final metrics
-	data = {
-		'Channel': ['Red', 'Green', 'Blue', 'Average'],
-		'Dice': [df['dice_red'].iloc[-1], df['dice_green'].iloc[-1], df['dice_blue'].iloc[-1], df['dice_average'].iloc[-1]],
-		'IoU': [df['iou_red'].iloc[-1], df['iou_green'].iloc[-1], df['iou_blue'].iloc[-1], df['iou_average'].iloc[-1]],
-		'Accuracy': [df['accuracy_red'].iloc[-1], df['accuracy_green'].iloc[-1], df['accuracy_blue'].iloc[-1], df['accuracy_average'].iloc[-1]],
-		'FPR': [df['fpr_red'].iloc[-1], df['fpr_green'].iloc[-1], df['fpr_blue'].iloc[-1], df['fpr_average'].iloc[-1]],
-		'FNR': [df['fnr_red'].iloc[-1], df['fnr_green'].iloc[-1], df['fnr_blue'].iloc[-1], df['fnr_average'].iloc[-1]],
-		'Precision': [df['precision_red'].iloc[-1], df['precision_green'].iloc[-1], df['precision_blue'].iloc[-1], df['precision_average'].iloc[-1]],
-		'Recall': [df['recall_red'].iloc[-1], df['recall_green'].iloc[-1], df['recall_blue'].iloc[-1], df['recall_average'].iloc[-1]],
-	}
+	if set_name == 'train' or set_name == 'training':
 
-	# Create a new DataFrame
-	new_df = pd.DataFrame(data)
-	
-	# Melt the DataFrame
-	df_melted = pd.melt(new_df, id_vars="Channel", var_name="metric", value_name="value")
-
-	# Define a palette
-	palette = {
-		'Red': 'red',
-		'Blue': 'blue',
-		'Green': 'green',
-		'Average': 'gray',
-	}
-
-	# Plot using catplot for combined accuracies and losses
-	g = sns.catplot(x='metric', y='value', hue='Channel', data=df_melted, kind='bar', height=5, aspect=1.1, palette=palette)
-	g.set(ylim=(0, 1))
-	g.set_axis_labels("", "")
-	for ax in g.axes.flat: ax.set_yticks([i * 0.1 for i in range(11)])
-	title = f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Final Metrics"
-	g.fig.suptitle(title, y=1.08)
-
-	# Conver the legent orientation to horizontal and move it on top + remove legend title
-	sns.move_legend(g, "upper center", bbox_to_anchor=(0.5, 1.05), ncol=4, title=None)
-
-	plt.show()
-
-
-def barplot_metrics_multiple(dfs: list, models: list) -> None:
-	"""
-	Function to plot the final performance metrics of multiple U-Net models as barplots in a 1x3 grid.
-	"""
-	assert len(dfs) == len(models), "The number of DataFrames must match the number of models."
-
-	# Create a figure and axes for the 1x3 grid
-	fig, axes = plt.subplots(1, 3, figsize=(17, 5), squeeze=True)
-
-	for i, (df, model) in enumerate(zip(dfs, models)):
 		# Convert dataframe format collecting final metrics
 		data = {
 			'Channel': ['Red', 'Green', 'Blue', 'Average'],
@@ -521,14 +567,129 @@ def barplot_metrics_multiple(dfs: list, models: list) -> None:
 			'Average': 'gray',
 		}
 
-		# Plot using barplot for combined accuracies and losses
-		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted, ax=axes[i], palette=palette)
-		axes[i].set(ylim=(0, 1))
-		axes[i].set_yticks([i * 0.1 for i in range(11)])
-		axes[i].set_xlabel("")
-		axes[i].set_ylabel("")
-		axes[i].set_title(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Final Metrics", y=1.16)
-		axes[i].legend(title="", loc='upper center', bbox_to_anchor=(0.5, 1.16), ncol=4)
+		# Plot using catplot for combined accuracies and losses
+		g = sns.catplot(x='metric', y='value', hue='Channel', data=df_melted, kind='bar', height=5, aspect=1.1, palette=palette)
+		g.set(ylim=(0, 1))
+		g.set_axis_labels("", "")
+		for ax in g.axes.flat: ax.set_yticks([i * 0.1 for i in range(11)])
+		title = f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Final  Training Metrics"
+		g.fig.suptitle(title, y=1.08)
+
+		# Conver the legent orientation to horizontal and move it on top + remove legend title
+		sns.move_legend(g, "upper center", bbox_to_anchor=(0.5, 1.05), ncol=4, title=None)
+
+		plt.show()
+
+	elif set_name == 'valid' or set_name == 'validation':
+
+		# Convert dataframe format collecting final metrics
+		data = {
+			'Channel': ['Red', 'Green', 'Blue', 'Average'],
+			'Dice': [df['dice_red_e'].iloc[-1], df['dice_green_e'].iloc[-1], df['dice_blue_e'].iloc[-1], df['dice_average_e'].iloc[-1]],
+			'IoU': [df['iou_red_e'].iloc[-1], df['iou_green_e'].iloc[-1], df['iou_blue_e'].iloc[-1], df['iou_average_e'].iloc[-1]],
+			'Accuracy': [df['accuracy_red_e'].iloc[-1], df['accuracy_green_e'].iloc[-1], df['accuracy_blue_e'].iloc[-1], df['accuracy_average_e'].iloc[-1]],
+			'FPR': [df['fpr_red_e'].iloc[-1], df['fpr_green_e'].iloc[-1], df['fpr_blue_e'].iloc[-1], df['fpr_average_e'].iloc[-1]],
+			'FNR': [df['fnr_red_e'].iloc[-1], df['fnr_green_e'].iloc[-1], df['fnr_blue_e'].iloc[-1], df['fnr_average_e'].iloc[-1]],
+			'Precision': [df['precision_red_e'].iloc[-1], df['precision_green_e'].iloc[-1], df['precision_blue_e'].iloc[-1], df['precision_average_e'].iloc[-1]],
+			'Recall': [df['recall_red_e'].iloc[-1], df['recall_green_e'].iloc[-1], df['recall_blue_e'].iloc[-1], df['recall_average_e'].iloc[-1]],
+		}
+
+		# Create a new DataFrame
+		new_df = pd.DataFrame(data)
+		
+		# Melt the DataFrame
+		df_melted = pd.melt(new_df, id_vars="Channel", var_name="metric", value_name="value")
+
+		# Define a palette
+		palette = {
+			'Red': 'red',
+			'Blue': 'blue',
+			'Green': 'green',
+			'Average': 'gray',
+		}
+
+		# Plot using catplot for combined accuracies and losses
+		g = sns.catplot(x='metric', y='value', hue='Channel', data=df_melted, kind='bar', height=5, aspect=1.1, palette=palette)
+		g.set(ylim=(0, 1))
+		g.set_axis_labels("", "")
+		for ax in g.axes.flat: ax.set_yticks([i * 0.1 for i in range(11)])
+		title = f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Final Validation Metrics"
+		g.fig.suptitle(title, y=1.08)
+
+		# Conver the legent orientation to horizontal and move it on top + remove legend title
+		sns.move_legend(g, "upper center", bbox_to_anchor=(0.5, 1.05), ncol=4, title=None)
+
+		plt.show()
+
+	else:
+		raise ValueError("The set_name parameter must be either 'train' or 'valid'.")
+
+
+def barplot_metrics_multiple(dfs: list, models: list) -> None:
+	"""
+	Function to plot the final performance metrics of multiple U-Net models as barplots in a 2xn_model grid.
+	"""
+	assert len(dfs) == len(models), "The number of DataFrames must match the number of models."
+
+	# Create a figure and axes for the 1x3 grid
+	fig, axes = plt.subplots(2, len(dfs), figsize=(6*len(dfs), 10), squeeze=True)
+
+	for i, (df, model) in enumerate(zip(dfs, models)):
+		# Convert dataframe format collecting final metrics
+		data = {
+			'Channel': ['Red', 'Green', 'Blue', 'Average'],
+			'Dice': [df['dice_red'].iloc[-1], df['dice_green'].iloc[-1], df['dice_blue'].iloc[-1], df['dice_average'].iloc[-1]],
+			'IoU': [df['iou_red'].iloc[-1], df['iou_green'].iloc[-1], df['iou_blue'].iloc[-1], df['iou_average'].iloc[-1]],
+			'Accuracy': [df['accuracy_red'].iloc[-1], df['accuracy_green'].iloc[-1], df['accuracy_blue'].iloc[-1], df['accuracy_average'].iloc[-1]],
+			'FPR': [df['fpr_red'].iloc[-1], df['fpr_green'].iloc[-1], df['fpr_blue'].iloc[-1], df['fpr_average'].iloc[-1]],
+			'FNR': [df['fnr_red'].iloc[-1], df['fnr_green'].iloc[-1], df['fnr_blue'].iloc[-1], df['fnr_average'].iloc[-1]],
+			'Precision': [df['precision_red'].iloc[-1], df['precision_green'].iloc[-1], df['precision_blue'].iloc[-1], df['precision_average'].iloc[-1]],
+			'Recall': [df['recall_red'].iloc[-1], df['recall_green'].iloc[-1], df['recall_blue'].iloc[-1], df['recall_average'].iloc[-1]],
+		}
+		data_e = {
+			'Channel': ['Red', 'Green', 'Blue', 'Average'],
+			'Dice': [df['dice_red_e'].iloc[-1], df['dice_green_e'].iloc[-1], df['dice_blue_e'].iloc[-1], df['dice_average_e'].iloc[-1]],
+			'IoU': [df['iou_red_e'].iloc[-1], df['iou_green_e'].iloc[-1], df['iou_blue_e'].iloc[-1], df['iou_average_e'].iloc[-1]],
+			'Accuracy': [df['accuracy_red_e'].iloc[-1], df['accuracy_green_e'].iloc[-1], df['accuracy_blue_e'].iloc[-1], df['accuracy_average_e'].iloc[-1]],
+			'FPR': [df['fpr_red_e'].iloc[-1], df['fpr_green_e'].iloc[-1], df['fpr_blue_e'].iloc[-1], df['fpr_average_e'].iloc[-1]],
+			'FNR': [df['fnr_red_e'].iloc[-1], df['fnr_green_e'].iloc[-1], df['fnr_blue_e'].iloc[-1], df['fnr_average_e'].iloc[-1]],
+			'Precision': [df['precision_red_e'].iloc[-1], df['precision_green_e'].iloc[-1], df['precision_blue_e'].iloc[-1], df['precision_average_e'].iloc[-1]],
+			'Recall': [df['recall_red_e'].iloc[-1], df['recall_green_e'].iloc[-1], df['recall_blue_e'].iloc[-1], df['recall_average_e'].iloc[-1]],
+		}
+
+		# Create a new DataFrame
+		new_df = pd.DataFrame(data)
+		new_df_e = pd.DataFrame(data_e)
+		
+		# Melt the DataFrame
+		df_melted = pd.melt(new_df, id_vars="Channel", var_name="metric", value_name="value")
+		df_melted_e = pd.melt(new_df_e, id_vars="Channel", var_name="metric", value_name="value")
+
+		# Define a palette
+		palette = {
+			'Red': 'red',
+			'Blue': 'blue',
+			'Green': 'green',
+			'Average': 'gray',
+		}
+
+		# Plot using barplot training metrics in first row
+		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted, ax=axes[0, i], palette=palette)
+		axes[0, i].set(ylim=(0, 1))
+		axes[0, i].set_yticks([i * 0.1 for i in range(11)])
+		axes[0, i].set_xlabel("")
+		axes[0, i].set_ylabel("Training Metrics")
+		axes[0, i].set_title(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Training Metrics", y=1.16)
+		axes[0, i].legend(title="", loc='upper center', bbox_to_anchor=(0.5, 1.16), ncol=4)
+
+		# Plot using barplot validation metrics in second row
+		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted_e, ax=axes[1, i], palette=palette)
+		axes[1, i].set(ylim=(0, 1))
+		axes[1, i].set_yticks([i * 0.1 for i in range(11)])
+		axes[1, i].set_xlabel("")
+		axes[1, i].set_ylabel("Validation Metrics")
+		axes[1, i].set_title(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Validation Metrics", y=1.16)
+		axes[1, i].legend(title="", loc='upper center', bbox_to_anchor=(0.5, 1.16), ncol=4)
 
 	# Adjust layout
 	plt.tight_layout()
