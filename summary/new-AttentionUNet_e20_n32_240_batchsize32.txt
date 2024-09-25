@@ -1,0 +1,192 @@
+Job started at Wed Sep 25 01:35:49 AM CEST 2024
+CUDA module loaded
+Conda environment activated in 7 seconds
+🚀 Starting training...
+
+Importing libraries...
+
+Setting hyperparameters...
+Percentage:   0.5
+Split:        0.9
+N Filters:    32
+Image Size:   240
+Epochs:       20
+Train Batch:  32
+Valid Batch:  32
+LR:           0.002
+Weight Decay: 0.01
+Gamma:        0.9
+Resume Training: True
+Start Epoch:     10
+
+Setting up the device...
+Using device: cuda
+
+Loading the BraTS2020 dataset...
+Total examples:      28413 examples
+Train-Test split:    90% - 10%
+Train-Test examples: 25571 - 2842
+Training batch   - Images shape: torch.Size([32, 4, 240, 240]) Masks shape: torch.Size([32, 3, 240, 240])
+Validation batch - Images shape: torch.Size([32, 4, 240, 240]) Masks shape: torch.Size([32, 3, 240, 240])
+
+Building the model...
+Model: AttentionUNet
+Total Parameters: 3258263
+
+Model loaded from checkpoint file models/saved_models/AttentionUNet_e10.pth
+Resuming training from epoch 10
+
+Training the model...
+
+------------------------
+Epoch 11/20
+Training loss:   2.5953
+Validation loss: 0.2863
+Current LR: 6.97e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.32 0.30      1.00 0.00 0.14       0.36    0.34
+Green    0.54 0.51      1.00 0.00 0.16       0.61    0.56
+Blue     0.36 0.34      1.00 0.00 0.09       0.39    0.37
+Average  0.41 0.38      1.00 0.00 0.13       0.45    0.42
+------------------------------------------------------------
+
+------------------------
+Epoch 12/20
+Training loss:   2.5043
+Validation loss: 0.2760
+Current LR: 6.28e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.32 0.30      1.00 0.00 0.16       0.37    0.33
+Green    0.55 0.52      1.00 0.00 0.13       0.59    0.59
+Blue     0.36 0.34      1.00 0.00 0.09       0.39    0.37
+Average  0.41 0.39      1.00 0.00 0.13       0.45    0.43
+------------------------------------------------------------
+
+------------------------
+Epoch 13/20
+Training loss:   2.4024
+Validation loss: 0.2678
+Current LR: 5.65e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.32 0.30      1.00 0.00 0.15       0.37    0.33
+Green    0.56 0.53      1.00 0.00 0.14       0.61    0.58
+Blue     0.36 0.34      1.00 0.00 0.09       0.39    0.37
+Average  0.41 0.39      1.00 0.00 0.13       0.46    0.43
+------------------------------------------------------------
+
+------------------------
+Epoch 14/20
+Training loss:   2.3111
+Validation loss: 0.2703
+Current LR: 5.08e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.32 0.29      1.00 0.00 0.18       0.38    0.30
+Green    0.56 0.53      1.00 0.00 0.12       0.60    0.60
+Blue     0.36 0.34      1.00 0.00 0.08       0.38    0.38
+Average  0.41 0.39      1.00 0.00 0.13       0.46    0.43
+------------------------------------------------------------
+
+------------------------
+Epoch 15/20
+Training loss:   2.2411
+Validation loss: 0.2603
+Current LR: 4.58e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.32 0.31      1.00 0.00 0.15       0.38    0.34
+Green    0.56 0.53      1.00 0.00 0.15       0.62    0.57
+Blue     0.36 0.34      1.00 0.00 0.09       0.40    0.37
+Average  0.41 0.39      1.00 0.00 0.13       0.46    0.43
+------------------------------------------------------------
+
+------------------------
+Epoch 16/20
+Training loss:   2.1955
+Validation loss: 0.2561
+Current LR: 4.12e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.33 0.31      1.00 0.00 0.13       0.37    0.35
+Green    0.57 0.53      1.00 0.00 0.13       0.61    0.59
+Blue     0.36 0.35      1.00 0.00 0.08       0.39    0.38
+Average  0.42 0.40      1.00 0.00 0.11       0.46    0.44
+------------------------------------------------------------
+
+------------------------
+Epoch 17/20
+Training loss:   2.1276
+Validation loss: 0.2477
+Current LR: 3.71e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.33 0.31      1.00 0.00 0.14       0.38    0.35
+Green    0.56 0.53      1.00 0.00 0.15       0.63    0.57
+Blue     0.36 0.34      1.00 0.00 0.09       0.40    0.37
+Average  0.42 0.40      1.00 0.00 0.13       0.47    0.43
+------------------------------------------------------------
+
+------------------------
+Epoch 18/20
+Training loss:   2.0717
+Validation loss: 0.2431
+Current LR: 3.34e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.34 0.32      1.00 0.00 0.13       0.37    0.36
+Green    0.57 0.54      1.00 0.00 0.12       0.61    0.60
+Blue     0.36 0.35      1.00 0.00 0.09       0.40    0.37
+Average  0.42 0.40      1.00 0.00 0.11       0.46    0.44
+------------------------------------------------------------
+
+------------------------
+Epoch 19/20
+Training loss:   2.0227
+Validation loss: 0.2447
+Current LR: 3.00e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.34 0.32      1.00 0.00 0.14       0.38    0.35
+Green    0.57 0.54      1.00 0.00 0.11       0.60    0.62
+Blue     0.36 0.35      1.00 0.00 0.09       0.40    0.37
+Average  0.42 0.40      1.00 0.00 0.11       0.46    0.45
+------------------------------------------------------------
+
+------------------------
+Epoch 20/20
+Training loss:   1.9869
+Validation loss: 0.2364
+Current LR: 2.70e-04
+
+Metrics (%)
+------------------------------------------------------------
+         Dice  IoU  Accuracy  FPR  FNR  Precision  Recall
+Red      0.34 0.32      1.00 0.00 0.13       0.38    0.35
+Green    0.57 0.54      1.00 0.00 0.14       0.63    0.58
+Blue     0.37 0.35      1.00 0.00 0.09       0.40    0.37
+Average  0.43 0.40      1.00 0.00 0.12       0.47    0.44
+------------------------------------------------------------
+
+Training concluded
+🏁 Job completed at Wed Sep 25 03:15:46 AM CEST 2024!
