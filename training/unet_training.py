@@ -56,6 +56,7 @@ print(f"LR:           {LR}")
 print(f"Weight Decay: {WEIGHT_DECAY}")
 print(f"Gamma:        {GAMMA}")
 
+
 # Other training options -------------------------------------------------------
 # Resume previous training from checkpoint
 RESUME_TRAINING: bool = False
