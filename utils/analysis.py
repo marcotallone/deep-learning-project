@@ -328,6 +328,9 @@ def display_animated(patient_index: int,
 		plt.imshow(img)
 		plt.axis('off')
 
+		# Adjust layout to remove white borders
+		plt.subplots_adjust(left=0, right=1, top=0.9, bottom=0)
+
 	# Create the animation
 	ani = animation.FuncAnimation(fig, update, frames=scan_range, interval=interval)
 
@@ -361,6 +364,12 @@ def plot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> None:
 		fig, ax = plt.subplots(4, 2, figsize=(15, 20))
 		fig.suptitle(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Training Metrics through Epochs", fontsize=16, y=1)
 
+		# Set all the axes xticks as the epochs
+		epochs = df['epoch'].values
+		for i in range(4):
+			for j in range(2):
+				ax[i, j].set_xticks(epochs)
+
 		# Loss
 		sns.lineplot(data=df, x='epoch', y='train_loss', label='Train Loss', ax=ax[0, 0], marker='o', color='blue')
 		sns.lineplot(data=df, x='epoch', y='validation_loss', label='Validation Loss', ax=ax[0, 0], marker='o', color='orange')
@@ -368,6 +377,7 @@ def plot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> None:
 		ax[0, 0].set_xlabel("Epochs")
 		ax[0, 0].set_ylabel("Loss")
 		ax[0, 0].legend()
+
 
 		# Accuracy
 		sns.lineplot(data=df, x='epoch', y='accuracy_red', label='NEC', ax=ax[0, 1], marker='o', color='red')
@@ -446,6 +456,12 @@ def plot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> None:
 
 		fig, ax = plt.subplots(4, 2, figsize=(15, 20))
 		fig.suptitle(f"{model.module.name if isinstance(model, th.nn.DataParallel) else model.name} Validation Metrics through Epochs", fontsize=16, y=1)
+
+		# Set all the axes xticks as the epochs
+		epochs = df['epoch'].values
+		for i in range(4):
+			for j in range(2):
+				ax[i, j].set_xticks(epochs)
 
 		# Loss
 		sns.lineplot(data=df, x='epoch', y='train_loss', label='Train Loss', ax=ax[0, 0], marker='o', color='blue')
