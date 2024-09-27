@@ -302,7 +302,7 @@ Each encoder block is composed of 2 convolutional layers that perform a same con
 Then a bottleneck layer follows and performs once again some same convolutions before the upscaling phase.\
 The decoder is instead composed of the 4 decoder blocks which also perform same convolutions again with kernel size of 3 and ReLU non-linearities, but this time are alterated by bilinear upsampling operations to bring back the image to the original size.\
 As portrayed by the gray arrows in the above image, skip connections are implemented from each encoder block to the symmetrical decoder counterpart to facilitate the training process. The skip connections are implemented by concatenating the output of the encoder block with the input of the decoder block.\
-In our implementation, the model performs the segmentation task by taking in input the MRI scans of shape 128x128x4 and outputs a mask prediction of shape 128x128x3 to be compared with the ground truth mask layers described above.
+In our implementation, the model performs the segmentation task by taking in input the MRI scans of shape 240x240x4 and outputs a mask prediction of shape 240x240x3 to be compared with the ground truth mask layers described above.
 
 #### Improved U-Net
 
