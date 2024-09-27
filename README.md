@@ -78,19 +78,18 @@ For the development of the models, the following two datasets have been used:
 With the data at our disposal, we have developed the following models:
 
 - For the **classification** task:
-  - CNN model
-  - AlexNet model
-  - VGG-16 model
-  - A VIT model
+  - [Customly developed CNN](./models/custom_cnn.py) model
+  - [`AlexNet`](./models/alexnet.py) model
+  - [`VGG-16`](./models/vgg16.py) model
+  - [`VIT`](./models/vit.py) model
 
 - For the **segmentation** task:
   - [`ClassicUNet`](./models/classic_unet.py) model
   - [`ImprovedUNet`](./models/improved_unet.py) model
   - [`AttentionUNet`](./models/attention_unet.py) model
 
-All the implemented models come wiht trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\
+All the implemented models come with trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\
 Further details about the datasets and the implemented models are given below, after installation instructions, dependencies requirements and usage examples.
-<!-- TODO: Add datasets detailed description and models description and performance -->
 
 ### Project Structure
 
@@ -104,9 +103,15 @@ The project is structured as follows:
 │  └──📁 segmentation       # Segmentation data (BraTS2020)
 ├──🖼️ images                # Other images
 ├──📁 jobs                  # SLURM Jobs
+│  ├── cnn.job
+│  ├── vit.job
 │  └── unet.job
 ├── LICENSE                 # License
 ├──🤖 models                # Models implementations
+│  ├── alexnet.py
+│  ├── custom_cnn.py
+│  ├── vit.py
+│  ├── vgg16.py
 │  ├── attention_unet.py
 │  ├── classic_unet.py
 │  ├── improved_unet.py
@@ -129,53 +134,7 @@ The project is structured as follows:
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=for-the-badge&logo=jupyter&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Kaggle](https://img.shields.io/badge/Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!--TODO LiST -->
-## TODO
-
-List of things to be done for the project:
-
-#### Classification
-
-- [x] Create a CNN model for classification
-- [x] Create a VIT model for classification
-- [x] Add residual/skip connections to the CNN models
-- [x] Visualize CNN layers/kernels to see if there is something interesting they observe
-- [x] Compare CNN models (AlexNet, VGG, ...) one with the other (in particular prediction confidence before extracting softmax)
-
-#### Segmentation
-
-- [x] Create a U-Net model for segmentation
-- [x] Fix U-Net input images size and kernels parameters for faster training...
-- [x] Find suitable metric for segmentation models predictions
-- [ ] Visualize UNet models attention blocks to see if they are focusing on the right regions
-- [ ] Extend U-Nets model for segmentation to see if they can predict life expectancy of the patient from tumor prediction
-
-#### General
-
-- [ ] Write README file with all the information
-- [ ] Do presentation for the project
-- [ ] REMOVE TODO and USEFUL LINKS AT THE END
-- [ ] Review static typing in models definitions
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- USEFUL LINKS -->
-## Useful Links
-
-- [Classification Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset)
-
-- [Segmentation Dataset](https://www.kaggle.com/datasets/awsaf49/brats2020-training-data)
-
-- [CNN YouTube Videos](https://www.youtube.com/watch?v=ArPaAX_PhIs&list=PLkDaE6sCZn6Gl29AoE31iwdVwSG-KnDzF)
-
-- [Brain Tumor Segmentation U-Net Notebook](https://www.kaggle.com/code/auxeno/brain-tumour-segmentation-cv)
-
-- [Trasformers in Pytorch](https://www.kaggle.com/code/auxeno/transformers-from-scratch-dl)
-
-- [VIT - Transformers for images in Pytorch (video)](https://www.youtube.com/watch?v=ovB0ddFtzzA)
+![Conda](https://img.shields.io/badge/Conda-44A833?style=for-the-badge&logo=anaconda&logoColor=white)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -194,8 +153,9 @@ Among the less common Python libraries used, we instead mention:
 - `h5py` version 3.11.0 for handling HDF5 files
 - `kaggle` (API package) version 1.6.17
 - `imutils` version 0.5.4 for image processing utilities
+- `einops` version 0.8.0 for tensor manipulation
 
-To quickly download the datasets, we provide a [`download.py`](./datasets/download.py) script that will download the datasets from the provided links and extract them in the `datasets` folder while also performing the necessary preprocessing steps. In order to correctly use the script you wil need to have installed the `kaggle` Python package and have a valid Kaggle API token in your home directory. More information on how to get the Kaggle API token can be found [here](https://www.kaggle.com/docs/api).
+To quickly download the datasets, we provide a [`download.py`](./datasets/download.py) script that will download the datasets from the provided links and extract them in the `datasets` folder while also performing the necessary preprocessing steps. In order to correctly use the script you wil need to have installed the `kaggle` Python package and have a valid Kaggle API token in your home `.kaggle/` directory. More information on how to get the Kaggle API token can be found [here](https://www.kaggle.com/docs/api).
 
 >[!WARNING]
 > Downloading the datasets from Kaggle manually and placing them in the `datasets/` folder is also possible but mind that it might be necessary to update the paths to the data in all the scripts depending on how you named the folders and files.
@@ -236,7 +196,7 @@ python training/train_script.py
 >[!WARNING]
 > Remember to always run python scripts from the **root folder** of the project in order to correctly import the necessary modules and packages.
 
-For an example on how to define and use one of the provided models refer to each model documentation in the [`models/`](./models) folder. For instance, defining a model can be as easy as shown in lines 100-105 of the [`training_unet.py`](./training/training_unet.py) script:
+For an example on how to define and use one of the provided models refer to each model documentation in the [`models/`](./models) folder. For instance, defining a model can be as easy as shown in the following lines of the [`unet_training.py`](./training/unet_training.py) script:
 
 ```python
 # Select and initialize the U-Net model
@@ -285,11 +245,11 @@ The original data also have a **mask** associated to each slice. In fact, all th
 
 The main task proposed by this dataset is therefore the implementation of machine learning algorithms for the segmentation of brain tumours from MRI images. However the dataset also comes with metadata information for each volume, such as the patient's age, survival days, and more. This allows for the development of more complex models that can for instance predict the patient's life expectancy from the tumour segmentation itself.\
 The original scans are available in `HDF5` (`.h5`) format to save memory space and to speed up the data loading process. The provided [`download.py`](./datasets/download.py) script will automatically download and extract the data in the correct folder.\
-As shown in the implemented Python notebooks, data can be loaded as multi-channel images and each channel, both for the input scan and for the ground truth mask, can be visualized independently as shown in the animated GIF below which represents the 155 scans for the first patient as well as the overlay of the 3 masks channel in the last picture.
+As shown in the implemented Python notebooks, data can be loaded as multi-channel images and each channel, both for the input scan and for the ground truth mask, can be visualized independently as shown in the animated GIF below which represents some the 155 scans for the first patient as well as the overlay of the 3 masks channel in the last picture.
 
 ![Multimodal MRI scans and associated mask channels (RGB) for the first patient](images/segmentation_example.gif)
 
-After preprocessing images and masks for each channel are of size 240x240 pixels, but, for the same reasons mentioned above, in most cases we shrinked the images down to 128x128 pixels.\
+After preprocessing images and masks for each channel, these assume a final size of 240x240 pixels.\
 As stated in the original dataset description, the usage of the dataset is free without restrictions for research purposes, provided that the necessary references [<a href="#ref1">1</a>, <a href="#ref2">2</a>, <a href="#ref3">3</a>, <a href="#ref4">4</a>, <a href="#ref5">5</a>] are cited.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -301,13 +261,14 @@ As stated in the original dataset description, the usage of the dataset is free 
 
 #### Convolutional Neural Network (CNN) Model
 
-As previously stated, we developed a CNN model to perform the classification task on the Brain Tumor MRI Dataset. The model was implemented starting from the AlexNet architecture and then simplified to improve its performance. The model is composed of four convolutional layers, each followed by a Mish activation function and a max pooling operation. Each convolutional layer has different channel sizes and kernel sizes to extract different features from the input images, as well as different strides and padding to control the output size. Before applying the activation function, batch normalization layers are added to speed up the training and improve the model's generalization capabilities. The output of the last convolutional layer is flattened and passed through three fully connected layers with a Mish activation function and a dropout layer to prevent overfitting. The last fully connected layer outputs the final prediction of the model.
-
-The model performs the classification task by taking in input the MRI scans of shape 128x128x3 and outputs a prediction of the class of the tumor. The model is trained using the cross-entropy loss function and the Adam optimizer, along with a learning rate scheduler to improve the training process. L2 regularization is also applied to the model's parameters to prevent overfitting.
+As previously stated, we developed a **CNN model** to perform the classification task on the Brain Tumor MRI Dataset. The model was implemented starting from the AlexNet architecture presented in the original paper [*ImageNet Classification with Deep Convolutional Neural Networks*](./papers/AlexNet.pdf) by *Krizhevsky et al.* [<a href="#ref6">6</a>] and then simplified to improve its performance. The model is composed of four convolutional layers, each followed by a Mish activation function and a max pooling operation. Each convolutional layer has different channel sizes and kernel sizes to extract different features from the input images, as well as different strides and padding to control the output size. Before applying the activation function, batch normalization layers are added to speed up the training and improve the model's generalization capabilities. The output of the last convolutional layer is flattened and passed through three fully connected layers with a Mish activation function and a dropout layer to prevent overfitting. The last fully connected layer outputs the final prediction of the model.\
+The model performs the classification task by taking in input the MRI scans of shape 128x128x3 and outputs a prediction of the class of the tumor. The model is trained using the cross-entropy loss function and the Adam optimizer, along with a learning rate scheduler to improve the training process. L2 regularization is also applied to the model's parameters to prevent overfitting.\
+Further implementation specific details can be found in the [`custom_cnn.py`](./models/custom_cnn.py) script. Additionally, for comparison purposes explained below, we also provide an equivalent implementation of the original **AlexNet model** without changes in the [`alexnet.py`](./models/alexnet.py) script and of the **VGG-16 model** in the [`vgg16.py`](./models/vgg16.py) script.
 
 #### VIT Model
 
-A Vision Transformer (VIT) model has been implemented to perform the classification task on the Brain Tumor MRI Dataset. The model's architecture is composed of the following components:
+A **Vision Transformer (VIT)** model has been implemented to perform the classification task on the Brain Tumor MRI Dataset. The core ideas to imlement such model were taken from the original paper [*An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale*](./papers/VIT-Original.pdf) by *Dosovitskiy et al.* [<a href="#ref7">7</a>] and [*Image Classification Based on Vision Transformer*](./papers/VIT-Tumor-Classification.pdf) by *A. A. M. Omer* [<a href="#ref8">8</a>].\
+The model's architecture is composed of the following components:
 
 - **Patch Embeddings**: the input image is divided into patches of size 16x16 pixels; each patch is then flattened and projected into a lower-dimensional space using a linear layer.
 - **Positional Encodings**: positional encodings are added to the patch embeddings to provide the model with information about the spatial relationships between the patches. A class token is also added to the sequence of embeddings to represent the entire image.
@@ -315,7 +276,8 @@ A Vision Transformer (VIT) model has been implemented to perform the classificat
 - **Dropout**: dropout layers are used throughout the model to prevent overfitting and improve the model's generalization capabilities by randomly setting a fraction of the input units to zero during training.
 - **Classification Head**: the output of the final transformer encoder layer is passed through a classification head; in particular, this head consists of a layer normalization, a linear layer to map the encoded features to the number of classes, and a dropout layer to further prevent overfitting.
 
-Also this model performs the classification task by taking in input the MRI scans of shape 128x128x3 and outputs a prediction of the class of the tumor. The model is trained using the cross-entropy loss function and the Adam optimizer, along with a learning rate scheduler to improve the training process. L2 regularization is also applied to the model's parameters to prevent overfitting.
+Also this model performs the classification task by taking in input the MRI scans of shape 128x128x3 and outputs a prediction of the class of the tumor. The model is trained using the cross-entropy loss function and the Adam optimizer, along with a learning rate scheduler to improve the training process. L2 regularization is also applied to the model's parameters to prevent overfitting.\
+Once again, additional implementation specific details can be found in the [`vit.py`](./models/vit.py) script.
 
 #### Comparison
 
@@ -329,7 +291,8 @@ The main difference between the 3 models described below lies in the way the enc
 
 #### Classic U-Net Model
 
-The first implemented U-Net model is an adaptation of the one proposed by *Ronneberger et al.* in their original paper [*U-Net: Convolutional Networks for Biomedical Image Segmentation*](./papers/U-Net-CNN.pdf) [TODO: add end reference]. The model is schematically depicted in the figure below while the full implementation can be found in the [`classic_unet.py`](./models/classic_unet.py) script.
+The first implemented U-Net model is an adaptation of the one proposed by *Ronneberger et al.* in their original paper [*U-Net: Convolutional Networks for Biomedical Image Segmentation*](./papers/U-Net-CNN.pdf) [<a href="#ref9">9</a>].
+The model is schematically depicted in the figure below while the full implementation can be found in the [`classic_unet.py`](./models/classic_unet.py) script.
 
 ![Classic U-Net model](images/unet-architecture.png)
 <!-- TODO: re-draw this image in tikz as the model it's not exactly like the one in the paper -->
@@ -346,10 +309,10 @@ In our implementation, the model performs the segmentation task by taking in inp
 As previously stated the total number of parameters of the previous model depends on the choice of the `n_filters` variable. However, in general, this number easily surpasses the milion parameters mark (e.g. setting `n_filters=16` already results in 1,375,043 parameters) which directly impacts training performace and inhibits possible improvements.\
 To address this issue, we implemented a second U-Net model that we called `ImprovedUNet` which aims to reduce the number of parameters while maintaining the same performance, if not improving it. The model starts from the same base architecture of the previous one but has some improvements taken from ideas in different research papers. In particular this model differs from the previous in the following ways:
 
-- **Separable Convolutions**: Instead of using the standard convolutional layers, this model uses separable convolutions, factorized in depthwise and pointwise convolutions. [TODO: Add reference]
+- **Separable Convolutions**: Instead of using the standard convolutional layers, this model uses separable convolutions, factorized in depthwise and pointwise convolutions. [<a href="#ref10">10</a>]
 - **Batch Normalization**: Batch normalization layers have been added after each convolutional layer to speed up training and improve the model's generalization capabilities.
-- **Larger Kernel Size**: as found by *Liu et al.* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [TODO: Add reference], using larger kernel sizes can improve CNNs performance. In particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
-- **Inverse Bottleneck**: The bottleneck layer has been replaced by an inverse bottleneck layer that first expands the number of channels before compressing them back to the original size. [TODO: Add reference]
+- **Larger Kernel Size**: as found by *Liu et al.* in [*A ConvNet for the 2020s*](./papers/Modern-CNNs.pdf) [<a href="#ref11">11</a>] using larger kernel sizes can improve CNNs performance. In particular the authors state that "*the benefit of larger kernel sizes reaches a saturation point at 7x7*".
+- **Inverse Bottleneck**: The bottleneck layer has been replaced by an inverse bottleneck layer that first expands the number of channels before compressing them back to the original size. [<a href="#ref12">12</a>]
 - **Additive Skip Connections**: Instead of concatenating the skip connections, this model uses an additive skip connection that sums the output of the encoder blocks with the decoder blocks.
 
 These improvements significantly contribute in reducing the total numer of parameters (with `n_filters=16` the model now has 799,075 parameters). The model performs the segmentation task just like the previous one.\
@@ -357,7 +320,7 @@ The full implementation of the model can be found in the [`improved_unet.py`](./
 
 #### Attention U-Net
 
-The final model proposed for the segmentation task tries to incorporate in the U-Net architecture the **attention** mechanism typical of transformer models. The model, called `AttentionUNet`, is based on the paper [*Attention U-Net: Learning Where to Look for the Pancreas*](./papers/Attention-UNet.pdf) [TODO: Add reference] by *Oktay et al.*. The model is schematically depicted in the figure below while the full implementation can be found in the [`attention_unet.py`](./models/attention_unet.py) script.
+The final model proposed for the segmentation task tries to incorporate in the U-Net architecture the **attention** mechanism typical of transformer models. The model, called `AttentionUNet`, is based on the paper [*Attention U-Net: Learning Where to Look for the Pancreas*](./papers/Attention-U-Nets.pdf) [<a href="#ref13">13</a>] by *Oktay et al.*. The model is schematically depicted in the figure below while the full implementation can be found in the [`attention_unet.py`](./models/attention_unet.py) script.
 
 ![Attention U-Net model](images/attention-unet-architecture.png)
 
@@ -435,6 +398,128 @@ Distributed under the MIT License. See [`LICENSE`](./LICENSE) for more informati
 
 <a id="ref5"></a>
 [5] S. Bakas, H. Akbari, A. Sotiras, M. Bilello, M. Rozycki, J. Kirby, et al., "Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-LGG collection", The Cancer Imaging Archive, 2017. DOI: 10.7937/K9/TCIA.2017.GJQ7R0EF
+
+<a id="ref6"></a>
+[6]
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton. 2017. ImageNet classification with deep convolutional neural networks. Commun. ACM 60, 6 (June 2017), 84–90. <https://doi.org/10.1145/3065386>
+
+<!-- @inproceedings{
+dosovitskiy2021an,
+title={An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
+author={Alexey Dosovitskiy and Lucas Beyer and Alexander Kolesnikov and Dirk Weissenborn and Xiaohua Zhai and Thomas Unterthiner and Mostafa Dehghani and Matthias Minderer and Georg Heigold and Sylvain Gelly and Jakob Uszkoreit and Neil Houlsby},
+booktitle={International Conference on Learning Representations},
+year={2021},
+url={https://openreview.net/forum?id=YicbFdNTTy}
+} -->
+<a id="ref7"></a>
+[7]
+Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., & Houlsby, N. (2021). An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale. International Conference on Learning Representations. <https://openreview.net/forum?id=YicbFdNTTy>
+
+
+<a id="ref8"></a>
+[8]
+Omer, A.A.M. (2024) Image Classification Based on Vision Transformer. Journal of Computer and Communications, 12, 49-59. <https://doi.org/10.4236/jcc.2024.124005>
+
+<!-- @InProceedings{10.1007/978-3-319-24574-4_28,
+author="Ronneberger, Olaf
+and Fischer, Philipp
+and Brox, Thomas",
+editor="Navab, Nassir
+and Hornegger, Joachim
+and Wells, William M.
+and Frangi, Alejandro F.",
+title="U-Net: Convolutional Networks for Biomedical Image Segmentation",
+booktitle="Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2015",
+year="2015",
+publisher="Springer International Publishing",
+address="Cham",
+pages="234--241",
+abstract="There is large consent that successful training of deep networks requires many thousand annotated training samples. In this paper, we present a network and training strategy that relies on the strong use of data augmentation to use the available annotated samples more efficiently. The architecture consists of a contracting path to capture context and a symmetric expanding path that enables precise localization. We show that such a network can be trained end-to-end from very few images and outperforms the prior best method (a sliding-window convolutional network) on the ISBI challenge for segmentation of neuronal structures in electron microscopic stacks. Using the same network trained on transmitted light microscopy images (phase contrast and DIC) we won the ISBI cell tracking challenge 2015 in these categories by a large margin. Moreover, the network is fast. Segmentation of a 512x512 image takes less than a second on a recent GPU. The full implementation (based on Caffe) and the trained networks are available at http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net.",
+isbn="978-3-319-24574-4"
+} -->
+<a id="ref9"></a>
+[9]
+Ronneberger, O., Fischer, P., & Brox, T. (2015). U-Net: Convolutional Networks for Biomedical Image Segmentation. In Nassir Navab, Joachim Hornegger, William M. Wells, & Alejandro F. Frangi (Eds.), Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2015 (pp. 234–241). Springer International Publishing. <https://doi.org/10.1007/978-3-319-24574-4_28>
+
+<!-- @article{DBLP:journals/corr/Chollet16a,
+  author       = {Fran{\c{c}}ois Chollet},
+  title        = {Xception: Deep Learning with Depthwise Separable Convolutions},
+  journal      = {CoRR},
+  volume       = {abs/1610.02357},
+  year         = {2016},
+  url          = {http://arxiv.org/abs/1610.02357},
+  eprinttype    = {arXiv},
+  eprint       = {1610.02357},
+  timestamp    = {Mon, 13 Aug 2018 16:46:20 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/Chollet16a.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+} -->
+<a id="ref10"></a>
+[10]
+Chollet, F. (2016). Xception: Deep Learning with Depthwise Separable Convolutions. CoRR, abs/1610.02357. <http://arxiv.org/abs/1610.02357>
+
+<!-- @misc{liu2022convnet2020s,
+      title={A ConvNet for the 2020s}, 
+      author={Zhuang Liu and Hanzi Mao and Chao-Yuan Wu and Christoph Feichtenhofer and Trevor Darrell and Saining Xie},
+      year={2022},
+      eprint={2201.03545},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2201.03545}, 
+} -->
+<a id="ref11"></a>
+[11]
+Liu, Z., Mao, H., Wu, C.-Y., Feichtenhofer, C., Darrell, T., & Xie, S. (2022). A ConvNet for the 2020s. arXiv preprint arXiv:2201.03545. <https://arxiv.org/abs/2201.03545>
+
+<!-- @article{DBLP:journals/corr/abs-1801-04381,
+  author       = {Mark Sandler and
+                  Andrew G. Howard and
+                  Menglong Zhu and
+                  Andrey Zhmoginov and
+                  Liang{-}Chieh Chen},
+  title        = {Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification,
+                  Detection and Segmentation},
+  journal      = {CoRR},
+  volume       = {abs/1801.04381},
+  year         = {2018},
+  url          = {http://arxiv.org/abs/1801.04381},
+  eprinttype    = {arXiv},
+  eprint       = {1801.04381},
+  timestamp    = {Tue, 12 Jan 2021 15:30:06 +0100},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-1801-04381.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+} -->
+<a id="ref12"></a>
+[12]
+Sandler, M., Howard, A. G., Zhu, M., Zhmoginov, A., & Chen, L.-C. (2018). Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation. CoRR, abs/1801.04381. <http://arxiv.org/abs/1801.04381>
+
+<!-- @article{DBLP:journals/corr/abs-1804-03999,
+  author       = {Ozan Oktay and
+                  Jo Schlemper and
+                  Lo{\"{\i}}c Le Folgoc and
+                  Matthew C. H. Lee and
+                  Mattias P. Heinrich and
+                  Kazunari Misawa and
+                  Kensaku Mori and
+                  Steven G. McDonagh and
+                  Nils Y. Hammerla and
+                  Bernhard Kainz and
+                  Ben Glocker and
+                  Daniel Rueckert},
+  title        = {Attention U-Net: Learning Where to Look for the Pancreas},
+  journal      = {CoRR},
+  volume       = {abs/1804.03999},
+  year         = {2018},
+  url          = {http://arxiv.org/abs/1804.03999},
+  eprinttype    = {arXiv},
+  eprint       = {1804.03999},
+  timestamp    = {Tue, 17 Sep 2019 14:15:15 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-1804-03999.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+} -->
+<a id="ref13"></a>
+[13]
+Oktay, O., Schlemper, J., Le Folgoc, L., Lee, M. C. H., Heinrich, M. P., Misawa, K., Mori, K., McDonagh, S. G., Hammerla, N. Y., Kainz, B., Glocker, B., & Rueckert, D. (2018). Attention U-Net: Learning Where to Look for the Pancreas. CoRR, abs/1804.03999. <http://arxiv.org/abs/1804.03999>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
