@@ -212,7 +212,10 @@ All the implemented modules have been fully documented with docstrings so always
 
 ### Brain Tumor MRI Dataset (Classification)
 
-The [Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset) is a dataset containing a total of 7023 images of human brain MRI images which are classified into 4 classes: glioma, meningioma, no tumor and pituitary. The dataset is divided into two folders, one for training and one for testing, each containing subfolders for each class. Hence, the main task proposed by this dataset is the implementation og machine learning algorithms for the (multi-class) classification of brain tumors from MRI images.\
+The [Brain Tumor MRI Dataset](https://www.kaggle.com/datasets/masoudnickparvar/brain-tumor-mri-dataset) is a dataset containing a total of 7023 images of human brain MRI images which are classified into 4 classes: glioma, meningioma, no tumor and pituitary. The dataset is divided into two folders, one for training and one for testing, each containing subfolders for each class. Hence, the main task proposed by this dataset is the implementation og machine learning algorithms for the (multi-class) classification of brain tumors from MRI images.
+
+![Classes of the Brain Tumor MRI Dataset](images/classification_samples.png)
+
 This dataset is the result of the combination of data originally taken from 3 datasets, mainly:
 
 - [Figshare Brain Tumor Dataset](https://figshare.com/articles/dataset/brain_tumor_dataset/1512427)
@@ -222,12 +225,18 @@ This dataset is the result of the combination of data originally taken from 3 da
 > [!NOTE]
 > As a result of the combination, the original size of the images in this dataset is different as some images exhibit white borders while others don't. You can resize the image to the desired size after preprocessing and removing the extra margins. These operations are automatically done by the provided [`download.py`](./datasets/download.py) script that will uniform all images to 256x256 pixels images.
 
-As stated above, after preprocessing all images are in `.jpg` format and have been resized to 256x256 resolution. However, due to the large amount of computation required to elaborate such images with our models, in most cases we shrinked the images down to 128x128 pixels.\
-After an initial analysis of the dataset, we found that the 4 classes present in the dataset have the following distribution:
+As stated above, after preprocessing all images are in `.jpg` format and have been resized to 256x256 resolution. However, due to the large amount of computation required to elaborate such images with our models, in most cases we shrinked the images down to 128x128 pixels. Moreover, the dataset comes already separated into training and testing sets, with the training set containing 5712 images and the testing set containing 1311 images, hence roughly a 80-20 split. After an initial analysis of the dataset, we found that the 4 classes present in the dataset have the following distribution:
 
-<!-- TODO: Add class distribution plot -->
+![Brain Tumor MRI Dataset class distribution](images/classification-histogram.png)
+
+Hence class inbalance is not evident neither in the training nor in the testing set.
 
 ### BraTS 2020 Dataset (Segmentation)
+
+<!-- ![BraTS2020](./images/brats2020.png) -->
+<!-- <p align="center">
+  <img src="./images/brats2020.png" alt="BraTS2020" width="50%">
+</p> -->
 
 The [BraTS 2020 Dataset](https://www.kaggle.com/datasets/awsaf49/brats2020-training-data) is a dataset containing a total of 57195 multimodal magnetic resonance imaging (MRI) scans of of intrinsically heterogeneous (in appearance, shape, and histology) brain tumors, namely gliomas. The scans have been collected from a total of 369 patients, labelled as **"volumes"**. Each volume then consists of 155 horizontal **slices** of the brain, hence the total amount of data in the dataset is 369x155 = 57195 images.\
 Furthermore, the scans of each brain slice are not simple images, but are actually multimodal MRI scans, meaning that the given images comes with 4 different channels, each representing a different MRI modality:
@@ -247,7 +256,10 @@ The main task proposed by this dataset is therefore the implementation of machin
 The original scans are available in `HDF5` (`.h5`) format to save memory space and to speed up the data loading process. The provided [`download.py`](./datasets/download.py) script will automatically download and extract the data in the correct folder.\
 As shown in the implemented Python notebooks, data can be loaded as multi-channel images and each channel, both for the input scan and for the ground truth mask, can be visualized independently as shown in the animated GIF below which represents some the 155 scans for the first patient as well as the overlay of the 3 masks channel in the last picture.
 
-![Multimodal MRI scans and associated mask channels (RGB) for the first patient](images/segmentation_example.gif)
+<!-- ![Multimodal MRI scans and associated mask channels (RGB) for the first patient](images/segmentation_example.gif) -->
+<p align="center">
+  <img src="./images/segmentation_example.gif" alt="Multimodal MRI scans and associated mask channels (RGB) for the first patient" width="80%">
+</p>
 
 After preprocessing images and masks for each channel, these assume a final size of 240x240 pixels.\
 As stated in the original dataset description, the usage of the dataset is free without restrictions for research purposes, provided that the necessary references [<a href="#ref1">1</a>, <a href="#ref2">2</a>, <a href="#ref3">3</a>, <a href="#ref4">4</a>, <a href="#ref5">5</a>] are cited.
@@ -336,7 +348,10 @@ In practice, this mechanism is implemented as **attention gates** at the skip co
 From a transformer point of view, the task is basically **to extract the regions in the encoder's features that are relevant to the query from the decoder**. The query and the key interact to produce the *attention map* which highlights areas where to focus on. The latter is produced by aligning the query tensor to the key one: this results in a set of weights that represent the importance of each of the decoder's features in the encoder's output.\
 This attention map the acts on the encoder's output **x** itself (the **value**) since it's applied to this value through element-wise multiplication that scales the features accordingly. Features that are considered relevant by the attention map (high weights) are emphasized, while others (low weights) are diminished.
 In summary, this produces a weighted feature representation where the attention is directed toward the most informative parts of the input, hence refining the information flow in the network and improving the quality of the segmentation output.\
-<!-- TODO: picture of the attention map of big model -->
+As it's possible to see in the animation below, these attention maps are learned during the training phase so the hope is that the models learns to pay attention to the most important parts of the input images, i.e. the brain or even more precisely the tumour regions as it happens in maps 1 and 2 below although it seems in this case that the model also picks parts of the surrounding dark background with high attention.
+
+![Attention maps learned by the Attention U-Net model](images/attention-maps.gif)
+
 Moreover, all of these benefits come with a limited increase in the number of parameters to pay (with `n_filters=16` the model now has 843,319 parameters), making this model the most efficient of the three.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
