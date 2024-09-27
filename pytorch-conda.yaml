@@ -28,4 +28,5 @@ dependencies:
     - imutils
     - kaggle
     - ImageMagic
+    - einops
 
