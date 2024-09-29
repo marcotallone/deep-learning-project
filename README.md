@@ -363,9 +363,10 @@ Moreover, all of these benefits come with a limited increase in the number of pa
 
 | Net | Training Loss | Training accuracy | Training confidence | Test accuracy | Test confidence |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| Custom Net | 2.6 E-03 | 1.0 | 1.0 | 0.98 | 1.0 |
-| Alex | 3.8 E-03 | 1.0 | 1.0 | 0.93 | 1.0 |
-| VGG16 | 2.6 E-06 | 1.0 | 1.0 | 0.95 | 1.0 |
+| Custom Net | 3.6 E-03 | 1.0 | 1.0 | 0.99 | 1.0 |
+| Alex | 1 E-04 | 1.0 | 1.0 | 0.92 | 1.0 |
+| VGG16 | 7.1 E-07 | 1.0 | 1.0 | 0.94 | 1.0 |
+| VIT | 0.26 | 0.9 | 0.92 | 0.88 | 0.93 |
 
 ### Segmentation Models
 
