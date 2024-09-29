@@ -1,0 +1,1180 @@
+\documentclass[xcolor=table]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{import}
+\subimport{settings/}{general.tex}
+\subimport{settings/}{colors.tex}
+\subimport{settings/}{figures.tex}
+\subimport{settings/}{math.tex}
+\subimport{settings/}{code.tex}
+\subimport{settings/}{fonts.tex}
+\subimport{settings/}{commands.tex}
+\setbeamertemplate{navigation symbols}{
+    \insertsectionnavigationsymbol\
+    \insertsubsectionnavigationsymbol\
+}
+
+% Emoji support for LaTeX
+\usepackage{emoji}
+\setemojifont{Noto Color Emoji}
+
+% Importing images from another path
+\graphicspath{{./images/}}
+
+
+% Theme ------------------------------------------------------------------------
+\usetheme{Antibes}
+\usecolortheme{dolphin}
+\setbeamercolor{structure}{fg=blue}
+% \setbeamercolor{item}{fg=black}
+
+% Title ------------------------------------------------------------------------
+\title{\bft{Parallel Quicksort Algorithms\\ in MPI and OpenMP}}
+\author{Marco Tallone}
+\date{May 13, 2024}
+
+\titlegraphic{
+	\includegraphics[width=0.8\textwidth]{SDIC-DSAI-logos.png}
+}
+
+% Document ---------------------------------------------------------------------
+\begin{document}
+\frame{\titlepage} % This creates a title slide
+
+% SLides -----------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\section{Introduction}
+\begin{frame}
+\frametitle{Introduction}
+
+Different parallel versions of the Quicksort algorithm in MPI and OpenMP have been implemented and compared:
+
+\begin{itemize}
+\item \bft{Task Quicksort} (OpenMP only)
+\item \bft{Simple Parallel Quicksort}
+\item \bft{Hyperquicksort}
+\item \bft{PSRS} (Parallel Sorting by Regular Sampling)
+\end{itemize}
+
+\end{frame}
+%-------------------------------------------------------------------------------
+\section{Quicksort Algorithms}
+\subsection{Serial Quicksort}
+\begin{frame}
+\frametitle{Serial Quicksort}
+\begin{columns}
+\column{0.3\textwidth}
+\begin{enumerate}
+\item<1-> Choose a pivot $\tau$ from the input array $\mathbf{X}$;
+\item<2-> Partition $X$ into two subarrays $\mathbf{X}_{< \tau}$ and $\mathbf{X}_{\geq \tau}$;
+\item<3-> Recursively sort $\mathbf{X}_{< \tau}$ and $\mathbf{X}_{\geq \tau}$ until $\text{len}(\mathbf{X}) \leq 2$.
+\end{enumerate}
+
+\column{0.7\textwidth}
+\begin{adjustbox}{max width=\textwidth}
+    \begin{tikzpicture}
+
+        % Define the colors
+        \definecolor{lightblue}{HTML}{0080ff}
+
+        % 1D array rectangle
+        \draw[line width=0.2] (0, 0) rectangle (10, 0.5);
+
+        % Highlight the pivot of the array in yellow
+        \draw[fill=yellow, opacity=0.5] (4.5, 0) rectangle (5, 0.5);
+        \node at (4.75, -0.25) {pivot $\tau$};
+
+        % Fill the array with the numbers
+        \foreach \value [count=\i] in {7, 13, 18, 2, 17, 1, 14, 20, 6, 10,
+                                       15, 9, 3, 16, 19, 4, 11, 12, 5, 8} {
+            \node at (\i*0.5-0.25, 0.25) {\value};
+            \draw[line width=0.1] (\i*0.5, 0) -- (\i*0.5, 0.5);
+        }
+
+        % Partitioned array below
+        \pause
+        \draw[fill=lightblue, opacity=0.3] (0, -1.5) rectangle (4.5, -1);
+        \draw[fill=yellow, opacity=0.5] (4.5, -1.5) rectangle (5, -1);
+        \draw[fill=red, opacity=0.4] (5, -1.5) rectangle (10, -1);
+        \draw[line width=1, dashed, color=black] (4.5, -2) -- (4.5, -0.5);
+        \draw[line width=0.2] (0, -1.5) rectangle (10, -1);
+        \foreach \value [count=\i] in {7, 2, 1, 6, 9, 3, 4, 5, 8, 10, 
+                                       13, 18, 17, 14, 20, 15, 16, 19, 11, 12} {
+            \node at (\i*0.5-0.25, -1.25) {\value};
+            \draw[line width=0.1] (\i*0.5, -1.5) -- (\i*0.5, -1);
+        }
+        \node at (4.75, -1.75) {$\tau$};
+        \node at (2.25, -1.75) {$\mathbf{X}_{< \tau}$};
+        \node at (7.5, -1.75) {$\mathbf{X}_{\geq \tau}$};
+
+        % Recursive steps
+        \pause
+        \draw[-latex, line width=1, color=black] (2.25, -2.25) -- (2, -3.25);
+        \draw[-latex, line width=1, color=black] (7.5, -2.25) -- (7.75, -3.25);
+
+        % Little left recursive step
+        \draw[fill=lightblue, opacity=0.3] (0, -4) rectangle (2, -3.5);
+        \draw[fill=yellow, opacity=0.5] (2, -4) rectangle (2.5, -3.5);
+        \draw[fill=red, opacity=0.4] (2.5, -4) rectangle (4, -3.5);
+        \draw[line width=0.2] (0, -4) rectangle (4, -3.5);
+        \foreach \i in {1, 2, 3, 4, 5, 6, 7} {
+            \draw[line width=0.1] (\i*0.5, -4) -- (\i*0.5, -3.5);
+        }
+        \draw[-latex, line width=1, color=black] (1.25, -4.25) -- (1, -5.25);
+        \draw[-latex, line width=1, color=black] (2.75, -4.25) -- (3, -5.25);
+        \node at (1, -5.5) {\huge{\dots}};
+        \node at (3, -5.5) {\huge{\dots}};
+
+        % Little right recursive step
+        \draw[fill=lightblue, opacity=0.3] (5, -4) rectangle (7.5, -3.5);
+        \draw[fill=yellow, opacity=0.5] (7.5, -4) rectangle (8, -3.5);
+        \draw[fill=red, opacity=0.4] (8, -4) rectangle (10, -3.5);
+        \draw[line width=0.2] (5, -4) rectangle (10, -3.5);
+        \foreach \i in {1, 2, 3, 4, 5, 6, 7, 8, 9} {
+            \draw[line width=0.1] (5+\i*0.5, -4) -- (5+\i*0.5, -3.5);
+        }
+        \draw[-latex, line width=1, color=black] (6.25, -4.25) -- (6, -5.25);
+        \draw[-latex, line width=1, color=black] (8.5, -4.25) -- (8.75, -5.25);
+        \node at (6, -5.5) {\huge{\dots}};
+        \node at (8.75, -5.5) {\huge{\dots}};
+    \end{tikzpicture}
+\end{adjustbox}
+\end{columns}
+\end{frame}
+%-------------------------------------------------------------------------------
+\begin{frame}[fragile]
+
+\frametitle{Serial Quicksort}
+
+\begin{code}{Pseudocode}{Serial Quicksort}{}{}
+function (*serial_qsort*)($\mathbf{X}$):
+    if len($\mathbf{X}$) > 2:
+        $\tau \leftarrow$ choose_pivot($\mathbf{X}$)
+        $\mathbf{X}_{< \tau}, \mathbf{X}_{\geq \tau} \leftarrow$ partition($\mathbf{X}, \tau$)
+
+
+        (*serial_qsort*)($\mathbf{X}_{< \tau}$)
+
+
+        (*serial_qsort*)($\mathbf{X}_{\geq \tau}$)
+    else:
+        if len($\mathbf{X}$) == 2 and $\mathbf{X}[0] > \mathbf{X}[1]$:
+            swap($\mathbf{X}[0], \mathbf{X}[1]$)
+\end{code}
+
+\end{frame}
+%-------------------------------------------------------------------------------
+\subsection{OpenMP Task Quicksort}
+\begin{frame}[fragile]
+
+\frametitle{Task Quicksort}
+
+\begin{code}{Pseudocode}{OpenMP Task Quicksort}{}{}
+function (*omp_task_qsort*)($\mathbf{X}$):
+    if len($\mathbf{X}$) > 2:
+        $\tau \leftarrow$ choose_pivot($\mathbf{X}$)
+        $\mathbf{X}_{< \tau}, \mathbf{X}_{\geq \tau} \leftarrow$ partition($\mathbf{X}, \tau$)
+
+        [*#pragma omp task*]
+        (*omp_task_qsort*)($\mathbf{X}_{< \tau}$)
+
+        [*#pragma omp task*]
+        (*omp_task_qsort*)($\mathbf{X}_{\geq \tau}$)
+    else:
+        if len($\mathbf{X}$) == 2 and $\mathbf{X}[0] > \mathbf{X}[1]$:
+            swap($\mathbf{X}[0], \mathbf{X}[1]$)
+\end{code}
+
+\tiny{\emoji{warning} This function needs to be called \bft{inside a} \cc{\#pragma omp parallel} \bft{parallel region} to work properly.}
+\end{frame}
+%-------------------------------------------------------------------------------
+\subsection{Simple Parallel Quicksort}
+\begin{frame}[fragile]
+
+\frametitle{Simple Parallel Quicksort: MPI implementation}
+
+\begin{columns}
+\column{0.4\textwidth}
+\begin{enumerate}
+\item<1-> Split $\mathbf{X}$ in $P$ chunks;
+\item<2-> Choose \bft{one} pivot $\tau$ and broadcast it;
+\item<3-> Local partitioning in $\mathbf{X}^{i}_{< \tau}$ and $\mathbf{X}^{i}_{\geq \tau}$;
+\item<4-> ``Low'' partitions $\rightarrow$~rank $< P/2$,\\
+``High'' partitions $\rightarrow$~rank $\geq P/2$;
+\item<5-> Recursively sort the chunks.
+\end{enumerate}
+
+\column{0.6\textwidth}
+\begin{adjustbox}{max width=\textwidth}
+    \begin{tikzpicture}
+        % Define the colors
+        \definecolor{lightblue}{HTML}{0080ff}
+
+        % Initial array
+        \coordinate (A0) at  (0, 0);
+        \draw[line width=0.2] (A0) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in {7, 13, 18, 2, 17, 1, 14, 20, 6, 10,
+                                       15, 9, 3, 16, 19, 4, 11, 12, 5, 8} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A0) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A0) -- ++(0, 0.5);
+        }
+
+        % Separation of the chunks
+        \draw[line width=0.5, dashed, color=gray] 
+        ([yshift=0.5cm]A0) -- ++(0, 1);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=2.5cm, yshift=0.5cm]A0) -- ++(0, 1);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=5cm, yshift=0.5cm]A0) -- ++(0, 1);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7.5cm, yshift=0.5cm]A0) -- ++(0, 1);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm, yshift=0.5cm]A0) -- ++(0, 1);
+        \node at ([xshift=1.25cm, yshift=1cm]A0) {$P_0$};
+        \node at ([xshift=3.75cm, yshift=1cm]A0) {$P_1$};
+        \node at ([xshift=6.25cm, yshift=1cm]A0) {$P_2$};
+        \node at ([xshift=8.75cm, yshift=1cm]A0) {$P_3$};
+
+        % Highlight the first cell of first chunk in yellow
+        \pause
+        \draw[fill=yellow, opacity=0.5] (A0) rectangle ++(0.5, 0.5);
+        \node at ([xshift=0.25cm, yshift=-0.25cm]A0) {pivot $\tau$};
+
+        % Array after partitioning
+        \pause
+        \coordinate (A1) at ([yshift=-2cm]A0);
+        \draw[line width=0.2] (A1) rectangle ++(10, 0.5);
+
+        \draw[fill=lightblue, opacity=0.3]
+        (A1) rectangle ++(0.5, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=0.5cm]A1) rectangle ++(2, 0.5);
+
+        \draw[fill=lightblue, opacity=0.3]
+        ([xshift=2.5cm]A1) rectangle ++(1, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=3.5cm]A1) rectangle ++(1.5, 0.5);
+
+        \draw[fill=lightblue, opacity=0.3]
+        ([xshift=5cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=5.5cm]A1) rectangle ++(2, 0.5);
+
+        \draw[fill=lightblue, opacity=0.3]
+        ([xshift=7.5cm]A1) rectangle ++(1, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=8.5cm]A1) rectangle ++(1.5, 0.5);
+
+        \foreach \value [count=\i] in {
+        2,7,13,18,17,
+        1,6,14,20,10,
+        3,15,9,16,19,
+        4,5,11,12,8} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A1) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A1) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        ([yshift=0.5cm]A1) -- ++(0, 1);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=2.5cm, yshift=0.5cm]A1) -- ++(0, 1.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=5cm, yshift=0.5cm]A1) -- ++(0, 1.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7.5cm, yshift=0.5cm]A1) -- ++(0, 1.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm, yshift=0.5cm]A1) -- ++(0, 1.5);
+
+        % Exchange of partitions
+        \pause
+        \coordinate (A2) at ([yshift=-2cm]A1);
+        \draw[line width=0.2] (A2) rectangle ++(10, 0.5);
+
+        \draw[fill=lightblue, opacity=0.3]
+        (A2) rectangle ++(3, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=3cm]A2) rectangle ++(7, 0.5);
+
+        \foreach \value [count=\i] in {
+        2,3,
+        1,6,4,5,
+        7,13,18,17,15,9,16,19,
+        14,20,10,11,12,8} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A2) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A2) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        (A1) -- (A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=2.5cm]A1) -- ([xshift=1cm, yshift=0.5cm]A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=5cm]A1) -- ([xshift=3cm, yshift=0.5cm]A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7.5cm]A1) -- ([xshift=7cm, yshift=0.5cm]A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm]A1) -- ([xshift=10cm, yshift=0.5cm]A2);
+
+        % Recursive step
+        \pause
+        \coordinate (A3) at ([yshift=-0.5cm]A2);        
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3cm, yshift=0.5cm]A3) -- ++(0, -2);
+
+        \draw[-latex, line width=1, color=black]
+        ([xshift=1.5cm]A3) -- ++(0, -1) node[midway, left] {$P_0$ \& $P_1$};
+        \node at ([xshift=1.5cm, yshift=-1.5cm]A3) {\huge{\dots}};
+        \draw[-latex, line width=1, color=black]
+        ([xshift=6.5cm]A3) -- ++(0, -1) node[midway, right] {$P_2$ \& $P_3$};
+        \node at ([xshift=6.5cm, yshift=-1.5cm]A3) {\huge{\dots}};
+
+    \end{tikzpicture}
+\end{adjustbox}
+\end{columns}
+
+\end{frame}
+%//TODO: add pseudocode as extra slide at the end
+%-------------------------------------------------------------------------------
+\begin{frame}[fragile]
+
+\frametitle{Simple Parallel Quicksort: OpenMP implementation}
+
+\begin{columns}
+\column{0.3\textwidth}
+{
+\fontsize{7pt}{10pt}\selectfont
+\begin{enumerate}
+\item<1-> Split $\mathbf{X}$ in $P$ chunks;
+\item<2-> Choose \bft{one} pivot $\tau$ (\bft{shared} variable);
+\item<3-> Local partitioning in $\mathbf{X}^{i}_{< \tau}$ and $\mathbf{X}^{i}_{\geq \tau}$;
+\item<4-> $\mathbf{L} \leftarrow$ \# elements in low partitions,\\
+$\mathbf{H} \leftarrow$ \# elements in high partitions;
+\item<5-> $\mathbf{L}$ and $\mathbf{H}$ prefix sums;
+\item<6-> Update a \bft{shared} \cc{indexes} array;
+\item<7-> \bft{\red{Serially reorder}} according to \cc{indexes};
+\item<8-> Repeat recursively.
+\end{enumerate}
+}
+
+\column{0.7\textwidth}
+\begin{adjustbox}{max width=\textwidth}
+    \begin{tikzpicture}
+        % Define the colors
+        \definecolor{lightblue}{HTML}{0080ff}
+
+        % 1D array rectangle
+        \draw[line width=0.2] (0, 0) rectangle (10, 0.5);
+
+        % Fill the array with the numbers
+        \foreach \value [count=\i] in {7, 13, 18, 2, 17, 1, 14, 20, 6, 10,
+                                       15, 9, 3, 16, 19, 4, 11, 12, 5, 8} {
+            \node at (\i*0.5-0.25, 0.25) {\value};
+            \draw[line width=0.1] (\i*0.5, 0) -- (\i*0.5, 0.5);
+        }
+
+        % Separation of the chunks
+        \draw[line width=0.5, dashed, color=gray] (0, 0.5) -- (0, 1);
+        \node at (1, 0.75) {$P_0$};
+        \draw[line width=0.5, dashed, color=gray] (2, 0.5) -- (2, 1);
+        \node at (3, 0.75) {$P_1$};
+        \draw[line width=0.5, dashed, color=gray] (2, 0.5) -- (2, 1);
+        \node at (5, 0.75) {$P_2$};
+        \draw[line width=0.5, dashed, color=gray] (4, 0.5) -- (4, 1);
+        \node at (7, 0.75) {$P_3$};
+        \draw[line width=0.5, dashed, color=gray] (6, 0.5) -- (6, 1);
+        \node at (9, 0.75) {$P_4$};
+        \draw[line width=0.5, dashed, color=gray] (8, 0.5) -- (8, 1);
+        \draw[line width=0.5, dashed, color=gray] (10, 0.5) -- (10, 1);
+
+        % Highlight the first cell of first chunk in yellow
+        \pause
+        \draw[fill=yellow, opacity=0.5] (0, 0) rectangle (0.5, 0.5);
+        \node at (0.25, -0.25) {pivot $\tau$};
+
+
+        % Array after partitioning
+        \pause
+        \draw[line width=0.2] (0, -1) rectangle (10, -0.5);
+        \draw[fill=lightblue, opacity=0.3] (0, -1) rectangle (0.5, -0.5);
+        \draw[fill=red, opacity=0.3] (0.5, -1) rectangle (2, -0.5);
+        \draw[fill=lightblue, opacity=0.3] (2, -1) rectangle (2.5, -0.5);
+        \draw[fill=red, opacity=0.3] (2.5, -1) rectangle (4, -0.5);
+        \draw[fill=lightblue, opacity=0.3] (4, -1) rectangle (4.5, -0.5);
+        \draw[fill=red, opacity=0.3] (4.5, -1) rectangle (6, -0.5);
+        \draw[fill=lightblue, opacity=0.3] (6, -1) rectangle (7, -0.5);
+        \draw[fill=red, opacity=0.3] (7, -1) rectangle (8, -0.5);
+        \draw[fill=lightblue, opacity=0.3] (8, -1) rectangle (8.5, -0.5);
+        \draw[fill=red, opacity=0.3] (8.5, -1) rectangle (10, -0.5);
+        \foreach \value [count=\i] in {2,7,18,13,1,17,14,20,6,10,15,9,3,4,19,16,5,12,11,8} {
+            \node at (\i*0.5-0.25, -0.75) {\value};
+            \draw[line width=0.1] (\i*0.5, -1) -- (\i*0.5, -0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray] (2, -0.5) -- (2, 0);
+        \draw[line width=0.5, dashed, color=gray] (2, -0.5) -- (2, 0);
+        \draw[line width=0.5, dashed, color=gray] (4, -0.5) -- (4, 0);
+        \draw[line width=0.5, dashed, color=gray] (6, -0.5) -- (6, 0);
+        \draw[line width=0.5, dashed, color=gray] (8, -0.5) -- (8, 0);
+        \draw[line width=0.5, dashed, color=gray] (10, -0.5) -- (10, 0);
+        % \node[anchor=west] at (10, -0.75) {Partitioning};
+
+        % Prefix sum arrays
+        \pause
+        \node[anchor=east] at (0.5, -2.25) {$\mathbf{L}$};
+        \draw[line width=0.2] (0.5, -2.5) rectangle (3.5, -2);
+        \foreach \value [count=\i] in {0,1,1,1,2,1} {
+            \node at (\i*0.5+0.25, -2.25) {\value};
+            \draw[line width=0.1] (\i*0.5, -2.5) -- (\i*0.5, -2);
+        }
+
+        \node[anchor=west] at (9.5, -2.25) {$\mathbf{H}$};
+        \draw[line width=0.2] (6.5, -2.5) rectangle (9.5, -2);
+        \foreach \value [count=\i] in {0,3,3,3,2,3} {
+            \node at (\i*0.5+6.25, -2.25) {\value};
+            \draw[line width=0.1] (\i*0.5+6, -2.5) -- (\i*0.5+6, -2);
+        }
+
+        % Dashed arrows from partitions to prefix sum arrays
+        \draw[line width=0.5, dashed, color=lightblue, 
+              opacity=0.5, -Stealth] (0.25, -1.05) -- (1.25, -1.95);
+        \draw[line width=0.5, dashed, color=lightblue, 
+              opacity=0.5, -Stealth] (2.25, -1.05) -- (1.75, -1.95);
+        \draw[line width=0.5, dashed, color=lightblue, 
+              opacity=0.5, -Stealth] (4.25, -1.05) -- (2.25, -1.95);
+        \draw[line width=0.5, dashed, color=lightblue, 
+              opacity=0.5, -Stealth] (6.5, -1.05) -- (2.75, -1.95);
+        \draw[line width=0.5, dashed, color=lightblue, 
+              opacity=0.5, -Stealth] (8.25, -1.05) -- (3.25, -1.95);
+        \draw[line width=0.5, dashed, color=red, 
+              opacity=0.5, -Stealth] (1.25, -1.05) -- (7.25, -1.95);
+        \draw[line width=0.5, dashed, color=red, 
+              opacity=0.5, -Stealth] (3.25, -1.05) -- (7.75, -1.95);
+        \draw[line width=0.5, dashed, color=red, 
+              opacity=0.5, -Stealth] (5.25, -1.05) -- (8.25, -1.95);
+        \draw[line width=0.5, dashed, color=red, 
+              opacity=0.5, -Stealth] (7.5, -1.05) -- (8.75, -1.95);
+        \draw[line width=0.5, dashed, color=red, 
+              opacity=0.5, -Stealth] (9.25, -1.05) -- (9.25, -1.95);
+
+        \pause
+        \node[anchor=west] at (1.1, -2.75) {prefix sum};
+        \node[anchor=west] at (7.1, -2.75) {prefix sum};
+        \draw[line width=0.5, color=gray, -Stealth] (0.75, -2.55) -- (0.75, -2.95);
+        \draw[line width=0.5, color=gray, -Stealth] (3.25, -2.55) -- (3.25, -2.95);
+        \draw[line width=0.5, color=gray, -Stealth] (6.75, -2.55) -- (6.75, -2.95);
+        \draw[line width=0.5, color=gray, -Stealth] (9.25, -2.55) -- (9.25, -2.95);
+
+        % Prefix sum arrays n2
+        \node[anchor=east] at (0.5, -3.25) {$\mathbf{L}$};
+        \draw[line width=0.2] (0.5, -3.5) rectangle (3.5, -3);
+        \foreach \value [count=\i] in {0,1,2,3,5,6} {
+            \node at (\i*0.5+0.25, -3.25) {\value};
+            \draw[line width=0.1] (\i*0.5, -3.5) -- (\i*0.5, -3);
+        }
+
+        \node[anchor=west] at (9.5, -3.25) {$\mathbf{H}$};
+        \draw[line width=0.2] (6.5, -3.5) rectangle (9.5, -3);
+        \foreach \value [count=\i] in {0,3,6,9,11,14} {
+            \node at (\i*0.5+6.25, -3.25) {\value};
+            \draw[line width=0.1] (\i*0.5+6, -3.5) -- (\i*0.5+6, -3);
+        }
+
+        % Connecting lines
+        \pause
+        \draw[line width=0.5] (6.75, -1.05) -- (6.75, -1.5);
+        \draw[line width=0.5] (6.75, -1.5) -- (4.5, -1.5);
+        \draw[line width=0.5] (4.5, -1.5) -- (4.5, -4);
+        \draw[line width=0.2, color=lightblue, fill=white] (4, -2.75) rectangle (5, -3.25);
+        \node[anchor=center] at (4.5, -3) {$j=1$};
+        \draw[line width=0.5, -Stealth] (2.25, -3.55) -- (2.25, -4.45);
+        \node[anchor=east] at (2.25, -4) {$L[3] + 1 = 4$};
+        \draw[fill=lightblue, opacity=0.15] (2.05, -4) circle (0.2);
+        \draw[fill=lightblue, opacity=0.15] (2.25, -5.28) circle (0.2);
+        \draw[line width=0.5] (2.25, -4) -- (4.5, -4);
+
+        \draw[line width=0.5] (5.75, -1.05) -- (5.75, -4);
+        \draw[line width=0.2, color=red, fill=white] (5.25, -2.75) rectangle (6.25, -2.25);
+        \node[anchor=center] at (5.75, -2.5) {$j=2$};
+        \draw[line width=0.5] (7.75, -3.55) -- (7.75, -4);
+        \draw[line width=0.5] (5.75, -4) -- (7.75, -4);
+        \draw[line width=0.5, -Stealth] (7.25, -4) -- (7.25, -4.45);
+        \node[anchor=west] at (7.75, -4) {$L[5] + H[2] + 2 = 14$};
+        \draw[fill=red, opacity=0.15] (11, -4) circle (0.2);
+        \draw[fill=red, opacity=0.15] (7.25, -5.28) circle (0.2);
+
+        \foreach \value [count=\i] in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19} {
+            \node[color=gray] at (\i*0.5-0.25, -5.25) {\small\value};
+        }
+
+        % Final array
+        \pause
+        \draw[line width=0.2] (0, -5) rectangle (10, -4.5);
+        \draw[fill=lightblue, opacity=0.3] (0, -5) rectangle (3, -4.5);
+        \draw[fill=red, opacity=0.3] (3, -5) rectangle (10, -4.5);
+        \foreach \value [count=\i] in {2,1,6,3,4,5,7,18,13,17,14,20,10,15,9,19,16,12,11,8} {
+            \node at (\i*0.5-0.25, -4.75) {\value};
+            \draw[line width=0.1] (\i*0.5, -5) -- (\i*0.5, -4.5);
+        }
+
+        % Recursive step
+        \pause
+        \draw[line width=0.5, dashed, color=gray] (3, -5) -- (3, -7);
+        \draw[-latex, line width=1, color=black] (1.5, -5.5) -- ++(0, -1);
+        \node at (1.5, -7) {\huge{\dots}};
+        \draw[-latex, line width=1, color=black] (6.5, -5.5) -- ++(0, -1);
+        \node at (6.5, -7) {\huge{\dots}};
+
+    \end{tikzpicture}
+\end{adjustbox}
+\end{columns}
+
+\end{frame}
+%%-------------------------------------------------------------------------------
+%\subsection{Hyperquicksort}
+%\begin{frame}[fragile]
+
+%\frametitle{Hyperquicksort}
+
+%\begin{enumerate}
+%\item<1-> Split $\mathbf{X}$ in $P$ chunks;
+%\item<2-> \bft{\blue{Each process locally sorts its chunk}}
+%\item<3-> \bft{\blue{One process chooses the median of its chunk as pivot $\tau$}} and broadcasts it;
+%\item<3-> Local partitioning in $\mathbf{X}^{i}_{< \tau}$ and $\mathbf{X}^{i}_{\geq \tau}$;
+%\item<4-> ``Low'' partitions $\rightarrow$~rank $< P/2$,\\
+%``High'' partitions $\rightarrow$~rank $\geq P/2$;
+%\item<5-> Recursively sort the chunks.
+%\end{enumerate}
+
+%\end{frame}
+%%-------------------------------------------------------------------------------
+%-------------------------------------------------------------------------------
+\subsection{Hyperquicksort}
+\begin{frame}[fragile]
+
+\frametitle{Hyperquicksort}
+
+\begin{enumerate}
+\item Split $\mathbf{X}$ in $P$ chunks;
+\item \bft{\blue{Each process locally sorts its chunk}}
+\item \bft{\blue{One process chooses the median of its chunk as pivot $\tau$}} and broadcasts it;
+\item Local partitioning in $\mathbf{X}^{i}_{< \tau}$ and $\mathbf{X}^{i}_{\geq \tau}$;
+\item ``Low'' partitions $\rightarrow$~rank $< P/2$,\\
+``High'' partitions $\rightarrow$~rank $\geq P/2$;
+\item Recursively sort the chunks.
+\end{enumerate}
+
+\end{frame}
+%-------------------------------------------------------------------------------
+
+\subsection{PSRS}
+\begin{frame}[fragile]
+
+\frametitle{PSRS:\ MPI Implementation}
+
+\begin{columns}
+\column{0.4\textwidth}
+{
+\fontsize{7pt}{10pt}\selectfont
+\begin{enumerate}
+\item<1-> Split $\mathbf{X}$ in $P$ chunks;
+\item<2-> Local chunk \bft{sorting};
+\item<3-> Each selects $P$ samples:
+\begin{equation*}
+    \frac{i \cdot n}{P^2}\;,\; i = 0,1,\dots,P-1
+\end{equation*}
+\item<4-> One process:\\
+- Gathers and sorts all samples;\\
+- Regularly picks $P-1$ pivots;\\
+- Broadcasts pivots.\\
+\item<5-> Local partition according to pivots;
+\item<6-> \bft{All-to-all} exchange:\\
+$P_i$ sends $j^{th}$ partition to $P_j$;
+\item <7-> Local sorting.
+\end{enumerate}
+}
+
+\column{0.6\textwidth}
+\begin{adjustbox}{max width=\textwidth}
+
+    \begin{tikzpicture}
+
+        % Define the colors
+        \definecolor{lightblue}{HTML}{0080ff}
+
+        % 1D array rectangle
+        \coordinate (A0) at  (0, 0);
+        \draw[line width=0.2] (A0) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in {7, 13, 18, 2, 17, 1, 14, 20, 6, 10,
+                                       15, 9, 3, 16, 19, 4, 11, 12, 5, 8} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A0) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A0) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        ([yshift=-0.5cm]A0) -- ++(0, 2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3.5cm, yshift=-0.5cm]A0) -- ++(0, 2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7cm, yshift=-0.5cm]A0) -- ++(0, 2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm, yshift=-0.5cm]A0) -- ++(0, 2);
+        \node at ([xshift=1.75cm, yshift=1cm]A0) {$P_0$};
+        \node at ([xshift=5.25cm, yshift=1cm]A0) {$P_1$};
+        \node at ([xshift=8.5cm, yshift=1cm]A0) {$P_2$};
+
+        % Local sorted sub-arrays
+        \pause
+        \coordinate (A1) at ([yshift=-1cm]A0);
+        \draw[line width=0.2] (A1) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in
+        {1,2,7,13,14,17,18,3,6,9,10,15,16,20,4,5,8,11,12,19} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A1) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A1) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray] (A1) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3.5cm]A1) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7cm]A1) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm]A1) -- ++(0, 0.5);
+        
+        % Highlight pivots
+        \pause
+        \draw[fill=orange, opacity=0.3] ([xshift=0cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=1cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=2cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=3.5cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=4.5cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=5.5cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=7cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=8cm]A1) rectangle ++(0.5, 0.5);
+        \draw[fill=orange, opacity=0.3] ([xshift=9cm]A1) rectangle ++(0.5, 0.5);
+
+        \pause
+        \node[anchor=west] at ([yshift=-0.25cm]A1) {\textcolor{orange!90!black}{\textbf{Regularly sampled pivots:} $\mathbf{\tau_0=7; \quad \tau_1=12}$}};
+
+        % Partition after pivot selection
+        \pause
+        \coordinate (A2) at ([yshift=-1cm]A1);
+
+        \draw[fill=lightblue, opacity=0.3]
+        ([xshift=2.5cm, yshift=0.05cm]A2) rectangle ++(0.7, 0.4);
+        \draw[fill=yellow, opacity=0.5]
+        ([xshift=3.5cm, yshift=0.05cm]A2) rectangle ++(2.1, 0.4);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=5.8cm, yshift=0.05cm]A2) rectangle ++(1.1, 0.4);
+
+        \node[anchor=west] at ([yshift=0.25cm]A2)
+        {$\Rightarrow$ partition in $ < 7, \quad 7 \leq * <12, \quad \geq 12$};
+
+        \draw[fill=lightblue, opacity=0.3]
+        ([yshift=-0.5cm]A2) rectangle ++(1, 0.5);
+        \draw[fill=yellow, opacity=0.5]
+        ([xshift=1cm, yshift=-0.5cm]A2) rectangle ++(0.5, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=1.5cm, yshift=-0.5cm]A2) rectangle ++(2, 0.5);
+        \draw[fill=lightblue, opacity=0.3]
+        ([xshift=3.5cm, yshift=-0.5cm]A2) rectangle ++(1, 0.5);
+        \draw[fill=yellow, opacity=0.5]
+        ([xshift=4.5cm, yshift=-0.5cm]A2) rectangle ++(1, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=5.5cm, yshift=-0.5cm]A2) rectangle ++(1.5, 0.5);
+        \draw[fill=lightblue, opacity=0.3]
+        ([xshift=7cm, yshift=-0.5cm]A2) rectangle ++(1, 0.5);
+        \draw[fill=yellow, opacity=0.5]
+        ([xshift=8cm, yshift=-0.5cm]A2) rectangle ++(1, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=9cm, yshift=-0.5cm]A2) rectangle ++(1, 0.5);
+
+        \draw[line width=0.2] ([yshift=-0.5cm]A2) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in
+        {1,2,7,13,14,17,18,3,6,9,10,15,16,20,4,5,8,11,12,19} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=-0.25cm]A2) {\value};
+            \draw[line width=0.1]
+            ([xshift=\i*0.5cm, yshift=-0.5cm]A2) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        (A2) -- ++(0, 1);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3.5cm]A2) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7cm]A2) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm]A2) -- ++(0, 1);
+
+        % \draw[line width=0.5, dashed, color=gray]
+        % ([yshift=-0.5cm]A2) -- ++(0, -0.5);
+        % \draw[line width=0.5, dashed, color=gray]
+        % ([xshift=3.5cm, yshift=-0.5cm]A2) -- ++(0, -0.5);
+        % \draw[line width=0.5, dashed, color=gray]
+        % ([xshift=7cm, yshift=-0.5cm]A2) -- ++(0, -0.5);
+        % \draw[line width=0.5, dashed, color=gray]
+        % ([xshift=10cm, yshift=-0.5cm]A2) -- ++(0, -0.5);
+
+        % All-to-all exchange
+        \pause
+        \coordinate (A3) at ([yshift=-2cm]A2);
+
+        \draw[fill=lightblue, opacity=0.3]
+        (A3) rectangle ++(3, 0.5);
+        \draw[fill=yellow, opacity=0.5]
+        ([xshift=3cm]A3) rectangle ++(2.5, 0.5);
+        \draw[fill=red, opacity=0.3]
+        ([xshift=5.5cm]A3) rectangle ++(4.5, 0.5);
+
+        \draw[line width=0.2] (A3) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in
+        {1,2,3,6,4,5,7,9,10,8,11,13,14,17,18,15,16,20,12,19} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A3) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A3) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        ([yshift=0.5cm]A3) -- ([yshift=-0.5cm]A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3cm, yshift=0.5cm]A3) -- ([xshift=3.5cm, yshift=-0.5cm]A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=5.5cm, yshift=0.5cm]A3) -- ([xshift=7cm, yshift=-0.5cm]A2);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm, yshift=0.5cm]A3) -- ([xshift=10cm, yshift=-0.5cm]A2);
+
+        % Local sorting
+        \pause
+        \coordinate (A4) at ([yshift=-2cm]A3);
+
+        \draw[line width=0.2] (A4) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in
+        {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A4) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A4) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        ([yshift=0.5cm]A4) -- (A3);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3cm, yshift=0.5cm]A4) -- ([xshift=3cm]A3);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=5.5cm, yshift=0.5cm]A4) -- ([xshift=5.5cm]A3);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm, yshift=0.5cm]A4) -- ([xshift=10cm]A3);
+        
+    \end{tikzpicture}
+
+\end{adjustbox}
+\end{columns}
+\end{frame}
+%-------------------------------------------------------------------------------
+\begin{frame}[fragile]
+
+\frametitle{PSRS:\ OpenMP Implementation}
+
+\begin{columns}
+\column{0.4\textwidth}
+{
+\fontsize{7pt}{10pt}\selectfont
+\begin{enumerate}
+\item<1-> Split $\mathbf{X}$ in $P$ chunks;
+\item<2-> Local chunk \bft{sorting};
+\item<3-> Each selects $P$ samples:
+$\rightarrow$~\bft{shared} variable;
+\item<4-> Master thread:\\
+- Sorts all samples;\\
+- Regularly picks $P-1$ pivots;\\
+- Writes pivots in shared array.\\
+\item<5-> Local partition according to pivots;
+\item<6-> $(P + 1) \times (P + 1)$ matrix $\mathbf{M}$;
+\item<8-> Prefix sum $\mathbf{S}$ of last column;
+\item<9-> Update the \cc{indexes} array;
+\item<10-> \bft{\red{Serially reorder}} elements according to \cc{indexes};\\
+\item<11-> Each thread sorts from\\
+$\mathbf{S}[i]$ to $\mathbf{M}[i+1][P]$
+\end{enumerate}
+}
+
+\column{0.6\textwidth}
+\begin{adjustbox}{max width=\textwidth}
+
+    \begin{tikzpicture}
+
+        % Define the colors
+        \definecolor{lightblue}{HTML}{0080ff}
+
+        % 1D array rectangle
+        \coordinate (A0) at  (0, 0);
+        \draw[line width=0.2] (A0) rectangle ++(10, 0.5);
+        \foreach \value [count=\i] in {7, 13, 18, 2, 17, 1, 14, 20, 6, 10,
+                                       15, 9, 3, 16, 19, 4, 11, 12, 5, 8} {
+            \node at ([xshift=\i*0.5cm-0.25cm, yshift=0.25cm]A0) {\value};
+            \draw[line width=0.1] ([xshift=\i*0.5cm]A0) -- ++(0, 0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray]
+        ([yshift=0.5cm]A0) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=3.5cm, yshift=0.5cm]A0) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=7cm, yshift=0.5cm]A0) -- ++(0, 0.5);
+        \draw[line width=0.5, dashed, color=gray]
+        ([xshift=10cm, yshift=0.5cm]A0) -- ++(0, 0.5);
+        \node at ([xshift=1.75cm, yshift=0.75cm]A0) {$P_0$};
+        \node at ([xshift=5.25cm, yshift=0.75cm]A0) {$P_1$};
+        \node at ([xshift=8.5cm, yshift=0.75cm]A0) {$P_2$};
+
+        % Local sorted sub-arrays
+        \pause
+        \draw[line width=0.2] (0, -1) rectangle (10, -0.5);
+        \foreach \value [count=\i] in {1,2,7,13,14,17,18,3,6,9,10,15,16,20,4,5,8,11,12,19} {
+            \node at (\i*0.5-0.25, -0.75) {\value};
+            \draw[line width=0.1] (\i*0.5, -1) -- (\i*0.5, -0.5);
+        }
+        \draw[line width=0.5, dashed, color=gray] (0, -0.5) -- (0, 0);
+        \draw[line width=0.5, dashed, color=gray] (3.5, -0.5) -- (3.5, 0);
+        \draw[line width=0.5, dashed, color=gray] (7, -0.5) -- (7, 0);
+        \draw[line width=0.5, dashed, color=gray] (10, -0.5) -- (10, 0);
+        
+        % Highlight pivots
+        \pause
+        \draw[fill=orange, opacity=0.3] (0, -1) rectangle (0.5, -0.5);
+        \draw[fill=orange, opacity=0.3] (1, -1) rectangle (1.5, -0.5);
+        \draw[fill=orange, opacity=0.3] (2, -1) rectangle (2.5, -0.5);
+        \draw[fill=orange, opacity=0.3] (3.5, -1) rectangle (4, -0.5);
+        \draw[fill=orange, opacity=0.3] (4.5, -1) rectangle (5, -0.5);
+        \draw[fill=orange, opacity=0.3] (5.5, -1) rectangle (6, -0.5);
+        \draw[fill=orange, opacity=0.3] (7, -1) rectangle (7.5, -0.5);
+        \draw[fill=orange, opacity=0.3] (8, -1) rectangle (8.5, -0.5);
+        \draw[fill=orange, opacity=0.3] (9, -1) rectangle (9.5, -0.5);
+
+        \pause
+        \node[anchor=west] at (0, -1.25) {\textcolor{orange!90!black}{\textbf{Regularly sampled pivots:} $\mathbf{\tau_0=7; \quad \tau_1=12}$}};
+
+        % Partition after pivot selection
+        \pause
+        \draw[fill=lightblue, opacity=0.3] (2.5, -1.95) rectangle (3.2, -1.55);
+        \draw[fill=yellow, opacity=0.5] (3.5, -1.95) rectangle (5.6, -1.55);
+        \draw[fill=red, opacity=0.3] (5.8, -1.95) rectangle (6.9, -1.55);
+        \node[anchor=west] at (0, -1.75)
+        {$\Rightarrow$ partition in $ < 7, \quad 7 \leq * <12, \quad \geq 12$};
+
+        \draw[fill=lightblue, opacity=0.3] (0, -2.5) rectangle (1, -2);
+        \draw[fill=yellow, opacity=0.5] (1, -2.5) rectangle (1.5, -2);
+        \draw[fill=red, opacity=0.3] (1.5, -2.5) rectangle (3.5, -2);
+        \draw[fill=lightblue, opacity=0.3] (3.5, -2.5) rectangle (4.5, -2);
+        \draw[fill=yellow, opacity=0.5] (4.5, -2.5) rectangle (5.5, -2);
+        \draw[fill=red, opacity=0.3] (5.5, -2.5) rectangle (7, -2);
+        \draw[fill=lightblue, opacity=0.3] (7, -2.5) rectangle (8, -2);
+        \draw[fill=yellow, opacity=0.5] (8, -2.5) rectangle (9, -2);
+        \draw[fill=red, opacity=0.3] (9, -2.5) rectangle (10, -2);
+
+        \draw[line width=0.2] (0, -2.5) rectangle (10, -2);
+        \foreach \value [count=\i] in {1,2,7,13,14,17,18,3,6,9,10,15,16,20,4,5,8,11,12,19} {
+            \node at (\i*0.5-0.25, -2.25) {\value};
+            \draw[line width=0.1] (\i*0.5, -2.5) -- (\i*0.5, -2);
+        }
+        \draw[line width=0.5, dashed, color=gray] (0, -2) -- (0, -1);
+        \draw[line width=0.5, dashed, color=gray] (3.5, -1.5) -- (3.5, -1);
+        \draw[line width=0.5, dashed, color=gray] (7, -2) -- (7, -1.5);
+        \draw[line width=0.5, dashed, color=gray] (10, -2) -- (10, -1);
+
+        \draw[line width=0.5, dashed, color=gray] (0, -2.5) -- (0, -3);
+        \draw[line width=0.5, dashed, color=gray] (3.5, -2.5) -- (3.5, -3);
+        \draw[line width=0.5, dashed, color=gray] (7, -2.5) -- (7, -3);
+        \draw[line width=0.5, dashed, color=gray] (10, -2.5) -- (10, -3);
+
+        %4x4 matrix filled with zeroes below
+        \only<6>{
+            \node[anchor=west] at (9.25, -4.5) {$\mathbf{M}$};
+            \draw[fill=lightblue, opacity=0.3] (7.5, -4) rectangle (9, -4.5);
+            \draw[fill=yellow, opacity=0.5] (7.5, -4.5) rectangle (9, -5);
+            \draw[fill=red, opacity=0.3] (7.5, -5) rectangle (9, -5.5);
+            \draw[line width=0.2] (7, -3.5) rectangle (9, -5.5);
+            \draw[line width=0.2] (7.5, -3.5) -- (7.5, -5.5);
+            \draw[line width=0.2] (8, -3.5) -- (8, -5.5);
+            \draw[line width=0.2] (8.5, -3.5) -- (8.5, -5.5);
+            \draw[line width=0.2] (7, -4) -- (9, -4);
+            \draw[line width=0.2] (7, -4.5) -- (9, -4.5);
+            \draw[line width=0.2] (7, -5) -- (9, -5);
+
+            \node at (7.25, -3.75) {0};
+            \node at (7.75, -3.75) {0};
+            \node at (8.25, -3.75) {0};
+            \node at (8.75, -3.75) {0};
+
+            \node at (7.25, -4.25) {0};
+            \node at (7.75, -4.25) {2};
+            \node at (8.25, -4.25) {2};
+            \node at (8.75, -4.25) {2};
+
+            \node at (7.25, -4.75) {0};
+            \node at (7.75, -4.75) {1};
+            \node at (8.25, -4.75) {2};
+            \node at (8.75, -4.75) {2};
+
+            \node at (7.25, -5.25) {0};
+            \node at (7.75, -5.25) {4};
+            \node at (8.25, -5.25) {3};
+            \node at (8.75, -5.25) {2};
+        }
+
+        \only<7->{
+            \node[anchor=west] at (9.25, -4.5) {$\mathbf{M}$};
+            \draw[line width=0.2] (7, -3.5) rectangle (9, -5.5);
+            \draw[line width=0.2] (7.5, -3.5) -- (7.5, -5.5);
+            \draw[line width=0.2] (8, -3.5) -- (8, -5.5);
+            \draw[line width=0.2] (8.5, -3.5) -- (8.5, -5.5);
+            \draw[line width=0.2] (7, -4) -- (9, -4);
+            \draw[line width=0.2] (7, -4.5) -- (9, -4.5);
+            \draw[line width=0.2] (7, -5) -- (9, -5);
+
+            \node at (7.25, -3.75) {0};
+            \node at (7.75, -3.75) {0};
+            \node at (8.25, -3.75) {0};
+            \node at (8.75, -3.75) {0};
+
+            \node at (7.25, -4.25) {0};
+            \node at (7.75, -4.25) {2};
+            \node at (8.25, -4.25) {4};
+            \node at (8.75, -4.25) {6};
+
+            \node at (7.25, -4.75) {0};
+            \node at (7.75, -4.75) {1};
+            \node at (8.25, -4.75) {3};
+            \node at (8.75, -4.75) {5};
+
+            \node at (7.25, -5.25) {0};
+            \node at (7.75, -5.25) {7};
+            \node at (8.25, -5.25) {4};
+            \node at (8.75, -5.25) {9};
+        }
+
+        \only<7>{
+            % Arrow 'prefix sum' under the matrix from left to right
+            \draw[-latex, line width=1, color=black] (7.25, -5.75) -- (8.75, -5.75) node[midway, below] {prefix sum};
+        }
+
+        %Highlight fill in gray last column
+        \only<8->{
+        \draw[fill=gray, opacity=0.3] (8.5, -3.5) rectangle (9, -5.5);
+
+        % S array below matrix
+        \draw[line width=0.2] (7, -6.5) rectangle (9, -6);
+        \draw[line width=0.2] (7.5, -6.5) -- (7.5, -6);
+        \draw[line width=0.2] (8, -6.5) -- (8, -6);
+        \draw[line width=0.2] (8.5, -6.5) -- (8.5, -6);
+        \draw[line width=0.2] (7, -6) -- (9, -6);
+
+        \draw[fill=gray, opacity=0.3] (7, -6) rectangle (9, -6.5);
+
+        \node at (7.25, -6.25) {0};
+        \node at (7.75, -6.25) {6};
+        \node at (8.25, -6.25) {11};
+        \node at (8.75, -6.25) {20};
+
+        \node[anchor=west] at (9.25, -6.25) {$\mathbf{S}$};
+        }
+
+        \only<8>{
+            % arrow 'prefix sum' to the right of the matrix
+            \draw[-latex, line width=1, color=gray] (9.25, -3.5) -- (9.25, -5.5) node[pos=0.8, right] {prefix sum};
+        }
+
+        % Final array
+        \only<9->{
+        \draw[fill=yellow, opacity=0.25] (4.25, -7.75) circle (0.2);
+        \foreach \value [count=\i] in {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19} {
+            \node[color=gray] at (\i*0.5-0.25, -7.75) {\small\value};
+        }
+
+        % Connection LINES
+        \draw[line width=0.5] (5.25, -2.55) -- (5.25, -3);
+        \draw[line width=0.5] (5.25, -3) -- (4.25, -3);
+        \draw[line width=0.5, -Stealth] (4.25, -3) -- (4.25, -6.95);
+        \draw[line width=0.2, color=black, fill=white] (2.65, -3.25) rectangle (5.80, -3.75);
+        \node[anchor=center] at (4.25, -3.5) {$i=1,\;j=1,\;k=1$};
+
+        \draw[fill=yellow, opacity=0.25] (4.035, -5.5) circle (0.2);
+        \node[anchor=east] at (4.25, -5.5) {$S[k] + M[k+1][i] + j = 8$};
+
+        \draw[line width=0.5, color=gray, opacity=0.5] (7.65, -4.75) -- (1.5, -4.75);
+        \draw[line width=0.5, color=gray, opacity=0.5] (1.5, -4.75) -- (1.5, -5.25);
+        \draw[line width=0.5, color=black, opacity=0.5] (7.65, -6.25) -- (0.5, -6.25);
+        \draw[line width=0.5, color=black, opacity=0.5] (0.5, -6.25) -- (0.5, -5.8);
+        }
+
+        \only<10->{
+        \draw[line width=0.2] (0, -7.5) rectangle (10, -7);
+        \draw[fill=lightblue, opacity=0.3] (0, -7.5) rectangle (3, -7);
+        \draw[fill=yellow, opacity=0.5] (3, -7.5) rectangle (5.5, -7);
+        \draw[fill=red, opacity=0.3] (5.5, -7.5) rectangle (10, -7);
+        \foreach \value [count=\i] in {1,2,3,6,4,5,7,9,10,8,11,13,14,17,18,15,16,20,12,19} {
+            \node at (\i*0.5-0.25, -7.25) {\value};
+            \draw[line width=0.1] (\i*0.5, -7.5) -- (\i*0.5, -7);
+        }
+        }
+
+        \only<11->{
+        \node at (1.5, -8.5) {$P_0$ sorts first};
+        \node at (4.25, -8.5) {$P_1$ sorts second};
+        \node at (7.5, -8.5) {$P_2$ sorts third};
+
+        \draw[line width=0.2] (0, -9) rectangle (10, -9.5);
+        \foreach \value [count=\i] in {1,2,3,4,5,6,7,8,9,10,
+                                       11,12,13,14,15,16,17,18,19,20} {
+            \node at (\i*0.5-0.25, -9.25) {\value};
+            \draw[line width=0.1] (\i*0.5, -9) -- (\i*0.5, -9.5);
+        }
+        \draw[line width=0.5, dashed, color=gray] (0, -8) -- (0, -9);
+        \draw[line width=0.5, dashed, color=gray] (3, -8) -- (3, -9);
+        \draw[line width=0.5, dashed, color=gray] (5.5, -8) -- (5.5, -9);
+        \draw[line width=0.5, dashed, color=gray] (10, -8) -- (10, -9);
+        }
+
+    \end{tikzpicture}
+
+\end{adjustbox}
+\end{columns}
+\end{frame}
+%-------------------------------------------------------------------------------
+\section{Results}
+
+\begin{frame}[t]
+\frametitle{Scaling Analysis}
+
+\begin{block}{Strong Scaling}
+    Measuring how the execution time $t$ varies with the number of processors $P$ for a fixed total workload.
+\end{block}
+
+\begin{block}{Weak Scaling}
+    Measuring how the execution time $t$ varies with the number of processors $P$ for a fixed workload per processor.
+\end{block}
+
+\begin{columns}
+
+    \column{0.5\textwidth}
+    
+    \bft{MPI Implementation}
+    \begin{itemize}
+        \item \hyperlink{strong-scaling-time}{\emoji{chart-increasing} Strong Scaling $t - P$};
+        \item \hyperlink{strong-scaling-speedup}{\emoji{chart-increasing} Strong Scaling $S_p - P$};
+        \item \hyperlink{weak-scaling-time}{\emoji{chart-increasing} Weak Scaling $t - P$};
+        \item \hyperlink{weak-scaling-efficiency}{\emoji{chart-increasing} Weak Scaling $\varepsilon - P$}.
+    \end{itemize}
+
+    \column{0.5\textwidth}
+
+    \bft{OpenMP Implementation}
+    \begin{itemize}
+        \item \hyperlink{omp-strong-scaling-time}{\emoji{chart-decreasing} Strong Scaling $t - P$};
+        \item \hyperlink{omp-strong-scaling-speedup}{\emoji{chart-decreasing} Strong Scaling $S_p - P$};
+        \item \hyperlink{omp-weak-scaling-time}{\emoji{chart-decreasing} Weak Scaling $t - P$};
+        \item \hyperlink{omp-weak-scaling-efficiency}{\emoji{chart-decreasing} Weak Scaling $\varepsilon - P$}.
+    \end{itemize}
+
+\end{columns}
+
+\end{frame}
+
+\begin{frame}[label=strong-scaling-time]
+\includegraphics[width=\textwidth]{mpi_timeplot.pdf}
+\end{frame}
+
+\begin{frame}[label=strong-scaling-speedup]
+\includegraphics[width=\textwidth]{mpi_speedplot.pdf}
+\end{frame}
+
+\begin{frame}[label=weak-scaling-time]
+\includegraphics[width=\textwidth]{mpi_weaktimeplot.pdf}
+\end{frame}
+
+\begin{frame}[label=weak-scaling-efficiency]
+\includegraphics[width=\textwidth]{mpi_effplot.pdf}
+\end{frame}
+
+\begin{frame}[label=omp-strong-scaling-time]
+\includegraphics[width=\textwidth]{omp_timeplot.pdf}
+\end{frame}
+
+\begin{frame}[label=omp-strong-scaling-speedup]
+\includegraphics[width=\textwidth]{omp_speedplot.pdf}
+\end{frame}
+
+\begin{frame}[label=omp-weak-scaling-time]
+\includegraphics[width=\textwidth]{omp_weaktimeplot.pdf}
+\end{frame}
+
+\begin{frame}[label=omp-weak-scaling-efficiency]
+\includegraphics[width=\textwidth]{omp_effplot.pdf}
+\end{frame}
+
+%-------------------------------------------------------------------------------
+
+        
+
+
+% \subsection{MPI}
+
+% \begin{frame}[fragile]
+%     \frametitle{MPI Strong Scaling}
+%     \begin{columns}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{mpi_timeplot.pdf}
+%             \end{adjustbox}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{mpi_speedplot.pdf}
+%             \end{adjustbox}
+%     \end{columns}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{MPI Weak Scaling}
+%     \begin{columns}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{mpi_weaktimeplot.pdf}
+%             \end{adjustbox}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{mpi_effplot.pdf}
+%             \end{adjustbox}
+%     \end{columns}
+% \end{frame}
+
+% \subsection{OpenMP}
+
+% \begin{frame}[fragile]
+%     \frametitle{OpenMP Strong Scaling}
+%     \begin{columns}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{omp_timeplot.pdf}
+%             \end{adjustbox}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{omp_speedplot.pdf}
+%             \end{adjustbox}
+%     \end{columns}
+% \end{frame}
+
+% \begin{frame}[fragile]
+%     \frametitle{OpenMP Weak Scaling}
+%     \begin{columns}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{omp_weaktimeplot.pdf}
+%             \end{adjustbox}
+%         \column{0.5\textwidth}
+%             \begin{adjustbox}{max width=\textwidth}
+%                 \includegraphics[width=1.1\textwidth]{omp_effplot.pdf}
+%             \end{adjustbox}
+%     \end{columns}
+% \end{frame}
+%-------------------------------------------------------------------------------
+
+\section{References}
+
+\nocite{*}
+
+\begin{frame}{References}
+\footnotesize % or \small or \tiny
+\bibliographystyle{plain}
+\bibliography{bibliography2}
+\end{frame}
+
+\end{document}

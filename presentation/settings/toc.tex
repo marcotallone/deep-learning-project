@@ -1,0 +1,21 @@
+% Set the depth of the table of contents to show:
+% 0 - chapter
+% 1 - section
+% 2 - subsection
+% 3 - subsubsection
+\setcounter{tocdepth}{2}
+
+% Set the depth of the sections numbering:
+\setcounter{secnumdepth}{3}
+
+% Table of contents
+%\usepackage{tocloft}
+\usepackage[subfigure]{tocloft}
+
+% For filling dots between toc elements and page numbers
+% \renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}}    % for parts
+%\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}   % for chapters
+% \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}    % for sections, if you really want!
+
+% Remove page numbers for parts in the table of contents
+\cftpagenumbersoff{part}

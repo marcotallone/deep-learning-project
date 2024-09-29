@@ -106,7 +106,6 @@ class CustomCNN(th.nn.Module):
                 in_features=128,
                 out_features=output_classes
             ),
-            th.nn.Softmax(dim=1),
         )
 
     # Forward pass

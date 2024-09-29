@@ -73,7 +73,7 @@
 	grid-template-columns: repeat(20, auto); /* Adjust the number of columns */
 	grid-auto-rows: min-content;
 	gap: 20px;
-	padding: 0px;
+	padding-top: 20px;
 }
 
 .input-image {
@@ -164,7 +164,6 @@
 	grid-row: 3;
 	width: 32px;
 	height: 60px;
-	/* margin-left: 20px; */
 }
 
 .encoder41 {

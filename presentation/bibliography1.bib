@@ -1,0 +1,67 @@
+@misc{orfeo,
+  author = {AREA Science Park},
+  title = {ORFEO Documentation},
+  url = {https://orfeo-doc.areasciencepark.it/},
+  year = {2023}
+}
+
+@misc{epyc,
+  author = {AMD},
+  title = {EPYC 7H12 Specifications},
+  url = {https://www.amd.com/en/processors/epyc},
+  year = {2023}
+}
+
+@inproceedings{Velten2022,
+author = {Velten, Markus and Sch\"{o}ne, Robert and Ilsche, Thomas and Hackenberg, Daniel},
+title = {Memory Performance of AMD EPYC Rome and Intel Cascade Lake SP Server Processors},
+year = {2022},
+isbn = {9781450391436},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3489525.3511689},
+doi = {10.1145/3489525.3511689},
+abstract = {Modern processors, in particular within the server segment, integrate more cores with each generation. This increases their complexity in general, and that of the memory hierarchy in particular. Software executed on such processors can suffer from performance degradation when data is distributed disadvantageously over the available resources. To optimize data placement and access patterns, an in-depth analysis of the processor design and its implications for performance is necessary. This paper describes and experimentally evaluates the memory hierarchy of AMD EPYC Rome and Intel Xeon Cascade Lake SP server processors in detail. Their distinct microarchitectures cause different performance patterns for memory latencies, in particular for remote cache accesses. Our findings illustrate the complex NUMA properties and how data placement and cache coherence states impact access latencies to local and remote locations. This paper also compares theoretical and effective bandwidths for accessing data at the different memory levels and main memory bandwidth saturation at reduced core counts. The presented insight is a foundation for modeling performance of the given microarchitectures, which enables practical performance engineering of complex applications. Moreover, security research on side-channel attacks can also leverage the presented findings.},
+booktitle = {Proceedings of the 2022 ACM/SPEC on International Conference on Performance Engineering},
+pages = {165–175},
+numpages = {11},
+keywords = {amd epyc rome, amd zen 2, cache coherence, intel xeon cascade lake, intel xeon skylake, memory hierarchy},
+location = {Beijing, China},
+series = {ICPE '22}
+}
+
+@article{Nuriyev2022,
+  title    = {Model-based selection of optimal MPI broadcast algorithms for multi-core clusters},
+  journal  = {Journal of Parallel and Distributed Computing},
+  volume   = {165},
+  pages    = {1-16},
+  year     = {2022},
+  issn     = {0743-7315},
+  doi      = {https://doi.org/10.1016/j.jpdc.2022.03.012},
+  url      = {https://www.sciencedirect.com/science/article/pii/S0743731522000697},
+  author   = {Emin Nuriyev and Juan-Antonio Rico-Gallego and Alexey Lastovetsky},
+  keywords = {Message passing, Collective communication algorithms, Communication performance modeling, MPI, Multi-core clusters},
+  abstract = {The performance of collective communication operations determines the overall performance of MPI applications. Different algorithms have been developed and implemented for each MPI collective operation, but none proved superior in all situations. Therefore, MPI implementations have to solve the problem of selecting the optimal algorithm for the collective operation depending on the platform, the number of processes involved, the message size(s), etc. The current solution method is purely empirical. Recently, an alternative solution method using analytical performance models of collective algorithms has been proposed and proved both accurate and efficient for one-process-per-CPU configurations. The method derives the analytical performance models of algorithms from their code implementation rather than from high-level mathematical definitions, and estimates the parameters of the models separately for each algorithm. The method is network and topology oblivious and uses the Hockney model for point-to-point communications. In this paper, we extend that selection method to the case of clusters of multi-core processors, where each core of the platform runs a process of the MPI application. We present the proposed approach using Open MPI broadcast algorithms, and experimentally validate it on three different clusters of multi-core processors, Grisou, Gros and MareNostrum4.}
+}
+
+@misc{mpi,
+  author = {MPI Forum},
+  title = {MPI: A Message-Passing Interface Standard},
+  url = {https://www.mpi-forum.org/docs/},
+  year = {2023}
+}
+
+@article{Hockney,
+title = {The communication challenge for MPP: Intel Paragon and Meiko CS-2},
+journal = {Parallel Computing},
+volume = {20},
+number = {3},
+pages = {389-398},
+year = {1994},
+issn = {0167-8191},
+doi = {https://doi.org/10.1016/S0167-8191(06)80021-9},
+url = {https://www.sciencedirect.com/science/article/pii/S0167819106800219},
+author = {Roger W. Hockney},
+keywords = {Communication performance, COMMS1 benchmark, Massively-parallel processors, Latency, Intel iPSC/860, Intel Paragon, Meiko CS-2, Cray-C90},
+abstract = {The communication performance of the Intel iPSC/860, Paragon XP/S and the Meiko CS-2 are compared using the COMMS1 benchmark from the Genesis Parallel Benchmark Suite. The challenge to distributed-memory massively-parallel processors presented by the Cray-C90 shared memory computer is highlighted by re-interpreting vector processing results as though they were measuring communication startup and bandwidth. The results show a wide gap between the two types of computer, in favour of the C-90. These results are for the initial issue of software and hardware of the Paragon and CS-2. Comments from Intel and Meiko are included to show how the manufacturers aim to improve communication performance.}
+}

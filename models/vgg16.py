@@ -145,7 +145,6 @@ class VGG16_128(th.nn.Module):
                 in_features=4096,
                 out_features=output_classes
             ),
-            #th.nn.Softmax(dim=1),
         )
 
     # Forward pass
