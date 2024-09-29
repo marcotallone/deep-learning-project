@@ -48,7 +48,7 @@ class VisionTransformer(th.nn.Module):
                  heads: int = 8,
                  mlp_dim: int = 1024,
                  dropout: float = 0.2
-    ) -> None:
+    ):
         super().__init__()
 
         # Check if the image dimensions are divisible by the patch size
@@ -57,31 +57,29 @@ class VisionTransformer(th.nn.Module):
         patch_dim: int = 3 * patch_size * patch_size  # 3 channels for RGB
 
         # Patch embedding
-        self.patch_embed : th.nn.Linear = th.nn.Linear(patch_dim, dim)
+        self.patch_embed = th.nn.Linear(patch_dim, dim)
 
         # Positional encoding
-        self.pos_embedding : th.nn.Parameter = th.nn.Parameter(th.randn(1, num_patches + 1, dim))
-        self.cls_token: th.nn.Parameter = th.nn.Parameter(th.randn(1, 1, dim))
-        self.dropout: th.nn.Dropout = th.nn.Dropout(dropout)
+        self.pos_embedding = th.nn.Parameter(th.randn(1, num_patches + 1, dim))
+        self.cls_token = th.nn.Parameter(th.randn(1, 1, dim))
+        self.dropout = th.nn.Dropout(dropout)
 
         # Transformer encoder layers
-        self.transformer_layers: th.nn.ModuleList = th.nn.ModuleList([
+        self.transformer_layers = th.nn.ModuleList([
             th.nn.TransformerEncoderLayer(
                 d_model=dim,
                 nhead=heads,
                 dim_feedforward=mlp_dim,
-                dropout=dropout
+                dropout=dropout,
+                batch_first=True
             )
             for _ in range(depth)
         ])
         self.norm = th.nn.LayerNorm(dim)
 
         # Classification head
-        self.to_cls_token: th.nn.Linear = th.nn.Linear(
-            in_features=dim,
-            out_features=output_classes
-        )
-        self.mlp_head: th.nn.Sequential = th.nn.Sequential(
+        self.to_cls_token = th.nn.Identity()
+        self.mlp_head = th.nn.Sequential(
             th.nn.LayerNorm(dim),
             th.nn.Linear(
                 in_features=dim,
@@ -92,7 +90,7 @@ class VisionTransformer(th.nn.Module):
 
 
     # Forward pass
-    def forward(self, x: Tensor) -> Tensor:
+    def forward(self, x):
         x = rearrange(x, 'b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1=16, p2=16)  # Flatten patches
         x = self.patch_embed(x)  # [batch_size, num_patches, dim]
 
