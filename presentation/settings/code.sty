@@ -1,0 +1,382 @@
+%┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓%
+%┃                                   CODE                                     ┃%
+%┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛%
+% NOTE: This package requires the minted package.
+% NOTE: This package uses `pygments` to highlight code, more info at:
+%				---------->					https://pygments.org/					<----------
+% NOTE: If you use this package independently, you need to define the colors!
+
+\ProvidesPackage{code}[2024/08/20 A package providing nice coding utilities]
+
+% Import required packages  
+\RequirePackage{minted}
+\RequirePackage{listings}
+\RequirePackage{fontspec}
+\RequirePackage[breakable]{tcolorbox}
+\tcbuselibrary{minted}
+\tcbuselibrary{listings}
+\tcbuselibrary{skins}
+\RequirePackage{xparse}
+\RequirePackage{etoolbox}
+\RequirePackage{xpatch}
+\RequirePackage{ifthen}
+\RequirePackage{float}
+\RequirePackage{newtxtt}
+\RequirePackage{newfloat}
+\RequirePackage{pgfkeys}
+
+%┌────────────────────────────────────────────────────────────────────────────┐%
+%│                            Common Settings																	│%
+%└────────────────────────────────────────────────────────────────────────────┘%
+
+% Set mono font for code
+% \setmonofont{JetBrainsMono}[
+%     Path=./fonts/static/,
+%     Scale=0.85,
+%     Extension=.ttf,
+%     UprightFont=*-Regular,
+%     BoldFont=*-Bold,
+%     ItalicFont=*-Italic,
+%     BoldItalicFont=*-BoldItalic
+% ]
+
+\setmonofont{JetBrainsMono}[
+    Scale=0.85,
+    Extension=.ttf,
+    UprightFont=*-Regular,
+    BoldFont=*-Bold,
+    ItalicFont=*-Italic,
+]
+
+% Patches for red boxes problem in minted
+% see https://tex.stackexchange.com/a/401250/
+\makeatletter
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+\makeatother
+\makeatletter
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+\xpatchcmd{\inputminted}{\minted@fvset}{\minted@fvset\dontdofcolorbox}{}{}
+\xpatchcmd{\mintinline}{\minted@fvset}{\minted@fvset\dontdofcolorbox}{}{} 
+\makeatother
+
+%┌────────────────────────────────────────────────────────────────────────────┐%
+%│																Common Style																│%
+%└────────────────────────────────────────────────────────────────────────────┘%
+
+% Line numbers style and color
+% \colorlet{numerscolor}{boxcolor!50!textcolor} % Number color change
+\renewcommand{\theFancyVerbLine}{\sffamily
+\textcolor{numerscolor}{\arabic{FancyVerbLine}}}
+
+% Optional arguments for code environment
+\tcbset{
+  % Optional Additional Variables:
+  % you can also use built-in ones together (e.g. title is a built-in option)
+  input/.store in   = \codeInput,
+  output/.store in  = \codeOutput,
+  color/.store in   = \backgroundColor,
+  frame/.store in   = \frameColor,
+  text/.store in    = \textColor,
+  % Default Values
+  input             = defaultInput,
+  output            = defaultOutput,
+  color             = boxcolor,
+  frame             = boxcolor,
+  text              = textcolor,
+}
+
+% Base box style for all languages 
+% NOTE: To REMOVE LINE NUMBERS comment: - linenos
+%																				- numbersep
+%																				- overlay (bottom)
+% Aditionally adjust the `left` margin to your liking (suggest `left = 3mm`)
+\tcbset{
+  basestyle/.style = {
+		% Base minted  style ------------------------------------------------------
+		listing engine				= minted,							% use minted engine
+    minted options = {
+      breaklines,																% break long lines
+      autogobble,																% remove leading spaces				
+      linenos,																	% enable line numbers
+      fontsize						=	\small,							% font size
+      numbersep						=	4mm,								% line number separation
+      obeytabs						=	true,								% obey tabs in code
+      tabsize							=	4,									% tab size
+      mathescape					=	true,								% enable math mode inside '$'
+			%	 WARNING: math escape works only in code comments!
+      escapeinside				=	§§,									% normal text inside '§'
+    },
+		% Box and borders settings ------------------------------------------------
+		colback               = \backgroundColor,		% background color
+		colframe              = \frameColor,				% frame color
+    boxrule								=	0pt,								% frame thickness
+    arc										=	2mm,								% corner radius
+    left									=	7mm,								% left margin
+    top										=	1mm,								% top margin
+    bottom								=	1mm,								% bottom margin		
+		% Title (only if passed as optional argument) -----------------------------
+		coltitle              =   textcolor,              % title color
+		fonttitle             =   \bfseries,              % title font
+		colbacktitle          =   boxcolor!40!background, % title background color
+		before title          =   {\faIcon{code}\quad},   % title icon
+		attach boxed title to top*,                       % title position
+		boxed title style={                               % title spacing/style
+			enhanced, 
+			top=1.5mm, 
+			bottom=1.5mm
+		}, 
+		% Input and Output --------------------------------------------------------
+		subtitle style = {													% INPUT and OUTPUT style
+			colback							=	boxcolor!40!background,
+			before							=	{\vspace*{-3.2mm}},
+			top									=	1mm,
+			bottom							=	1mm,
+			fontupper						=	\normalfont\
+		},
+		before upper={                              % print INPUT and OUTPUT
+			\ifthenelse{\equal{\codeInput}{defaultInput}}{}{
+				\ifstrempty{\codeInput}{}{
+					\tcbsubtitle{
+						\textcolor{commentscolor}{\texttt{INPUT:}}
+						\textcolor{commentscolor}{\codeInput}
+					}
+				} 
+			}
+			\ifthenelse{\equal{\codeOutput}{defaultOutput}}{}{
+				\ifstrempty{\codeOutput}{}{
+					\tcbsubtitle{
+						\textcolor{commentscolor}{\texttt{OUTPUT:}}
+						\textcolor{commentscolor}{\codeOutput}
+					}
+				}
+			}
+		},
+		% Numbers overlay box -----------------------------------------------------
+    overlay	= {
+			\begin{tcbclipinterior}\fill[boxcolor!40!background]
+        (frame.south west) rectangle ([xshift=5mm]frame.north west);
+      \end{tcbclipinterior}
+    }
+		% -------------------------------------------------------------------------
+  }
+}
+
+% Common minted style dependent on the theme
+\ifthenelse{\equal{\selectedtheme}{tokyo}}{
+	% Tokyonight theme
+	\setminted{style=dracula}
+}{
+	\ifthenelse{\equal{\selectedtheme}{dark}}{
+		% Dark theme
+		\setminted{style=github-dark}
+	}{
+		% Light theme
+		\setminted{style=default}
+	}
+}
+
+%┌────────────────────────────────────────────────────────────────────────────┐%
+%│                              Languages Styles															│%
+%└────────────────────────────────────────────────────────────────────────────┘%
+
+% NOTE: Inline Code ───────────────────────────────────────────────────────────
+
+%	Old:
+% % Markdown-style inline code with a colored background
+
+% % // TODO: look at pag. 21 of the tcolorbox manual for inline boxes
+
+\newcommand{\cc}[1]{
+  \kern-1ex                       % negative space
+  \tcbox[
+    on line,                      % inline
+    colback   = boxcolor,         % background color
+    coltext   = textcolor!60,     % text color
+    colframe  = boxcolor,         % frame color   
+    boxrule   = 0pt,              % frame thickness
+    boxsep    = 0.5pt,            % frame separation
+    top       = 0.5mm,            % top margin
+    bottom    = 0.5mm,            % bottom margin
+    left      = 0.5mm,            % left margin
+    right     = 0.5mm             % right margin
+  ]
+  {\texttt{#1}}                   % code text
+  \kern-1ex                       % negative space
+}
+
+\ifthenelse{\equal{\selectedtheme}{tokyo}}{
+	% Tokyonight theme
+  \NewDocumentCommand{\inline}{ O{bash} m }{\mintinline[style=dracula]{#1}{#2}}
+}{
+  \ifthenelse{\equal{\selectedtheme}{dark}}{
+		% Dark theme
+    \NewDocumentCommand{\inline}{ O{bash} m }{\mintinline[style=github-dark]{#1}{#2}}
+  }{
+    % Light theme
+    \NewDocumentCommand{\inline}{ O{bash} m }{\mintinline[style=default]{#1}{#2}}
+  }
+}
+
+% NOTE: Python ────────────────────────────────────────────────────────────────
+\newtcblisting{python}[1][]{
+	basestyle,
+	minted language				=	python,						% Python
+	enhanced,																	% enhanced mode							
+	listing only,															% only listing
+	#1
+}
+
+% NOTE: C ─────────────────────────────────────────────────────────────────────
+\newtcblisting{C}{
+	basestyle,
+	minted language				=	c,								% C
+	enhanced,																	% enhanced mode							
+	listing only,															% only listing
+}
+
+% NOTE: C++ ───────────────────────────────────────────────────────────────────
+\newtcblisting{cpp}{
+	basestyle,
+	minted language				=	cpp,							% C++
+	enhanced,																	% enhanced mode							
+	listing only,															% only listing
+}
+
+% NOTE: Bash ──────────────────────────────────────────────────────────────────
+\newtcblisting{bash}{
+	basestyle,
+	minted language				=	bash,							% Bash
+	enhanced,																	% enhanced mode							
+	listing only,															% only listing
+}
+
+% NOTE: YAML ──────────────────────────────────────────────────────────────────
+\newtcblisting{yaml}{
+	basestyle,
+	minted language				=	yaml,							% YAML
+	enhanced,																	% enhanced mode							
+	listing only,															% only listing
+}
+
+% XXX: Add more languages here, for available languages check at:
+%			 ---------->   https://pygments.org/languages/	<----------
+
+%┌────────────────────────────────────────────────────────────────────────────┐%
+%│                            Listing Code Boxes                              │%
+%└────────────────────────────────────────────────────────────────────────────┘%
+% Old code boxes from version 1.0 for retro compatibility
+
+% Code Environment
+\newtcblisting{code}[2][]{
+  % Initialize Variables -------------------------------------------------------
+  color                 =   boxcolor,
+  frame                 =   boxcolor,
+  text                  =   textcolor,
+  #1,                                         % other options
+  % Title (only if passed as optional argument) --------------------------------
+  coltitle              =   textcolor,                % title color
+  fonttitle             =   \bfseries,                % title font
+  colbacktitle          =   boxcolor!40!background,   % title background color
+  before title          =   {\faIcon{code}\quad},     % title icon
+  attach boxed title to top*,                         % title position
+  boxed title style={                                 % title spacing/style
+    enhanced, 
+    top=1.5mm, 
+    bottom=1.5mm
+  }, 
+  % Listings Options -----------------------------------------------------------
+  enhanced,                                   % enhanced mode
+  listing only,                               % only listing
+  listing options={
+    % Language style -----------------------------------------------------------
+    style               =   #2,               % language (codestyles.sty)
+    % Syntax Highlighting ------------------------------------------------------
+    basicstyle          =   \color{\textColor}\ttfamily\small, % text style
+    commentstyle        =   \color{gray},     % comments
+    keywordstyle        =   \color{red},      % keywords
+    stringstyle         =   \color{azure},    % strings
+    escapeinside        =   {§}{§},           % normal text inside '§' 
+    % Numbers ------------------------------------------------------------------
+    % numbers             =   none,           % line numbers (set by language)
+    numberstyle         =   \color{gray}\ttfamily, % line numbers style
+    numbersep           =   1.5mm,            % line numbers separation
+    % Spaces -------------------------------------------------------------------
+    breakatwhitespace   =   false,            % break at any whitespace
+    breaklines          =   true,             % break lines
+    captionpos          =   b,                % caption position
+    keepspaces          =   false,            % keep spaces
+    showspaces          =   false,            % show spaces
+    showstringspaces    =   false,            % show string spaces
+    showtabs            =   false,            % show tabs 
+    tabsize             =   2,                % tab size
+    % Margins ------------------------------------------------------------------
+    xleftmargin         =   0mm,              % left margin
+    aboveskip           =   -0.5mm,           % top spacing
+    belowskip           =   -0.5mm,           % bottom spacing
+  },
+  colback               =   \backgroundColor, % background color
+  colframe              =   \frameColor,      % frame color
+  boxrule               =   0pt,              % frame thickness
+  arc                   =   3mm,              % corner radius
+  % Input and Output -----------------------------------------------------------
+  subtitle style        =   {                 % INPUT and OUTPUT style
+    colback=boxcolor!70!background,
+    before={\vspace*{-3.2mm}},
+    top=1mm,
+    bottom=1mm,
+		fontupper=\normalfont
+  },
+  before upper={                              % print INPUT and OUTPUT
+    \ifthenelse{\equal{\codeInput}{defaultInput}}{}{
+      \ifstrempty{\codeInput}{}{
+        \tcbsubtitle{
+          \textcolor{gray}{\texttt{INPUT:}} \textcolor{gray}{\codeInput}
+        }
+      } 
+    }
+    \ifthenelse{\equal{\codeOutput}{defaultOutput}}{}{
+      \ifstrempty{\codeOutput}{}{
+        \tcbsubtitle{
+          \textcolor{gray}{\texttt{OUTPUT:}} \textcolor{gray}{\codeOutput}
+        }
+      }
+    }
+  },  
+}
+
+% NOTE: Input and Output can contain math text but it must be protected.
+% Example: 
+%     \begin{code}[input = \protect$\sin(x)$]{Pseudocode}
+%     ...
+%     \end{code}
+% Or you can also just enclose the text in curly braces:
+%     \begin{code}[input = {$\sin(x)$}]{Pseudocode}
+%     ...
+%     \end{code}
+
+% You can ADD A NEW LANGUAGE by copying and adding a new block below
+
+\lstdefinestyle{Pseudocode}{
+  language=Python,                            % language
+  numbers=left,                               % line numbers position
+  morekeywords={                              % additional keywords
+      function, if, else, return,
+      do, then, elif, end, and, not,
+      downto, to, exchange, each,
+      until, repeat, with
+    },
+  mathescape=true,                            % enable math mode
+  comment=[l]{//},                            % line comment
+}
+\lstdefinestyle{Python}{language = Python}
+\lstdefinestyle{C++}{language = C++}
+\lstdefinestyle{C}{language = C}
+\lstdefinestyle{Bash}{language = Bash}
+\lstdefinestyle{Fortran}{language = Fortran}
+\lstdefinestyle{R}{language = R}
+\lstdefinestyle{Java}{language = Java}
+\lstdefinestyle{JavaScript}{language = JavaScript}
+\lstdefinestyle{HTML}{language = HTML}
+\lstdefinestyle{CSS}{language = CSS}

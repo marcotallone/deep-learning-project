@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Specify the extensions of the files you want to delete
-extensions=(".aux" ".log" ".out" ".toc" ".lof" ".lot" ".fls" ".blg" ".bbl" ".bcf" ".fdb_latexmk" ".synctex.gz"".listing""-blx.bib" ".run.xml")
+extensions=("aux" "log" "out" "toc" "lof" "lot" "fls" "blg" "bbl" "bcf" "fdb_latexmk" "synctex.gz" "listing" "-blx.bib" "run.xml" "nav" "snm" "vrb" "synctex.gz" "synctex.gz(busy)")
 
 # Walk through the current directory and its subdirectories
 for ext in "${extensions[@]}"; do
