@@ -97,27 +97,27 @@
 
             % Fully connected layer 1 (1024 -> 512 features)
             \draw[fill=green] (10.4, -0.3, 0) -- (10.7, -0.3, 0) -- (10.7, 5, 0) -- (10.4, 5, 0) -- cycle;
-            \node[up right, rotate=43] at (10.4, 0, 7) {\scriptsize Fully connected 1024 -> 512};
+            \node[up right, rotate=43] at (10.9, 0, 7) {\scriptsize Fully connected 1024 -> 512};
 
             % Dropout
             \coordinate (A) at (11.1, -0.3, 0);
             \coordinate (B) at (11.1, 5, 0);
             \draw[yellow, dashed] (A) -- (B) -- cycle;
-            \node[up right, rotate=43] at (11.1, 0, 5) {\scriptsize Dropout};
+            \node[up right, rotate=43] at (11.5, 0, 5) {\scriptsize Dropout};
 
             % Fully connected layer 2 (512 -> 128 features)
             \draw[fill=green] (11.8, -0.3, 0) -- (12.1, -0.3, 0) -- (12.1, 3.5, 0) -- (11.8, 3.5, 0) -- cycle;
-            \node[up right, rotate=43] at (11.8, 0, 7) {\scriptsize Fully connected 512 -> 128};
+            \node[up right, rotate=43] at (12.3, 0, 7) {\scriptsize Fully connected 512 -> 128};
 
             % Dropout
             \coordinate (A) at (12.5, -0.3, 0);
             \coordinate (B) at (12.5, 3.5, 0);
             \draw[yellow, dashed] (A) -- (B) -- cycle;
-            \node[up right, rotate=43] at (12.5, 0, 5) {\scriptsize Dropout};
+            \node[up right, rotate=43] at (12.9, 0, 5) {\scriptsize Dropout};
 
             % Output layer (128 features -> 4 classes)
             \draw[fill=blue] (13.2, -0.3, 0) -- (13.5, -0.3, 0) -- (13.5, 2, 0) -- (13.2, 2, 0) -- cycle;
-            \node[up right, rotate=43] at (13.5, 0, 5) {\scriptsize Output 128 -> 4};
+            \node[up right, rotate=43] at (13.8, 0, 5) {\scriptsize Output 128 -> 4};
             
             \end{tikzpicture}
 
