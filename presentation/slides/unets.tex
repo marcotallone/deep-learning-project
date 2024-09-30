@@ -13,38 +13,49 @@
 
 	$3$ models for the segmentation task:
 
-	\vspace{2ex}
+	% \only<1->{
+	% \begin{cbox}
+	% 	\begin{itemize}
+	% 		\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model architecture}}
+	% 	\end{itemize}
+	% \end{cbox}
+	% }
 
-	\only<1->{
-	\begin{cbox}
-		\begin{itemize}
-			\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model architecture}}
-		\end{itemize}
-	\end{cbox}
+	% \only<2->{
+	% \begin{cbox}
+	% 	\begin{itemize}
+	% 		\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
+	% 			parameters}}
+	% 	\end{itemize}
+	% \end{cbox}
+	% }
+
+	% \only<3->{
+	% \begin{cbox}
+	% 	\begin{itemize}
+	% 		\item \bft{Attention U-Net}: \itt{\gray{attention mechanism added}}
+	% 	\end{itemize}
+	% \end{cbox}
+	% }
+
+	\begin{itemize}
+		\setlength{\itemsep}{0.8ex}
+		\only<1->{\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model
+		architecture}}}
+		\only<2->{\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
+		parameters}}}
+		\only<3->{\item \bft{Attention U-Net}: \itt{\gray{attention mechanism
+		added}}}
+\end{itemize}
+
+	\vspace{-2ex}
+
+	\only<4->{
+		\begin{figure}
+			\centering
+			\includegraphics[width=\textwidth]{parameters_vs_filters.png}
+		\end{figure}
 	}
-
-	\vspace{2ex}
-
-	\only<2->{
-	\begin{cbox}
-		\begin{itemize}
-			\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
-				parameters}}
-		\end{itemize}
-	\end{cbox}
-	}
-
-	\vspace{2ex}
-
-	\only<3->{
-	\begin{cbox}
-		\begin{itemize}
-			\item \bft{Attention U-Net}: \itt{\gray{attention mechanism added}}
-		\end{itemize}
-	\end{cbox}
-	}
-
-	% TODO: Maybe here the plot of n° of parameters vs `n_filters` variable
 
 \end{frame}
 
