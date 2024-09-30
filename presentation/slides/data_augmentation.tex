@@ -1,0 +1,35 @@
+\documentclass[../presentation.tex]{subfiles} % Parent file
+\graphicspath{{\subfix{../images/}}} % Images path
+
+\begin{document}
+
+\section{Datasets}
+
+\begin{frame}
+
+    \frametitle{Resizing and Data Augmentation}
+
+    \begin{cbox}[cyan]
+        \begin{itemize}
+            \item Images are resized to $128 \times 128$ pixels
+        \end{itemize}
+    \end{cbox}
+
+    \vspace{0.2cm}
+
+    \begin{cbox}
+        Transformations applied to the images:
+        \begin{itemize}
+            \item Random horizontal flip
+            \item Random rotation up to 10 degrees
+            \item Random change in brightness, contrast, saturation, and hue
+        \end{itemize}
+
+        \vspace{0.2cm}
+
+        Theses transformations add variability to the dataset and help the model generalize better
+    \end{cbox}
+
+\end{frame}
+
+\end{document}
