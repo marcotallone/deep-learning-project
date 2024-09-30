@@ -84,7 +84,8 @@
 \RequirePackage{multicol}
 
 % Lists (enumeration, ...)
-% \RequirePackage{enumitem}
+% WARNING: doesn't work in beamer!
+% \RequirePackage{enumitem} 
 
 % Hyperlinks
 \RequirePackage{hyperref}
@@ -577,6 +578,7 @@
 \newcommand{\blue}[1]{\textcolor{blue}{#1}}
 \newcommand{\purple}[1]{\textcolor{purple}{#1}}
 \newcommand{\gray}[1]{\textcolor{gray}{#1}}
+\newcommand{\commentcol}[1]{\textcolor{commentscolor}{#1}}
 
 % Quick bold font colors
 \newcommand{\bred}[1]{\textcolor{red}{\bft{#1}}}
@@ -587,6 +589,7 @@
 \newcommand{\bblue}[1]{\textcolor{blue}{\bft{#1}}}
 \newcommand{\bpurple}[1]{\textcolor{purple}{\bft{#1}}}
 \newcommand{\bgray}[1]{\textcolor{gray}{\bft{#1}}}
+\newcommand{\bcommentcol}[1]{\textcolor{commentscolor}{\bft{#1}}}
 
 % Command to print an horizontal line given the width in input (optional,
 % default is \textwidth)
