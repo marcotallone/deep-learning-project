@@ -78,7 +78,9 @@ def display_image_channels(image: Tensor, title='Image Channels'):
 	for idx, ax in enumerate(axes.flatten()):
 		channel_image = image[idx, :, :]  # Transpose the array to display the channel
 		ax.imshow(channel_image, cmap='gray')
-		ax.axis('off')
+		# ax.axis('off')
+		ax.set_xticks([])
+		ax.set_yticks([])
 		ax.set_title(channel_names[idx], fontsize=15)
 	plt.tight_layout()
 	plt.suptitle(title, fontsize=15, y=1.03)
@@ -110,7 +112,9 @@ def display_mask_channels(mask: Tensor, title='Mask Channels'):
 		rgb_mask = np.zeros((mask.shape[1], mask.shape[2], 3), dtype=np.uint8)
 		rgb_mask[..., idx] = mask[idx, :, :] * 255  # Transpose the array to display the channel
 		ax.imshow(rgb_mask)
-		ax.axis('off')
+		# ax.axis('off')
+		ax.set_xticks([])
+		ax.set_yticks([])
 		ax.set_title(channel_names[idx], fontsize=15)
 	plt.suptitle(title, fontsize=15, y=0.9)
 	plt.tight_layout()
@@ -143,7 +147,9 @@ def display_overlay(image: Tensor,
 	plt.figure(figsize=(8, 8))
 	plt.imshow(rgb_image)
 	plt.title(title, fontsize=15, y=1.02)
-	plt.axis('off')
+	# plt.axis('off')
+	plt.xticks([])
+	plt.yticks([])
 	plt.show()
 
 
@@ -220,8 +226,8 @@ def display_scan(scan_index: int,
 	"""
 
 	# Define title and subtitle
-	if title is None: title = 'Brain MRI Scan'
-	if subtitle is None: subtitle = f'Patient {patient_index} - Scan {scan_index}'
+	# if title is None: title = 'Brain MRI Scan'
+	# if subtitle is None: subtitle = f'Patient {patient_index} - Scan {scan_index}'
 
 	# Pick the image and mask of the scan
 	image = images[scan_index]
@@ -245,7 +251,9 @@ def display_scan(scan_index: int,
 		ax = fig.add_subplot(gs[0, idx])
 		channel_image = image[idx, :, :]
 		ax.imshow(channel_image, cmap='gray')
-		ax.axis('off')
+		# ax.axis('off')
+		ax.set_xticks([])
+		ax.set_yticks([])
 		ax.set_title(image_channels[idx], fontsize=labels_fontsize)
 
 	# Plot mask channels (1x3 grid)
@@ -254,7 +262,9 @@ def display_scan(scan_index: int,
 		rgb_mask = np.zeros((mask.shape[1], mask.shape[2], 3), dtype=np.uint8)
 		rgb_mask[..., idx] = mask[idx, :, :] * 255
 		ax.imshow(rgb_mask)
-		ax.axis('off')
+		# ax.axis('off')
+		ax.set_xticks([])
+		ax.set_yticks([])
 		ax.set_title(mask_channels[idx], fontsize=labels_fontsize)
 
 	# Plot overlay (single plot)
@@ -265,7 +275,9 @@ def display_scan(scan_index: int,
 	color_mask = np.stack([mask[0, :, :], mask[1, :, :], mask[2, :, :]], axis=-1)
 	rgb_image = np.where(color_mask, color_mask, rgb_image)
 	ax.imshow(rgb_image)
-	ax.axis('off')
+	# ax.axis('off')
+	ax.set_xticks([])
+	ax.set_yticks([])
 	ax.set_title('Overlay [RGB]', fontsize=labels_fontsize)
 
 	plt.suptitle(title, fontsize=title_fontsize, y=1)
@@ -273,7 +285,7 @@ def display_scan(scan_index: int,
 	plt.tight_layout()
 	
 	if save_path:
-		plt.savefig(save_path)
+		plt.savefig(save_path, format='png', dpi=600, transparent=True)
 		plt.close(fig)
 	else:
 		plt.show()
@@ -326,7 +338,9 @@ def display_animated(patient_index: int,
 		img = plt.imread(temp_file)
 		plt.tight_layout()
 		plt.imshow(img)
-		plt.axis('off')
+		# plt.axis('off')
+		plt.xticks([])
+		plt.yticks([])
 
 		# Adjust layout to remove white borders
 		plt.subplots_adjust(left=0, right=1, top=0.9, bottom=0)
@@ -335,7 +349,7 @@ def display_animated(patient_index: int,
 	ani = animation.FuncAnimation(fig, update, frames=scan_range, interval=interval)
 
 	# Save the animation as a GIF
-	ani.save(output_file, writer='imagemagick')
+	ani.save(output_file, writer='pillow', dpi=600, savefig_kwargs={'transparent': True})
 
 	# Close the figure
 	plt.close(fig)
@@ -575,7 +589,7 @@ def barplot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> Non
 		# Melt the DataFrame
 		df_melted = pd.melt(new_df, id_vars="Channel", var_name="metric", value_name="value")
 
-		# Define a palette
+		# Define a palettes
 		palette = {
 			'Red': 'red',
 			'Blue': 'blue',
@@ -616,7 +630,7 @@ def barplot_metrics(df: pd.DataFrame, model: th.nn.Module, set_name: str) -> Non
 		# Melt the DataFrame
 		df_melted = pd.melt(new_df, id_vars="Channel", var_name="metric", value_name="value")
 
-		# Define a palette
+		# Define a palettes
 		palette = {
 			'Red': 'red',
 			'Blue': 'blue',
@@ -681,7 +695,7 @@ def barplot_metrics_multiple(dfs: list, models: list) -> None:
 		df_melted = pd.melt(new_df, id_vars="Channel", var_name="metric", value_name="value")
 		df_melted_e = pd.melt(new_df_e, id_vars="Channel", var_name="metric", value_name="value")
 
-		# Define a palette
+		# Define a palettes
 		palette = {
 			'Red': 'red',
 			'Blue': 'blue',
@@ -690,7 +704,7 @@ def barplot_metrics_multiple(dfs: list, models: list) -> None:
 		}
 
 		# Plot using barplot training metrics in first row
-		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted, ax=axes[0, i], palette=palette)
+		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted, ax=axes[0, i], palette=palette, linewidth=0.5)
 		axes[0, i].set(ylim=(0, 1))
 		axes[0, i].set_yticks([i * 0.1 for i in range(11)])
 		axes[0, i].set_xlabel("")
@@ -699,7 +713,7 @@ def barplot_metrics_multiple(dfs: list, models: list) -> None:
 		axes[0, i].legend(title="", loc='upper center', bbox_to_anchor=(0.5, 1.16), ncol=4)
 
 		# Plot using barplot validation metrics in second row
-		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted_e, ax=axes[1, i], palette=palette)
+		sns.barplot(x='metric', y='value', hue='Channel', data=df_melted_e, ax=axes[1, i], palette=palette, linewidth=0.5)
 		axes[1, i].set(ylim=(0, 1))
 		axes[1, i].set_yticks([i * 0.1 for i in range(11)])
 		axes[1, i].set_xlabel("")
@@ -709,4 +723,6 @@ def barplot_metrics_multiple(dfs: list, models: list) -> None:
 
 	# Adjust layout
 	plt.tight_layout()
-	plt.show()
+	# plt.show()
+	plt.savefig("images/metrics_multiple.png", format='png', dpi=600, transparent=True)
+	plt.close()

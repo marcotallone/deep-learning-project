@@ -13,38 +13,49 @@
 
 	$3$ models for the segmentation task:
 
-	\vspace{2ex}
+	% \only<1->{
+	% \begin{cbox}
+	% 	\begin{itemize}
+	% 		\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model architecture}}
+	% 	\end{itemize}
+	% \end{cbox}
+	% }
 
-	\only<1->{
-	\begin{cbox}
-		\begin{itemize}
-			\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model architecture}}
-		\end{itemize}
-	\end{cbox}
+	% \only<2->{
+	% \begin{cbox}
+	% 	\begin{itemize}
+	% 		\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
+	% 			parameters}}
+	% 	\end{itemize}
+	% \end{cbox}
+	% }
+
+	% \only<3->{
+	% \begin{cbox}
+	% 	\begin{itemize}
+	% 		\item \bft{Attention U-Net}: \itt{\gray{attention mechanism added}}
+	% 	\end{itemize}
+	% \end{cbox}
+	% }
+
+	\begin{itemize}
+		\setlength{\itemsep}{0.8ex}
+		\only<1->{\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model
+		architecture}}}
+		\only<2->{\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
+		parameters}}}
+		\only<3->{\item \bft{Attention U-Net}: \itt{\gray{attention mechanism
+		added}}}
+\end{itemize}
+
+	\vspace{-2ex}
+
+	\only<4->{
+		\begin{figure}
+			\centering
+			\includegraphics[width=\textwidth]{parameters_vs_filters.png}
+		\end{figure}
 	}
-
-	\vspace{2ex}
-
-	\only<2->{
-	\begin{cbox}
-		\begin{itemize}
-			\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
-				parameters}}
-		\end{itemize}
-	\end{cbox}
-	}
-
-	\vspace{2ex}
-
-	\only<3->{
-	\begin{cbox}
-		\begin{itemize}
-			\item \bft{Attention U-Net}: \itt{\gray{attention mechanism added}}
-		\end{itemize}
-	\end{cbox}
-	}
-
-	% TODO: Maybe here the plot of n° of parameters vs `n_filters` variable
 
 \end{frame}
 
@@ -125,30 +136,28 @@
 		\item \bft{first encoder filters}: $32$
 	\end{itemize}
 
-	% Just a test:
-	% \begin{minipage}{0.23\textwidth}
-	% 	\begin{cbox}
-	% 		\begin{center}
-	% 			% \bft{\huge{20}}\\
-	% 			{\fontsize{20}{20}\selectfont{$20$}}\\
-	% 			epochs
-	% 		\end{center}
-	% 	\end{cbox}
-	% \end{minipage}
-	% \begin{minipage}{0.28\textwidth}
-	% 	\begin{cbox}
-	% 		\begin{center}
-	% 			learn~rate\\
-	% 			{\fontsize{15}{30}\selectfont{$2 \cdot 10^{-3}$}}
-	% 		\end{center}
-	% 	\end{cbox}
-	% \end{minipage}
-
 \end{frame}
 
 
 % Slide 6 ──────────────────────────────────────────────────────────────────────
 \begin{frame}[t]
+
+	\frametitle{Visualizing a prediction}
+
+	\vspace{-2ex}
+
+		\begin{figure}
+			\centering
+			\only<1>{\includegraphics[width=0.9\textwidth]{segmentation-prediction.png}}
+			\only<2->{\includegraphics[width=0.9\textwidth]{segmentation-bin-prediction.png}}
+			\includegraphics[width=0.9\textwidth]{segmentation-ground-truth.png}
+		\end{figure}
+
+\end{frame}
+
+
+% Slide 7 ──────────────────────────────────────────────────────────────────────
+\begin{frame}
 
 	\frametitle{Performance Assessment}
 
@@ -174,27 +183,30 @@
 		\end{array}
 	\end{equation*}
 
-	% TODO: Plot of these 3 indexes as they change through epochs for the three
-	% models (U-Net, Improved U-Net, Attention U-Net)
-	% Recall to plot both for the singe channels and the average of all channels:
-	% so maybe do 4 plots in total and do comparison in each of them
+	\vspace{2ex}
+
+	\begin{figure}
+		\centering
+		\only<1>{\includegraphics[width=\textwidth]{metrics-red.png}}
+		\only<2>{\includegraphics[width=\textwidth]{metrics-green.png}}
+		\only<3>{\includegraphics[width=\textwidth]{metrics-blue.png}}
+		\only<4>{\includegraphics[width=\textwidth]{metrics-average.png}}
+	\end{figure}
 
 	% NOTE: Extra material: all the indexes plots of the other metrics
 
 \end{frame}
 
 
-% Slide 7 ──────────────────────────────────────────────────────────────────────
-\begin{frame}[t]
+% Slide 8 ──────────────────────────────────────────────────────────────────────
+\begin{frame}
 
 	\frametitle{Visualizing Attention Maps}
 	
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.7\textwidth]{attention-maps.png}
+		\includegraphics[width=\textwidth]{attention-maps.png}
 	\end{figure}
-
-	% TODO: Probably better place these maps on a 1x4 grid for spacing
 
 \end{frame}
 
