@@ -1,4 +1,6 @@
 # Utilities functions to conduct model analysis and data visualization
+# Some of these functions are pretty long but it's just a bunch of plotting 
+# commands to produce nice plots for better data visualization
 
 # Imports ----------------------------------------------------------------------
 
@@ -15,6 +17,20 @@ from IPython.display import Image
 # Torch imports
 import torch as th
 from torch import Tensor
+
+# Define custom palette
+tokyo = {
+	"red": "#F7768E",
+	"orange": "#FF9E64",
+	"yellow": "#FFCB30",
+	"green": "#9ECE6A",
+	"cyan": "#2AC3DE",
+	"blue": "#7AA2F7",
+	"purple": "#BB9AF7",
+}
+
+# Apply the custom color palette globally
+sns.set_palette(list(tokyo.values()))
 
 
 # Parameters counter -----------------------------------------------------------
@@ -725,4 +741,226 @@ def barplot_metrics_multiple(dfs: list, models: list) -> None:
 	plt.tight_layout()
 	# plt.show()
 	plt.savefig("images/metrics_multiple.png", format='png', dpi=600, transparent=True)
+	plt.close()
+
+
+# Plot chosen metrics for all channels and average -----------------------------
+
+# Plots of dice, precision and recall over epochs for red channel
+def plot_red_metrics(classic_df: pd.DataFrame, improved_df: pd.DataFrame, attention_df: pd.DataFrame) -> None:
+	"""
+	Function to plot dice, precision and recall of the red channel 
+	for the classic, improved and attention U-Net models.
+	"""
+
+	fig, ax = plt.subplots(1, 3, figsize=(18, 7))
+
+	# Set all the axes xticks as the epochs
+	epochs = classic_df['epoch'].values
+	ax[0].set_xticks(epochs)
+	ax[1].set_xticks(epochs)
+	ax[2].set_xticks(epochs)
+
+	# Set yticks from 0.0 to 1.0 onsteps of 0.2
+	ax[0].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[1].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[2].set_yticks(np.arange(0.0, 1.1, 0.1))
+
+	# Set yrange [0,1] included
+	ax[0].set_ylim([0, 1])
+	ax[1].set_ylim([0, 1])
+	ax[2].set_ylim([0, 1])
+
+	# Dice
+	sns.lineplot(data=classic_df, x='epoch', y='dice_red_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=improved_df, x='epoch', y='dice_red_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=attention_df, x='epoch', y='dice_red_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[0])
+	red_bullet = '\u2B24'  # Unicode for red circle
+	ax[0].set_title(f"Dice for Red Channel {red_bullet}", fontsize=16, color=tokyo['red'])
+	ax[0].set_xlabel("Epochs")
+	ax[0].set_ylabel("")
+	ax[0].legend(loc='lower right')
+
+	# Precision
+	sns.lineplot(data=classic_df, x='epoch', y='precision_red_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=improved_df, x='epoch', y='precision_red_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=attention_df, x='epoch', y='precision_red_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[1])
+	ax[1].set_title(f"Precision for Red Channel {red_bullet}", fontsize=16, color=tokyo['red'])
+	ax[1].set_xlabel("Epochs")
+	ax[1].set_ylabel("")
+	ax[1].legend(loc='lower right')
+
+	# Recall
+	sns.lineplot(data=classic_df, x='epoch', y='recall_red_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=improved_df, x='epoch', y='recall_red_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=attention_df, x='epoch', y='recall_red_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[2])
+	ax[2].set_title(f"Recall for Red Channel {red_bullet}", fontsize=16, color=tokyo['red'])
+	ax[2].set_xlabel("Epochs")
+	ax[2].set_ylabel("")
+	ax[2].legend(loc='lower right')
+
+	# Save the plot
+	plt.tight_layout()
+	plt.savefig("images/metrics-red.png", dpi=600, transparent=True)
+	plt.close()
+
+
+# Plots for dice, precision, and recall over epochs for green channel
+def plot_green_metrics(classic_df: pd.DataFrame, improved_df: pd.DataFrame, attention_df: pd.DataFrame) -> None:
+	fig, ax = plt.subplots(1, 3, figsize=(18, 7))
+
+	# Set all the axes xticks as the epochs
+	epochs = classic_df['epoch'].values
+	ax[0].set_xticks(epochs)
+	ax[1].set_xticks(epochs)
+	ax[2].set_xticks(epochs)
+
+	# Set yticks from 0.0 to 1.0 on steps of 0.1
+	ax[0].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[1].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[2].set_yticks(np.arange(0.0, 1.1, 0.1))
+
+	# Set yrange [0,1] included
+	ax[0].set_ylim([0, 1])
+	ax[1].set_ylim([0, 1])
+	ax[2].set_ylim([0, 1])
+
+	# Dice
+	sns.lineplot(data=classic_df, x='epoch', y='dice_green_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=improved_df, x='epoch', y='dice_green_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=attention_df, x='epoch', y='dice_green_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[0])
+	green_bullet = '\u2B24'  # Unicode for green circle
+	ax[0].set_title(f"Dice for Green Channel {green_bullet}", fontsize=16, color=tokyo['green'])
+	ax[0].set_xlabel("Epochs")
+	ax[0].set_ylabel("")
+	ax[0].legend(loc='lower right')
+
+	# Precision
+	sns.lineplot(data=classic_df, x='epoch', y='precision_green_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=improved_df, x='epoch', y='precision_green_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=attention_df, x='epoch', y='precision_green_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[1])
+	ax[1].set_title(f"Precision for Green Channel {green_bullet}", fontsize=16, color=tokyo['green'])
+	ax[1].set_xlabel("Epochs")
+	ax[1].set_ylabel("")
+	ax[1].legend(loc='lower right')
+
+	# Recall
+	sns.lineplot(data=classic_df, x='epoch', y='recall_green_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=improved_df, x='epoch', y='recall_green_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=attention_df, x='epoch', y='recall_green_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[2])
+	ax[2].set_title(f"Recall for Green Channel {green_bullet}", fontsize=16, color=tokyo['green'])
+	ax[2].set_xlabel("Epochs")
+	ax[2].set_ylabel("")
+	ax[2].legend(loc='lower right')
+
+	# Save the plot
+	plt.tight_layout()
+	plt.savefig("images/metrics-green.png", dpi=600, transparent=True)
+	plt.close()
+
+
+# Plots for dice, precision, and recall over epochs for blue channel
+def plot_blue_metrics(classic_df: pd.DataFrame, improved_df: pd.DataFrame, attention_df: pd.DataFrame) -> None:
+	fig, ax = plt.subplots(1, 3, figsize=(18, 7))
+
+	# Set all the axes xticks as the epochs
+	epochs = classic_df['epoch'].values
+	ax[0].set_xticks(epochs)
+	ax[1].set_xticks(epochs)
+	ax[2].set_xticks(epochs)
+
+	# Set yticks from 0.0 to 1.0 on steps of 0.1
+	ax[0].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[1].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[2].set_yticks(np.arange(0.0, 1.1, 0.1))
+
+	# Set yrange [0,1] included
+	ax[0].set_ylim([0, 1])
+	ax[1].set_ylim([0, 1])
+	ax[2].set_ylim([0, 1])
+
+	# Dice
+	sns.lineplot(data=classic_df, x='epoch', y='dice_blue_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=improved_df, x='epoch', y='dice_blue_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=attention_df, x='epoch', y='dice_blue_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[0])
+	blue_bullet = '\u2B24'  # Unicode for blue circle
+	ax[0].set_title(f"Dice for Blue Channel {blue_bullet}", fontsize=16, color=tokyo['blue'])
+	ax[0].set_xlabel("Epochs")
+	ax[0].set_ylabel("")
+	ax[0].legend(loc='lower right')
+
+	# Precision
+	sns.lineplot(data=classic_df, x='epoch', y='precision_blue_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=improved_df, x='epoch', y='precision_blue_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=attention_df, x='epoch', y='precision_blue_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[1])
+	ax[1].set_title(f"Precision for Blue Channel {blue_bullet}", fontsize=16, color=tokyo['blue'])
+	ax[1].set_xlabel("Epochs")
+	ax[1].set_ylabel("")
+	ax[1].legend(loc='lower right')
+
+	# Recall
+	sns.lineplot(data=classic_df, x='epoch', y='recall_blue_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=improved_df, x='epoch', y='recall_blue_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=attention_df, x='epoch', y='recall_blue_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[2])
+	ax[2].set_title(f"Recall for Blue Channel {blue_bullet}", fontsize=16, color=tokyo['blue'])
+	ax[2].set_xlabel("Epochs")
+	ax[2].set_ylabel("")
+	ax[2].legend(loc='lower right')
+
+	# Save the plot
+	plt.tight_layout()
+	plt.savefig("images/metrics-blue.png", dpi=600, transparent=True)
+	plt.close()
+
+
+# Plots for dice, precision, and recall over epochs for average channel
+def plot_average_metrics(classic_df: pd.DataFrame, improved_df: pd.DataFrame, attention_df: pd.DataFrame) -> None:
+	fig, ax = plt.subplots(1, 3, figsize=(18, 7))
+
+	# Set all the axes xticks as the epochs
+	epochs = classic_df['epoch'].values
+	ax[0].set_xticks(epochs)
+	ax[1].set_xticks(epochs)
+	ax[2].set_xticks(epochs)
+
+	# Set yticks from 0.0 to 1.0 on steps of 0.1
+	ax[0].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[1].set_yticks(np.arange(0.0, 1.1, 0.1))
+	ax[2].set_yticks(np.arange(0.0, 1.1, 0.1))
+
+	# Set yrange [0,1] included
+	ax[0].set_ylim([0, 1])
+	ax[1].set_ylim([0, 1])
+	ax[2].set_ylim([0, 1])
+
+	# Dice
+	sns.lineplot(data=classic_df, x='epoch', y='dice_average_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=improved_df, x='epoch', y='dice_average_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[0])
+	sns.lineplot(data=attention_df, x='epoch', y='dice_average_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[0])
+	ax[0].set_title(f"Dice Average ", fontsize=16)
+	ax[0].set_xlabel("Epochs")
+	ax[0].set_ylabel("")
+	ax[0].legend(loc='lower right')
+
+	# Precision
+	sns.lineplot(data=classic_df, x='epoch', y='precision_average_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=improved_df, x='epoch', y='precision_average_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[1])
+	sns.lineplot(data=attention_df, x='epoch', y='precision_average_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[1])
+	ax[1].set_title(f"Precision Average ", fontsize=16)
+	ax[1].set_xlabel("Epochs")
+	ax[1].set_ylabel("")
+	ax[1].legend(loc='lower right')
+
+	# Recall
+	sns.lineplot(data=classic_df, x='epoch', y='recall_average_e', label='Classic U-Net', marker='o', color=tokyo['red'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=improved_df, x='epoch', y='recall_average_e', label='Improved U-Net', marker='o', color=tokyo['cyan'], markeredgewidth=0, ax=ax[2])
+	sns.lineplot(data=attention_df, x='epoch', y='recall_average_e', label='Attention U-Net', marker='o', color=tokyo['green'], markeredgewidth=0, ax=ax[2])
+	ax[2].set_title(f"Recall Average ", fontsize=16)
+	ax[2].set_xlabel("Epochs")
+	ax[2].set_ylabel("")
+	ax[2].legend(loc='lower right')
+
+	# Save the plot
+	plt.tight_layout()
+	plt.savefig("images/metrics-average.png", dpi=600, transparent=True)
 	plt.close()
