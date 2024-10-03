@@ -67,10 +67,22 @@
 
 	% TODO: Replace this figure with TikZ picture and correct numbers
 	% + in the tikz picture write the important elements highlighted in the speech
+	% \begin{figure}
+	% 	\centering
+	% 	\includegraphics[width=0.8\textwidth]{unet-architecture.png}
+	% \end{figure}
+
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.8\textwidth]{unet-architecture.png}
+		\begin{tikzpicture}
+
+			% Input Image
+			\node[draw, rectangle, minimum width=1.5cm, minimum height=1.5cm] (input)
+			at (0, 0) {Input Image};
+
+		\end{tikzpicture}
 	\end{figure}
+
 
 \end{frame}
 
