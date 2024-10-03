@@ -14,10 +14,78 @@ import h5py
 import torch as th
 from torch import Tensor
 from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
+from torchvision import transforms, datasets
 
 # Typining hints
 from typing import List, Tuple
+
+
+# Classification task ----------------------------------------------------------
+def load_classification(train_directory: str,
+                        valid_directory: str,
+                        train_batch_size: int,
+                        valid_batch_size: int,
+                        resize: Tuple[int, int] = (128, 128),
+                        shuffle: bool = True,
+                        data_augmentation: bool = True
+) -> Tuple[th.utils.data.DataLoader, th.utils.data.DataLoader]:
+    """Function to load the classification datasets for the training and validation sets
+
+    Parameters
+    ----------
+    train_directory: str
+        Directory containing the training dataset
+    valid_directory: str
+        Directory containing the validation dataset
+    train_batch_size: int
+        Batch size for the training dataloader
+    valid_batch_size: int
+        Batch size for the validation dataloader
+    resize: Tuple[int, int], optional (default=(128, 128))
+        Tuple with the new size of the images (height, width)
+    shuffle: bool, optional (default=True)
+        Boolean to shuffle the data or not
+    data_augmentation: bool, optional (default=True)
+        Boolean to apply data augmentation or not
+
+    Returns
+    -------
+    Tuple[th.utils.data.DataLoader, th.utils.data.DataLoader]
+        Tuple containing the training and validation dataloaders
+    """
+
+    # Define the transformations for the training datasets (data augmentation)
+    transform_train: transforms.Compose = transforms.Compose([
+        transforms.RandomHorizontalFlip(),      # Randomly flip images horizontally
+        transforms.RandomRotation(10),          # Randomly rotate images by 10 degrees
+        transforms.ColorJitter(brightness=0.2,  # Randomly change the brightness,
+                               contrast=0.2,    # contrast,
+                               saturation=0.2,  # saturation and
+                               hue=0.2          # hue of the images
+                               ),
+        transforms.Resize((resize[0], resize[1])), # Resize images
+        transforms.ToTensor(),                  # Convert to PyTorch tensors
+    ])
+
+    # Define the transformations for the testing datasets
+    transform_test: transforms.Compose = transforms.Compose([
+        transforms.Resize((resize[0], resize[1])), # Resize images
+        transforms.ToTensor(),                     # Convert  to PyTorch tensors
+    ])
+
+    # Create the Datasets
+    if data_augmentation:
+        train_dataset: Dataset = datasets.ImageFolder(root=train_directory, transform=transform_train)
+        valid_dataset: Dataset = datasets.ImageFolder(root=valid_directory, transform=transform_test)
+    else:
+        train_dataset: Dataset = datasets.ImageFolder(root=train_directory, transform=transform_test)
+        valid_dataset: Dataset = datasets.ImageFolder(root=valid_directory, transform=transform_test)
+
+    # Create the DataLoaders
+    train_loader: DataLoader = DataLoader(train_dataset, batch_size=train_batch_size, shuffle=shuffle)
+    valid_loader: DataLoader = DataLoader(valid_dataset, batch_size=valid_batch_size, shuffle=False)
+
+    return train_loader, valid_loader
 
 
 # Segmentation task: BraTS2020 Dataset -----------------------------------------
@@ -146,12 +214,6 @@ def load_segmentation(directory: str,
 
             selected_files = patient_files[start_index:end_index]
             h5_files.extend([os.path.join(directory, f) for f in selected_files])
-
-            # Print the selected files in order for debugging
-            # print(f"Selected files for patient {i}:")
-            # for f in selected_files:
-            #     print(f"\t{f}")
-
 
     # Shuffle the files randomly
     np.random.seed(42)

@@ -29,9 +29,13 @@ class AlexNet_128(th.nn.Module):
     # Constructor
     def __init__(self,
                  output_classes: int = 4,
-                 activation: th.nn.Module = th.nn.ReLU()
+                 activation: th.nn.Module = th.nn.ReLU(),
+                 name: str = "AlexNet"
     ) -> None:
         super().__init__()
+
+        # Model name
+        self.name: str = name
         
        # Convolutional layers 
         self.conv: th.nn.Sequential = th.nn.Sequential( 

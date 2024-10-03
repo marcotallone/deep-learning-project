@@ -32,9 +32,13 @@ class CustomCNN(th.nn.Module):
     def __init__(self,
                  output_classes: int = 4,
                  dropout: float = 0.4,
-                 activation: th.nn.Module = th.nn.Mish()
+                 activation: th.nn.Module = th.nn.Mish(),
+                 name: str = "CustomCNN"
     ) -> None:
         super().__init__()
+
+        # Model name
+        self.name: str = name
         
         # Convolutional layers
         self.conv: th.nn.Sequential = th.nn.Sequential(

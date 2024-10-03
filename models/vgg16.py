@@ -113,9 +113,13 @@ class VGG16_128(th.nn.Module):
     def __init__(self,
                  output_classes: int = 4,
                  dropout: float = 0.5,
-                 activation: th.nn.Module = th.nn.ReLU(inplace=True)
+                 activation: th.nn.Module = th.nn.ReLU(inplace=True),
+                 name: str = "VGG16"
     ) -> None:
         super().__init__()
+
+        # Model name
+        self.name: str = name
 
         # Downsampling method
         self.pool: th.nn.MaxPool2d = th.nn.MaxPool2d(kernel_size=2, stride=2)

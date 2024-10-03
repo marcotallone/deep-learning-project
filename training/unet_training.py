@@ -28,7 +28,7 @@ from models.attention_unet import AttentionUNet
 # Utils imports
 from utils.datasets import load_segmentation
 from utils.train import train_unet
-from utils.analysis import count_parameters, remove_module_prefix
+from utils.analysis import count_parameters
 
 
 # Hyperparameters --------------------------------------------------------------
@@ -74,7 +74,7 @@ CRITERION: Union[th.nn.Module, Callable[[th.Tensor, th.Tensor], th.Tensor]] = (
 )
 
 
-# Datasets and CHeckpoints directories (relative to the project root) ----------
+# Datasets and Checkpoints directories (relative to the project root) ----------
 DATASETS: str = "datasets"
 SEGMENTATION: str = os.path.join(DATASETS, "segmentation/data")
 SAVE_MODELS_PATH: str = f"models/saved_models"
@@ -135,7 +135,7 @@ print(f"Total Parameters: {total_params}")
 
 
 # Define the optimizer and scheduler -------------------------------------------
-optimizer: Optimizer = Adam(model.parameters(), lr=LR)
+optimizer: Optimizer = Adam(model.parameters(), lr=LR, weight_decay=WEIGHT_DECAY)
 scheduler: LRScheduler = ExponentialLR(optimizer=optimizer, gamma=GAMMA)
 
 _ = train_unet(

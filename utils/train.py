@@ -17,7 +17,7 @@ import torch as th
 from torch import Tensor
 from torch.nn import Module
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import LRScheduler
+from torch.optim.lr_scheduler import LRScheduler, StepLR
 from torch.utils.data import DataLoader
 
 # Typining hints
@@ -25,6 +25,23 @@ from typing import List, Tuple
 
 # Assessment metrics
 from utils.metrics import *
+
+
+# Detect appropriate device for training ---------------------------------------
+def get_device() -> th.device:
+    """Detect the appropriate device for training
+    
+    Returns
+    -------
+    th.device
+        Device to use for training: either cpu, cuda or mps
+    """
+    if th.cuda.is_available():
+        return th.device("cuda")
+    elif th.backends.mps.is_available():
+        return th.device("mps")
+    else:
+        return th.device("cpu")
 
 
 # Save training at a given checkpoint ------------------------------------------
@@ -432,3 +449,209 @@ def train_unet(model: Module,
 
     # Return the tracking metrics
     return metrics_df
+
+
+# Training function for multiclass classification models -----------------------
+def train_multiclass(model: Module,
+                     loss_fns: Tuple[Module, Module],
+                     optimizer: Optimizer,
+                     scheduler: StepLR,
+                     train_loader: DataLoader,
+                     valid_loader: DataLoader,
+                     n_epochs: int,
+                     start_epoch: int = 0,
+                     device: th.device = th.device("cpu"),
+                     save_path: str = None,
+                     save_metrics_path: str = None
+) -> pd.DataFrame:
+    """Training function for multiclass classification models
+
+    Parameters
+    ----------
+    model: th.nn.Module
+        Model to train
+    loss_fns: Tuple[th.nn.Module, th.nn.Module]
+        Loss functions to use for training and evaluation
+    optimizer: Optimizer
+        Optimizer to use
+    scheduler: StepLR
+        Scheduler to use
+    train_loader: DataLoader
+        DataLoader for the training set
+    valid_loader: DataLoader
+        DataLoader for the validation set
+    n_epochs: int
+        Number of epochs to train the model
+    start_epoch: int, optional (default=0)
+        Epoch to start training from (useful for resuming training)
+    device: th.device, optional (default=th.device("cpu"))
+        Device to use for training
+    save_path: str, optional (default=None)
+        Path to save the model weights
+    save_metrics_path: str, optional (default=None)
+        Path to save the training metrics
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing the training losses, validation losses, accuracy scores, 
+        and accuracy scores for each epoch
+    """
+
+    # If given create the directory to store the model weights and metrics
+    if save_path is not None: os.makedirs(save_path, exist_ok=True)
+    if save_metrics_path is not None: os.makedirs(save_metrics_path, exist_ok=True)
+
+    # Initialize the DataFrame for tracking metrics
+    columns = ["epoch", "lr", 
+               "train_loss", "validation_loss",
+               "accuracy", "accuracy_e"]
+    metrics_df = pd.DataFrame(columns=columns)
+
+    # Either resume training from a checkpoint or start from scratch
+    if start_epoch > 0:
+        load_name: str = os.path.join(save_path, f"{model.name}_e{start_epoch}.pth")
+        checkpoint = th.load(load_name)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        scheduler.load_state_dict(checkpoint["scheduler_state_dict"])
+        print(f"\nModel loaded from checkpoint file {load_name}")
+        print(f"Resuming training from epoch {start_epoch}")
+
+    # Move the model to the device
+    model.to(device)
+
+    print("\nTraining the model...")
+
+    # Loop over the epochs
+    for epoch in tqdm.tqdm(range(start_epoch + 1, n_epochs + 1), desc="Epoch", position=0): 
+        # or:   for epoch in range(start_epoch + 1, n_epochs + 1):
+
+        # Training loop --------------------------------------------------------
+        model.train() # Set the model to training mode
+        # train_losses: List[float] = [] # Track the loss
+        # train_accuracy: List[float] = [] # Track the accuracy
+        train_loss: float = 0.0
+        n_elements: int = 0
+        n_correct: int = 0
+        for _, (x, y) in tqdm.tqdm(enumerate(train_loader), 
+                                   desc="Training Batch", 
+                                   position=1, 
+                                   leave=False, 
+                                   total=len(train_loader)):
+            # or:   for x, y in train_loader:
+            x, y = x.to(device), y.to(device) # Move the data to the device
+            optimizer.zero_grad() # Zero out past gradients
+            yhat: Tensor = model(x) # Forward pass
+            loss: Tensor = loss_fns[0](yhat, y) # Loss computation
+            loss.backward() # Backward pass
+            optimizer.step()
+
+        # Log the loss and accuracy for the training set
+        with th.no_grad():
+            for _, (x_e, y_e) in tqdm.tqdm(enumerate(train_loader), 
+                                           desc="Training Assessment Batch",
+                                           position=2, 
+                                           leave=False, 
+                                           total=len(train_loader)):
+                x_e, y_e = x_e.to(device), y_e.to(device) # Move the data to the device
+                yhat_e: Tensor = model(x_e) # Forward pass
+                ypred_e = th.argmax(yhat_e, dim=1, keepdim=True) # Convert to class labels
+                train_loss += loss_fns[1](yhat_e, y_e).item() # Track the loss
+                n_elements += x_e.shape[0]  
+                n_correct += ypred_e.eq(y_e.view_as(ypred_e)).sum().item()
+
+            # Store loss and accuracy
+            # train_losses.append(train_loss / n_elements)  
+            # train_accuracy.append(n_correct / n_elements)
+
+            # Average the loss and accuracy across all batches
+            train_loss = train_loss / n_elements
+            train_accuracy = n_correct / n_elements
+
+        # Validation loop ------------------------------------------------------
+        model.eval()
+        # valid_losses: List[float] = []
+        # valid_accuracy: List[float] = []
+        valid_loss: float = 0.0
+        n_elements: int = 0
+        n_correct: int = 0
+
+        with th.no_grad():
+            for _, (x_e, y_e) in tqdm.tqdm(enumerate(valid_loader), 
+                                           desc="Validation Batch", 
+                                           position=3, 
+                                           leave=False, 
+                                           total=len(valid_loader)):
+                x_e, y_e = x_e.to(device), y_e.to(device)
+                yhat_e: Tensor = model(x_e)
+                ypred_e = th.argmax(yhat_e, dim=1, keepdim=True)
+                valid_loss += loss_fns[1](yhat_e, y_e).item()
+                n_elements += x_e.shape[0]
+                n_correct += ypred_e.eq(y_e.view_as(ypred_e)).sum().item()
+
+            # Store loss and accuracy
+            # valid_losses.append(valid_loss / n_elements)
+            # valid_accuracy.append(n_correct / n_elements)
+
+            # Average the loss and accuracy across all batches
+            valid_loss = valid_loss / n_elements
+            valid_accuracy = n_correct / n_elements
+
+        # Create a new DataFrame for the current epoch's metrics
+        epoch_metrics_df = pd.DataFrame([{
+            "epoch": epoch,
+            "lr": optimizer.param_groups[0]["lr"],
+            "train_loss": train_loss,
+            "validation_loss": valid_loss,
+            "accuracy": train_accuracy,
+            "accuracy_e": valid_accuracy
+        }])
+
+        # Concatenate the new DataFrame with the existing one
+        metrics_df = pd.concat([metrics_df, epoch_metrics_df], ignore_index=True)
+
+        # Create a DataFrame to display the metrics as
+        #           | Train | Validation |
+        #           |-------|------------|
+        # Accuracy  |       |            |
+        # Loss      |       |            |
+        display_df = pd.DataFrame({
+            "Metric": ["Loss", "Accuracy"],
+            "Train": [train_loss, train_accuracy],
+            "Validation": [valid_loss, valid_accuracy]
+        })
+        pd.options.display.float_format = "{:.2f}".format
+
+        # Display current epoch metrics in a nice format
+        print("------------------------------------------------------------")
+        print(f"Epoch:              {epoch}/{n_epochs}")
+        print(f"Currrent LR:        {optimizer.param_groups[0]['lr']:.2e}")
+        print("\nMetrics (%)")
+        print(display_df)
+        print("------------------------------------------------------------")
+
+        # Save the DataFrame to a CSV file
+        if save_metrics_path is not None:
+            csv_path = os.path.join(save_metrics_path, f"metrics_{model.name}.csv")
+        else:
+            csv_path = f"metrics_{model_name}.csv"
+
+        # Write new csv if it's the first epoch, otherwise append to the existing csv
+        if epoch == 1:
+            metrics_df.to_csv(csv_path, index=False)
+        else:
+            epoch_metrics_df.to_csv(csv_path, mode='a', header=False, index=False)
+
+        # Update the learning rate
+        scheduler.step()
+
+        # Save checkpoint at the end of the epoch
+        if save_path is not None:
+            save_checkpoint(model, optimizer, scheduler, epoch, save_path)
+
+    print("\nTraining concluded")
+
+    # Return the tracking metrics
+    return metrics_df
+

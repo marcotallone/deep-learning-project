@@ -36,6 +36,8 @@ class VisionTransformer(th.nn.Module):
         Dimension of the feedforward network
     dropout: float, optional (default: 0.2)
         Dropout rate to use in the model
+    name: str, optional (default: "VIT")
+        Name of the model
     """
 
     # Constructor
@@ -47,7 +49,8 @@ class VisionTransformer(th.nn.Module):
                  depth: int = 10,
                  heads: int = 8,
                  mlp_dim: int = 1024,
-                 dropout: float = 0.2
+                 dropout: float = 0.2,
+                 name: str = "VIT"
     ):
         super().__init__()
 
@@ -55,6 +58,9 @@ class VisionTransformer(th.nn.Module):
         assert img_size % patch_size == 0, "Image dimensions must be divisible by the patch size."
         num_patches: int = (img_size // patch_size) ** 2
         patch_dim: int = 3 * patch_size * patch_size  # 3 channels for RGB
+
+        # Model name
+        self.name: str = name
 
         # Patch embedding
         self.patch_embed = th.nn.Linear(patch_dim, dim)
