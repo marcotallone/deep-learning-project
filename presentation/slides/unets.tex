@@ -65,24 +65,26 @@
 
 	\frametitle{Classic U-Net}
 
-	% TODO: Replace this figure with TikZ picture and correct numbers
-	% + in the tikz picture write the important elements highlighted in the speech
-	% \begin{figure}
-	% 	\centering
-	% 	\includegraphics[width=0.8\textwidth]{unet-architecture.png}
-	% \end{figure}
+	\centering
 
-	\begin{figure}
-		\centering
-		\begin{tikzpicture}
-
-			% Input Image
-			\node[draw, rectangle, minimum width=1.5cm, minimum height=1.5cm] (input)
-			at (0, 0) {Input Image};
-
-		\end{tikzpicture}
-	\end{figure}
-
+	\begin{tikzpicture}[remember picture,overlay]
+			% Adjust the position of the image
+			\node[anchor=south] at ($(current page.south) + (0, 0.4)$) {
+				\only<1>{\includegraphics[width=\textwidth]{classic-unet-1.pdf}}%
+				\only<2>{\includegraphics[width=\textwidth]{classic-unet-2.pdf}}%
+				\only<3>{\includegraphics[width=\textwidth]{classic-unet-3.pdf}}%
+				\only<4>{\includegraphics[width=\textwidth]{classic-unet-4.pdf}}%
+				\only<5>{\includegraphics[width=\textwidth]{classic-unet-5.pdf}}
+			};
+			% Adjust the position of the text
+			\node[align=center] at ($(current page.center) + (0, 2.5)$) {
+				\only<1>{Input: $4$ channels \quad Output: $3$ channel}%
+				\only<2>{\yellow{$3 \times 3$ convolutions $+$ ReLU activations}}%
+				\only<3>{\red{$2 \times 2$ Max pooling}}%
+				\only<4>{\azure{$2 \times$ Bilinear upsampling}}%
+				\only<5>{\purple{Skip connections: concatenation}}
+			};
+	\end{tikzpicture}
 
 \end{frame}
 
@@ -152,7 +154,7 @@
 
 
 % Slide 6 ──────────────────────────────────────────────────────────────────────
-\begin{frame}[t]
+\begin{frame}
 
 	\frametitle{Visualizing a prediction}
 
@@ -160,9 +162,9 @@
 
 		\begin{figure}
 			\centering
-			\only<1>{\includegraphics[width=0.9\textwidth]{segmentation-prediction.png}}
-			\only<2->{\includegraphics[width=0.9\textwidth]{segmentation-bin-prediction.png}}
-			\includegraphics[width=0.9\textwidth]{segmentation-ground-truth.png}
+			\only<1>{\includegraphics[width=0.85\textwidth]{segmentation-prediction.png}}
+			\only<2->{\includegraphics[width=0.85\textwidth]{segmentation-bin-prediction.png}}
+			\includegraphics[width=0.85\textwidth]{segmentation-ground-truth.png}
 		\end{figure}
 
 \end{frame}
