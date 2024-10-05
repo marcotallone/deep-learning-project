@@ -132,7 +132,6 @@
         \end{tikzpicture}
 
         Number of parameters: $4589316$\\
-        Dropout rate: $0.4$
     
 \end{frame}
 
@@ -290,29 +289,24 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Visualizing the first layer filters}
-    \centering
-    % First row: two images with captions
-    \begin{minipage}{0.3\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{vgg_conv.png}
-        % \caption*{VGG}
-    \end{minipage}
-    \hfill
-    \begin{minipage}{0.3\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{alex_conv.png}
-        % \caption*{Alex}
-    \end{minipage}
-    
-    \vspace{0.5cm} % Space between rows
-    
-    % Second row: one image with caption
-    \begin{minipage}{0.35\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{cnn_conv.png}
-        % \caption{Caption 3}
-    \end{minipage}
+    \frametitle{Visualizing the first layer filters, CustomCNN}
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{cnn_conv.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Visualizing the first layer filters, AlexNet}
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{alex_conv.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Visualizing the first layer filters, VGG16}
+    \begin{center}
+        \includegraphics[width=0.7\textwidth]{vgg_conv.png}
+    \end{center}
 \end{frame}
 
 \end{document}
