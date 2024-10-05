@@ -10,64 +10,28 @@
 
 	\frametitle{Introduction}
 
-	Hello, world! \emoji{smile}
-
-	\begin{cbox}
-		Hellow world in a box.
-	\end{cbox}
-
-	\begin{cbox}[orange!50!background]
-		Hello world in an orange box mixed $50\%$ with the background.
-	\end{cbox}
-
-	\begin{warning}
-		Recall you need lualatex to compile this template.
-	\end{warning}
-
-	\begin{example}[Title of the example block]
-		For example like this \faIcon{smile}.
-	\end{example}
-
-\end{frame}
-
-% Slide 2 ──────────────────────────────────────────────────────────────────────
-\begin{frame}
-
-	\frametitle{Example TikZ Picture}
-
-	Minimal \bft{working} example of a \itt{TikZ picture}.
-
 	\begin{center}
-		\begin{tikzpicture}
-
-			% Figures with text inside
-			\node[draw, circle, minimum size=1cm] (dumb-name) at (0,0) {A};
-
-			% Figures withouth text
-			\draw[
-				fill=red, % Set the color of the shape
-				fill opacity=0.5, % Set the opacity of the shape
-				draw=blue, % Set the border color
-				draw opacity=1, % Set the border opacity
-				line width=1mm % Set the border width
-			] (2,0) circle (1cm);
-
-			% Arrows and segments with coordinates
-			\coordinate (A) at (0,2);
-			\coordinate (B) at (2,3);
-			\coordinate (C) at (3.5,2.5);
-			\coordinate (D) at (4,2);
-			\coordinate (E) at (2,1.5);
-
-			\draw[-Stealth] (A) -- (B) -- (C) -- (D); % Direct piecewise path
-			
-			% Multiple paths
-			\draw[green] (A) -- (C);
-			\draw[dashed, yellow] (C) -- (E);
-			\draw[-Stealth, red] (E) -- (D);
-
-		\end{tikzpicture}
+  A deep learning project for brain tumor classification and segmentation on MRI images using CNN, U-Net, and VIT models.
 	\end{center}
+
+	\begin{enumerate}
+		\item Datasets
+			\begin{itemize}
+				\item Brain Tumor MRI Dataset \gray{(\itt{classification})}
+				\item BraTS 2020 Dataset \gray{(\itt{segmentation})}
+			\end{itemize}
+		\item Classification
+			\begin{itemize}
+				\item AlexNet
+				\item VGG16
+				\item Custom CNN
+				\item VIT
+			\end{itemize}
+		\item Segmentation
+			\begin{itemize}
+				\item U-Net Models
+			\end{itemize}
+	\end{enumerate}
 
 \end{frame}
 
