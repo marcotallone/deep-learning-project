@@ -38,8 +38,8 @@ class encoder(th.nn.Module):
         super().__init__()
         expansion_ratio: int = 4
         self.encoder_block: th.nn.Sequential = th.nn.Sequential(
-            # Convolutional layer 1
-            th.nn.Conv2d(
+            # Convolutional layer 1: 3 convolutions
+            th.nn.Conv2d( # 1. Depthwise convolution
                 in_channels=in_channels,
                 out_channels=in_channels,
                 kernel_size=7, 
@@ -48,23 +48,21 @@ class encoder(th.nn.Module):
                 groups=in_channels,
             ),
             th.nn.BatchNorm2d(num_features=in_channels),
-            # Convolutional layer 2
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 2. Pointwise convolution
                 in_channels=in_channels,
                 out_channels=expansion_ratio*out_channels, 
                 kernel_size=1,
                 stride=1
             ),
             activation,
-            # Convolutional layer 3
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 3. Pointwise convolution
                 in_channels=expansion_ratio*out_channels,
                 out_channels=out_channels, 
                 kernel_size=1, 
                 stride=1
             ),
-            # Convolutional layer 4
-            th.nn.Conv2d(
+            # Convolutional layer 2: 3 convolutions
+            th.nn.Conv2d( # 1. Depthwise convolution
                 in_channels=out_channels,
                 out_channels=out_channels,
                 kernel_size=7,
@@ -73,16 +71,14 @@ class encoder(th.nn.Module):
                 groups=out_channels
             ),
             th.nn.BatchNorm2d(num_features=out_channels),
-            # Convolutional layer 5
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 2. Pointwise convolution
                 in_channels=out_channels,
                 out_channels=expansion_ratio*out_channels,
                 kernel_size=1, 
                 stride=1
             ),
             activation,
-            # Convolutional layer 6
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 3. Pointwise convolution
                 in_channels=expansion_ratio*out_channels,
                 out_channels=out_channels,
                 kernel_size=1,
@@ -118,8 +114,8 @@ class decoder(th.nn.Module):
         super().__init__()
         expansion_ratio: int = 4
         self.decoder_block: th.nn.Sequential = th.nn.Sequential(
-            # Convolutional layer 1
-            th.nn.Conv2d(
+            # Convolutional layer 1: 3 convolutions
+            th.nn.Conv2d( # 1. Depthwise convolution
                 in_channels=in_channels,
                 out_channels=in_channels,
                 kernel_size=7, 
@@ -128,23 +124,21 @@ class decoder(th.nn.Module):
                 groups=in_channels
             ),
             th.nn.BatchNorm2d(num_features=in_channels),
-            # Convolutional layer 2
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 2. Pointwise convolution
                 in_channels=in_channels,
                 out_channels=expansion_ratio*in_channels,
                 kernel_size=1, 
                 stride=1
             ),
             activation,
-            # Convolutional layer 3
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 3. Pointwise convolution
                 in_channels=expansion_ratio*in_channels,
                 out_channels=out_channels, 
                 kernel_size=1, 
                 stride=1
             ),
-            # Convolutional layer 4
-            th.nn.Conv2d(
+            # Convolutional layer 2: 3 convolutions
+            th.nn.Conv2d( # 1. Depthwise convolution
                 in_channels=out_channels,
                 out_channels=out_channels, 
                 kernel_size=7, 
@@ -153,19 +147,17 @@ class decoder(th.nn.Module):
                 groups=out_channels
             ),
             th.nn.BatchNorm2d(num_features=out_channels),
-            # Convolutional layer 5
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 2. Pointwise convolution
                 in_channels=out_channels,
                 out_channels=expansion_ratio*out_channels, 
                 kernel_size=1, 
                 stride=1
             ),
             activation,
-            # Convolutional layer 6
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 3. Pointwise convolution
                 in_channels=expansion_ratio*out_channels, 
                 out_channels=out_channels,
-                kernel_size=(1,1), 
+                kernel_size=1, 
                 stride=1
             ),
         )
@@ -194,8 +186,8 @@ class bottleneck(th.nn.Module):
     ) -> None:
         super().__init__()
         self.bottleneck_block: th.nn.Sequential = th.nn.Sequential(
-            # Convolutional layer 1
-            th.nn.Conv2d(
+            # Convolutional layer 1: 3 convolutions
+            th.nn.Conv2d( # 1. Depthwise convolution
                 in_channels=8*n_filters,  
                 out_channels=8*n_filters,
                 kernel_size=7,
@@ -204,23 +196,21 @@ class bottleneck(th.nn.Module):
                 groups=8*n_filters
             ),
             th.nn.BatchNorm2d(num_features=8*n_filters),
-            # Convolutional layer 2
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 2. Pointwise convolution
                 in_channels=8*n_filters,
                 out_channels=4*8*n_filters,
                 kernel_size=1, 
                 stride=1
             ),
             activation,
-            # Convolutional layer 3
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 3. Pointwise convolution
                 in_channels=4*8*n_filters,
                 out_channels=8*n_filters,
                 kernel_size=1,
                 stride=1
             ),
-            # Convolutional layer 4
-            th.nn.Conv2d(
+            # Convolutional layer 2: 3 convolutions
+            th.nn.Conv2d( # 1. Depthwise convolution
                 in_channels=8*n_filters,
                 out_channels=8*n_filters,
                 kernel_size=7,
@@ -229,16 +219,14 @@ class bottleneck(th.nn.Module):
                 groups=8*n_filters
             ),
             th.nn.BatchNorm2d(num_features=8*n_filters),
-            # Convolutional layer 5
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 2. Pointwise convolution
                 in_channels=8*n_filters,
                 out_channels=4*8*n_filters,
                 kernel_size=1,
                 stride=1
             ),
             activation,
-            # Convolutional layer 6
-            th.nn.Conv2d(
+            th.nn.Conv2d( # 3. Pointwise convolution
                 in_channels=4*8*n_filters,
                 out_channels=8*n_filters,
                 kernel_size=1,
@@ -383,23 +371,23 @@ class AttentionUNet(th.nn.Module):
         
         # Decoder
         x     = self.upsample(dec_4)
-        att_4 = self.attention_residual4(dec_4, enc_4, enc_4)  # QKV
-        x     = th.add(x, att_4)  # Add attention masked value rather than concat
+        att_4 = self.attention_residual4(dec_4, enc_4, enc_4)
+        x     = th.add(x, att_4) # Add attention wweights
         
         dec_3 = self.decoder4(x)
         x     = self.upsample(dec_3)
         att_3 = self.attention_residual3(dec_3, enc_3, enc_3)
-        x     = th.add(x, att_3)  # Add attention
+        x     = th.add(x, att_3)  # Add attention wweights
         
         dec_2 = self.decoder3(x)
         x     = self.upsample(dec_2)
         att_2 = self.attention_residual2(dec_2, enc_2, enc_2)
-        x     = th.add(x, att_2)  # Add attention
+        x     = th.add(x, att_2)  # Add attention wweights
         
         dec_1 = self.decoder2(x)
         x     = self.upsample(dec_1)
         att_1 = self.attention_residual1(dec_1, enc_1, enc_1)
-        x     = th.add(x, att_1)  # Add attention
+        x     = th.add(x, att_1)  # Add attention wweights
         
         x     = self.decoder1(x)
         x     = self.output(x)
@@ -538,23 +526,23 @@ class VisualAttentionUNet(th.nn.Module):
         
         # Decoder
         x     = self.upsample(dec_4)
-        att_4, map4 = self.attention_residual4(dec_4, enc_4, enc_4)  # QKV
-        x     = th.add(x, att_4)  # Add attention masked value rather than concat
+        att_4, map4 = self.attention_residual4(dec_4, enc_4, enc_4)
+        x     = th.add(x, att_4)
         
         dec_3 = self.decoder4(x)
         x     = self.upsample(dec_3)
         att_3, map3 = self.attention_residual3(dec_3, enc_3, enc_3)
-        x     = th.add(x, att_3)  # Add attention
+        x     = th.add(x, att_3)
         
         dec_2 = self.decoder3(x)
         x     = self.upsample(dec_2)
         att_2, map2 = self.attention_residual2(dec_2, enc_2, enc_2)
-        x     = th.add(x, att_2)  # Add attention
+        x     = th.add(x, att_2)
         
         dec_1 = self.decoder2(x)
         x     = self.upsample(dec_1)
         att_1, map1 = self.attention_residual1(dec_1, enc_1, enc_1)
-        x     = th.add(x, att_1)  # Add attention
+        x     = th.add(x, att_1)
         
         x     = self.decoder1(x)
         x     = self.output(x)

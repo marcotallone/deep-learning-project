@@ -230,16 +230,16 @@ class ClassicUNet(th.nn.Module):
         
         # Decoder
         x      = self.upsample(x)
-        x      = th.cat((x, skip_4), axis=1)  # Skip connection
+        x      = th.cat((x, skip_4), axis=1)
         x      = self.decoder4(x)
         x      = self.upsample(x)
-        x      = th.cat((x, skip_3), axis=1)  # Skip connection
+        x      = th.cat((x, skip_3), axis=1)
         x      = self.decoder3(x)
         x      = self.upsample(x)
-        x      = th.cat((x, skip_2), axis=1)  # Skip connection
+        x      = th.cat((x, skip_2), axis=1)
         x      = self.decoder2(x)
         x      = self.upsample(x)
-        x      = th.cat((x, skip_1), axis=1)  # Skip connection
+        x      = th.cat((x, skip_1), axis=1)
         x      = self.decoder1(x)
         x      = self.output(x)
         return x
