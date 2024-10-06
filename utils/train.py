@@ -611,11 +611,7 @@ def train_multiclass(model: Module,
         # Concatenate the new DataFrame with the existing one
         metrics_df = pd.concat([metrics_df, epoch_metrics_df], ignore_index=True)
 
-        # Create a DataFrame to display the metrics as
-        #           | Train | Validation |
-        #           |-------|------------|
-        # Accuracy  |       |            |
-        # Loss      |       |            |
+        # Create a DataFrame to display the metrics
         display_df = pd.DataFrame({
             "Metric": ["Loss", "Accuracy"],
             "Train": [train_loss, train_accuracy],

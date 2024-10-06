@@ -88,7 +88,7 @@ With the data at our disposal, we have developed the following models:
   - [`ImprovedUNet`](./models/improved_unet.py) model
   - [`AttentionUNet`](./models/attention_unet.py) model
 
-All the implemented models come with trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\
+<!-- NOT DONE IN THE END: All the implemented models come with trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\ -->
 Further details about the datasets and the implemented models are given below, after installation instructions, dependencies requirements and usage examples.
 
 ### Project Structure
@@ -361,6 +361,12 @@ Moreover, all of these benefits come with a limited increase in the number of pa
 
 ### Classification Models
 
+In the following table a summary of the performance metrics measured for the classification models at the end of their training is presented. The metrics are calculated on both the training and test sets and are averaged over the entire dataset. The metrics considered are:
+
+- **Loss**: the average loss
+- **Accuracy**: the average accuracy
+- **Confidence**: the average confidence in the most probable prediction: basically the average of the maximum value of the softmax output at each prediction
+
 | Net | Training Loss | Training accuracy | Training confidence | Test accuracy | Test confidence |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | Custom Net | 3.6 E-03 | 1.0 | 1.0 | 0.99 | 1.0 |
@@ -370,17 +376,45 @@ Moreover, all of these benefits come with a limited increase in the number of pa
 
 ### Segmentation Models
 
+In the following plots a summary of the most important performance metrics measured for the segmentation models at the end of their training is presented. Each metric is computed pixel-wise comparing the binarized predicted masks and the ground truth masks. Additionally, these have been averaged for both each channel independently and then the average across all channel and all batches has been taked.\
+The metrics considered are:
+
+- **Dice Coefficient**: a measure of the overlap between two samples, ranging from 0 to 1 where 1 means perfect overlap
+- **IoU (Jaccard Index)**: a measure of the similarity between two samples, ranging from 0 to 1 where 1 means perfect similarity
+- **Accuracy**: the average accuracy measured pixel-by-pixel (pixel-wise) and then average across all pixels for each channel and then also across all channels
+- **False Positive Rate (FPR)**: the average pixel-wise rate of false positives
+- **False Negative Rate (FNR)**: the average pixel-wise rate of false negatives
+- **Precision**: the average pixel-wise precision
+- **Recall**: the average pixel-wise recall
+
+![Segmentation Models Performance Metrics](./images/metrics_multiple.png)
+
+> [!NOTE]
+> You might not be able to correctly read the labels if you are using a light theme in your browser. Please consider switching to a dark theme or download the image to see the labels. We kindly apologize for the inconvenience. 🙏🏻
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONCLUSIONS -->
 ## Conclusions
+
+In conclusion, this project aimed to develop and compare different models for the classification and segmentation of brain tumours from MRI images. The models were trained on two different datasets, the Brain Tumor MRI Dataset for the classification task and the BraTS 2020 Dataset for the segmentation task.\
+We successfully implemented and trained a CNN model and a VIT model for the classification task, achieving high accuracy and confidence on the test set. For the segmentation task, we also acheved very good results with the U-Net models, especially with the Attention U-Net model for which it was also possible to visualize the attention maps learned during the training phase.\
+As a final consideration, although we were very satisfied with our work, we would like to propose a few possible improvements or extensions of this project, starting fro some of the ideas that we did not implement (*but we might implement in the future*...). Among these we suggest:
+
+- Improving the classification models capabilities to be able to work with the original image size of 256x256 pixels rather than the downscaled 128x128 pixels images and checking if the performance improves (*even though the obtained results are already very good*) or get worse.
+- Collecting more data to train the VIT model for classification and check if the performance improves.
+- Attempting transfer learning with the Vision Transformer model to see if the performance improves (*not clear from where to pick already trained models or where to apply it so might need some research*).
+- Testing out different architectures for the segmentation task and compare them with U-Nets
+- Training the U-Net models on the whole dataset rather than using just 50% of it to see if the performance improves or maybe if better attention maps are learned by the Attention U-Net model.
+- Performing a more in-depth hyperparameter tuning for the improved and Attention U-Net models (*requires more computational resources*).
+- Use the metadata information about patient's survival rate present in the segmentation dataset to predict the patient's life expectancy from the tumour segmentation itself. This regression task could be implemented either by extending the U-Net models with a final fully connected layer or by implementing a model that takes the U-Net predition as input and outputs the life expectancy. Such model could maybe be trained on the original masks and then tested on the predicted masks fro the U-Nets to see how good the predictions are.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Although this repository started as a simple university exam project, if you have a suggestion that would make this better or you attempted to implement one of the above mentioned improvements and want to share it with us, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement" or "extension".\
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -542,9 +576,10 @@ Oktay, O., Schlemper, J., Le Folgoc, L., Lee, M. C. H., Heinrich, M. P., Misawa,
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-- [Repository for the Deep Learning Course Labs/Practica (UniTS, Spring 2024)](https://github.com/emaballarin/deeplearning-units)
-- [Best-README-Template](https://github.com/othneildrew/Best-README-Template?tab=readme-ov-file)
-- [Freepik](https://www.flaticon.com/free-icons/machine-learning")
+- [Repository for the Deep Learning Course Labs/Practica (UniTS, Spring 2024)](https://github.com/emaballarin/deeplearning-units): for the Pytorch tutorials and the initial codebase
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template?tab=readme-ov-file): for the README template
+- [Freepik](https://www.flaticon.com/free-icons/machine-learning"): for the icons used in the README
+- [PlotNeuralNet](https://github.com/HarisIqbal88/PlotNeuralNet): for the TikZ code to draw model's architectures
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
