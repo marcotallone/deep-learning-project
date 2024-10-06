@@ -32,15 +32,15 @@ from models.attention_unet import AttentionUNet, VisualAttentionUNet
 
 # Constants
 N_FILTERS: int      = 32
-EPOCHS: int         = 20
+EPOCHS: int         = 50
 SAVE_MODELS_PATH: str = f"models/saved_models"
 
 # Choose the model to load
 # model: th.nn.Module = AlexNet_128()
 # model: th.nn.Module = VGG16_128()
 # model: th.nn.Module = CustomCNN()
-# model: th.nn.Module = VisionTransformer()
-model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
+model: th.nn.Module = VisionTransformer()
+# model: th.nn.Module = ClassicUNet(n_filters=N_FILTERS)
 # model: th.nn.Module = ImprovedUNet(n_filters=N_FILTERS)
 # model: th.nn.Module = AttentionUNet(n_filters=N_FILTERS)
 
