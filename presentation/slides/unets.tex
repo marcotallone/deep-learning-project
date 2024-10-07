@@ -94,22 +94,40 @@
 
 	\frametitle{Improved U-Net}
 
-	Small improvements from previous $\rightarrow$ to reduce $n^{\circ}$ of
-	parameters and improve performance:
+	% Small improvements from previous $\rightarrow$ to reduce $n^{\circ}$ of
+	% parameters and improve performance:
 
-	\vspace{4ex}
+	% \vspace{4ex}
 
-	\begin{itemize}
-		 \setlength{\itemsep}{4ex}
-		\item \bft{Separable Convolutions}: \gray{depthwise $+$ pointwise
-			convolutions} 
-		\item \bft{Batch Normalization}: \gray{to improve training and
-			generalization}
-		\item \bft{Larger Kernel Size}: \gray{$7 \times 7$ kernels instead of $3
-			\times 3$}
-		\item \bft{Inverse Bottleneck}: \gray{expands $+$ compresses channels}
-		\item \bft{Additive Skip Connections}: \gray{instead of concatenated ones}
-	\end{itemize}
+	% \begin{itemize}
+	% 	 \setlength{\itemsep}{4ex}
+	% 	\item \bft{Separable Convolutions}: \gray{depthwise $+$ pointwise
+	% 		convolutions} 
+	% 	\item \bft{Batch Normalization}: \gray{to improve training and
+	% 		generalization}
+	% 	\item \bft{Larger Kernel Size}: \gray{$7 \times 7$ kernels instead of $3
+	% 		\times 3$}
+	% 	\item \bft{Inverse Bottleneck}: \gray{expands $+$ compresses channels}
+	% 	\item \bft{Additive Skip Connections}: \gray{instead of concatenated ones}
+	% \end{itemize}
+
+	\centering
+
+	\begin{tikzpicture}[remember picture,overlay]
+			% Adjust the position of the image
+			\node[anchor=south] at ($(current page.south) + (0, 0.4)$) {
+				\only<1>{\includegraphics[width=\textwidth]{improved-unet-1.pdf}}%
+				\only<2>{\includegraphics[width=\textwidth]{improved-unet-2.pdf}}%
+				\only<3>{\includegraphics[width=\textwidth]{improved-unet-3.pdf}}%
+			};
+			% Adjust the position of the text
+			\node[align=center] at ($(current page.center) + (0, 2.5)$) {
+				\only<1>{Separable Convolutions \\ $7 \times 7$ kernels \\ Inverse
+				Bottleneck}%
+				\only<2>{\yellow{Batch Normalization}}%
+				\only<3>{\purple{Additive skip connections}}
+			};
+	\end{tikzpicture}
 
 \end{frame}
 

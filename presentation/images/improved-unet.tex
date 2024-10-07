@@ -57,10 +57,14 @@
 
 % Dark Background
 \def\ConvColor{commentscolor}
-\def\ConvReluColor{commentscolor}
+% \def\ConvReluColor{commentscolor}
+\def\ConvReluColor{yellow!50!commentscolor}
 \def\PoolColor{red}
-\def\UnpoolColor{azure}
+% \def\UnpoolColor{azure}
+\def\UnpoolColor{azure!30!purple}
 \def\ConcatColor{purple}
+% \def\BatchColor{background}
+\def\BatchColor{yellow}
 
 % for the presentation images
 % \def\ConvColor{background}
@@ -70,6 +74,7 @@
 % \def\PoolColor{background}
 % \def\UnpoolColor{background}
 % \def\ConcatColor{background}
+% \def\BatchColor{background}
 
 
 % Other Commands ---------------------------------------------------------------
@@ -146,7 +151,7 @@
 };
 \node[rotate=45] at ($(cr1-south) + (0.8,0)$) {$240 \times 240$};
 \node[rotate=45] at ($(cr1-north) + (0,0,-6)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Pooling 1
@@ -179,7 +184,7 @@ max pool}};
 };
 \node[rotate=45] at ($(cr2-south) + (1.1,0)$) {$120 \times 120$};
 \node[rotate=45] at ($(cr2-north) + (0,0,-5.3)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Pooling 2
@@ -212,7 +217,7 @@ max pool}};
 };
 \node[rotate=45] at ($(cr3-south) + (1.3,0)$) {$60 \times 60$};
 \node[rotate=45] at ($(cr3-north) + (0,0,-4.6)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Pooling 3
@@ -245,7 +250,7 @@ max pool}};
 };
 \node[rotate=45] at ($(cr4-south) + (1.6,0)$) {$30 \times 30$};
 \node[rotate=45] at ($(cr4-north) + (0,0,-3.8)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Pooling 4
@@ -270,7 +275,7 @@ max pool}};
 \pic[shift={(0,0,0)}] at (p4-east) {
 	RightBandedBox={
 		name=cr5,
-		xlabel={{"512","512"}},
+		xlabel={{"256$\rightarrow$1024$\rightarrow$","256$\rightarrow$1024$\rightarrow$256"}},
 		caption=Bottleneck,
 		fill=\ConvColor,
 		bandfill=\ConvReluColor,
@@ -281,7 +286,7 @@ max pool}};
 };
 \node[rotate=45] at ($(cr5-south) + (2.8,0)$) {$15 \times 15$};
 \node[rotate=45] at ($(cr5-north) + (0,0,-3)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 
@@ -304,19 +309,20 @@ max pool}};
 	\textcolor{\UnpoolColor}{\shortstack{$2\times$ Bilinear \\ Upsampling}}
 };
 
-% Residual concatenation 4
-\pic[shift={(-1.2,0,0)}] at (up4-west) {
+% Residual Connection 4
+% \pic[shift={(-1.2,0,0)}] at (up4-west) {
+\pic[shift={(0,0,0)}] at (up4-west) {
 	Box={
 		name=cat4,
-		xlabel={{"256",""}},
+		% xlabel={{"256",""}},
 		fill=\ConcatColor,
 		height=16,
 		width=6,
 		depth=16
 	}
 };
-\node[rotate=45] at ($(cat4-north) + (-0.4,0,-4.5)$) {
-	\textcolor{\ConcatColor}{\shortstack{Residual \\ Concatenation}}
+\node[rotate=45] at ($(cat4-north) + (-1.6,0,-4.5)$) {
+	\textcolor{\ConcatColor}{\shortstack{Residual \\ Connection}}
 };
 
 % Convolution 41, 42, and 43
@@ -334,7 +340,7 @@ max pool}};
 };
 \node[rotate=45] at ($(ucr4-south) + (1.6,0)$) {$30 \times 30$};
 \node[rotate=45] at ($(ucr4-north) + (0,0,-3.8)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Unpooling 3
@@ -353,19 +359,20 @@ max pool}};
 	\textcolor{\UnpoolColor}{\shortstack{$2\times$ Bilinear \\ Upsampling}}
 };
 
-% Residual concatenation 3
-\pic[shift={(-0.9,0,0)}] at (up3-west) {
+% Residual Connection 3
+% \pic[shift={(-0.9,0,0)}] at (up3-west) {
+\pic[shift={(0,0,0)}] at (up3-west) {
 	Box={
 		name=cat3,
-		xlabel={{"128",""}},
+		% xlabel={{"128",""}},
 		fill=\ConcatColor,
 		height=25,
 		width=4.5,
 		depth=25
 	}
 };
-\node[rotate=45] at ($(cat3-north) + (-0.6,0,-5.6)$) {
-	\textcolor{\ConcatColor}{\shortstack{Residual \\ Concatenation}}
+\node[rotate=45] at ($(cat3-north) + (-1.4,0,-5.6)$) {
+	\textcolor{\ConcatColor}{\shortstack{Residual \\ Connection}}
 };
 
 % Convolution 31 and 32
@@ -383,7 +390,7 @@ max pool}};
 };
 \node[rotate=45] at ($(ucr3-south) + (1.3,0)$) {$60 \times 60$};
 \node[rotate=45] at ($(ucr3-north) + (0,0,-4.6)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Unpooling 2
@@ -402,19 +409,20 @@ max pool}};
 	\textcolor{\UnpoolColor}{\shortstack{$2\times$ Bilinear \\ Upsampling}}
 };
 
-% Residual concatenation 2
-\pic[shift={(-0.7,0,0)}] at (up2-west) {
+% Residual Connection 2
+% \pic[shift={(-0.7,0,0)}] at (up2-west) {
+\pic[shift={(0,0,0)}] at (up2-west) {
 	Box={
 		name=cat2,
-		xlabel={{"64",""}},
+		% xlabel={{"64",""}},
 		fill=\ConcatColor,
 		height=32,
 		width=3.5,
 		depth=32
 	}
 };
-\node[rotate=45] at ($(cat2-north) + (-0.8,0,-6.2)$) {
-	\textcolor{\ConcatColor}{\shortstack{Residual \\ Concatenation}}
+\node[rotate=45] at ($(cat2-north) + (-1.4,0,-6.2)$) {
+	\textcolor{\ConcatColor}{\shortstack{Residual \\ Connection}}
 };
 
 % Convolution 21 and 22
@@ -432,7 +440,7 @@ max pool}};
 };
 \node[rotate=45] at ($(ucr2-south) + (1.1,0)$) {$120 \times 120$};
 \node[rotate=45] at ($(ucr2-north) + (0,0,-5.3)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 % Unpooling 1
@@ -451,19 +459,20 @@ max pool}};
 	\textcolor{\UnpoolColor}{\shortstack{$2\times$ Bilinear \\ Upsampling}}
 };
 
-% Residual concatenation 1
-\pic[shift={(-0.4,0,0)}] at (up1-west) {
+% Residual Connection 1
+% \pic[shift={(-0.4,0,0)}] at (up1-west) {
+\pic[shift={(0,0,0)}] at (up1-west) {
 	Box={
 		name=cat1,
-		xlabel={{"32",""}},
+		% xlabel={{"32",""}},
 		fill=\ConcatColor,
 		height=40,
 		width=2,
 		depth=40
 	}
 };
-\node[rotate=45] at ($(cat1-north) + (-1,0,-7.3)$) {
-	\textcolor{\ConcatColor}{\shortstack{Residual \\ Concatenation}}
+\node[rotate=45] at ($(cat1-north) + (-1.5,0,-7.3)$) {
+	\textcolor{\ConcatColor}{\shortstack{Residual \\ Connection}}
 };
 
 % Convolution 11 and 12
@@ -480,8 +489,8 @@ max pool}};
 	}
 };
 \node[rotate=45] at ($(ucr1-south) + (0.8,0)$) {$240 \times 240$};
-\node[rotate=45] at ($(ucr1-north) + (0,0,-6)$) {
-	\shortstack{$7 \times 7$ conv \\ ReLU}
+\node[rotate=45] at ($(ucr1-north) + (0.4,0,-6)$) {
+	\shortstack{$7 \times 7$ conv \\ ReLU \\ \textcolor{\BatchColor}{BN}}
 };
 
 
