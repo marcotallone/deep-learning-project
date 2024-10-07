@@ -57,14 +57,14 @@
 
 % Dark Background
 \def\ConvColor{commentscolor}
-% \def\ConvReluColor{commentscolor}
-\def\ConvReluColor{yellow!50!commentscolor}
+\def\ConvReluColor{commentscolor}
+% \def\ConvReluColor{yellow!50!commentscolor}
 \def\PoolColor{red}
-% \def\UnpoolColor{azure}
-\def\UnpoolColor{azure!30!purple}
+\def\UnpoolColor{azure}
+% \def\UnpoolColor{azure!30!purple}
 \def\ConcatColor{purple}
-% \def\BatchColor{background}
-\def\BatchColor{yellow}
+\def\BatchColor{background}
+% \def\BatchColor{yellow}
 
 % for the presentation images
 % \def\ConvColor{background}
@@ -310,11 +310,11 @@ max pool}};
 };
 
 % Residual Connection 4
-% \pic[shift={(-1.2,0,0)}] at (up4-west) {
-\pic[shift={(0,0,0)}] at (up4-west) {
+\pic[shift={(-1.2,0,0)}] at (up4-west) {
+% \pic[shift={(0,0,0)}] at (up4-west) {
 	Box={
 		name=cat4,
-		% xlabel={{"256",""}},
+		xlabel={{"256",""}},
 		fill=\ConcatColor,
 		height=16,
 		width=6,
@@ -360,11 +360,11 @@ max pool}};
 };
 
 % Residual Connection 3
-% \pic[shift={(-0.9,0,0)}] at (up3-west) {
-\pic[shift={(0,0,0)}] at (up3-west) {
+\pic[shift={(-0.9,0,0)}] at (up3-west) {
+% \pic[shift={(0,0,0)}] at (up3-west) {
 	Box={
 		name=cat3,
-		% xlabel={{"128",""}},
+		xlabel={{"128",""}},
 		fill=\ConcatColor,
 		height=25,
 		width=4.5,
@@ -410,11 +410,11 @@ max pool}};
 };
 
 % Residual Connection 2
-% \pic[shift={(-0.7,0,0)}] at (up2-west) {
-\pic[shift={(0,0,0)}] at (up2-west) {
+\pic[shift={(-0.7,0,0)}] at (up2-west) {
+% \pic[shift={(0,0,0)}] at (up2-west) {
 	Box={
 		name=cat2,
-		% xlabel={{"64",""}},
+		xlabel={{"64",""}},
 		fill=\ConcatColor,
 		height=32,
 		width=3.5,
@@ -460,11 +460,11 @@ max pool}};
 };
 
 % Residual Connection 1
-% \pic[shift={(-0.4,0,0)}] at (up1-west) {
-\pic[shift={(0,0,0)}] at (up1-west) {
+\pic[shift={(-0.4,0,0)}] at (up1-west) {
+% \pic[shift={(0,0,0)}] at (up1-west) {
 	Box={
 		name=cat1,
-		% xlabel={{"32",""}},
+		xlabel={{"32",""}},
 		fill=\ConcatColor,
 		height=40,
 		width=2,
@@ -622,6 +622,46 @@ max pool}};
 
 % Input Image connection
 \draw[normconnection]  (input4-east)  -- node {\normmidarrow} (cr1-west);
+
+
+% Separable Convolutions ------------------------------------------------------
+
+% Small zoom-in circle
+\draw[draw=textcolor,
+			fill=gray!50!background,
+			opacity=0.75, 
+			line width=1.5
+		] (-1,0) circle (1.5);
+
+% Cone borders
+\draw[draw=textcolor, 
+			opacity=1, 
+			line width=1.5,
+			] (0.5, -0.5) -- (10, -5);
+
+% Big zoom-in circle
+\draw[draw=textcolor, 
+			fill=background, 
+			opacity=1, 
+			line width=1
+		] (27,-12.5) circle (19);
+
+% % Normal Convolution Image
+% \node at (27,-15) {
+% 	\includegraphics[width=1.8\textwidth, angle=90]{normal-convolution2.png}
+% };
+% \node at (27,-4) {
+% 	\fontsize{30}{30}\selectfont \textcolor{textcolor}{\textbf{Normal Convolution}}
+% };
+
+% Separable Convolution Image
+\node at (27,-15) {
+	\includegraphics[width=1.8\textwidth, angle=90]{separable-convolution.png}
+};
+\node at (27,-2) {
+	\fontsize{30}{30}\selectfont \textcolor{textcolor}{\textbf{Separable Convolution}}
+};
+
 
 \end{tikzpicture}
 \end{document}

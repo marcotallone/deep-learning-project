@@ -686,5 +686,170 @@ max pool}};
 % Input Image connection
 \draw[normconnection]  (input4-east)  -- node {\normmidarrow} (cr1-west);
 
+% Attention Gates --------------------------------------------------------------
+
+% % Small zoom-in circle
+% \draw[draw=textcolor,
+% 			fill=gray!50!background,
+% 			opacity=0.75, 
+% 			line width=1.5
+% 		] ($(att1-west) + (0.75,0)$) circle (1.5);
+
+% % Cone borders
+% \draw[draw=textcolor, 
+% 			opacity=1, 
+% 			line width=1.5,
+% 			] (36,0) -- (10, -5);
+
+% % Big zoom-in circle
+% \draw[draw=textcolor, 
+% 			fill=background, 
+% 			opacity=1, 
+% 			line width=1
+% 		] (14,-12.5) circle (19);
+
+% % Circle with $+$ sign
+% \draw[draw=textcolor,
+% 			fill=gray!50!background,
+% 			opacity=1, 
+% 			line width=1
+% 		] (5,-10) circle (1);
+% 		\node[text=textcolor] at (5,-10) {\fontsize{25}{25}\selectfont $+$};
+
+% % Query convolution (decoder)
+% \pic[shift={(0,0,0)}] at (3.75,-15) {
+% 	Box={
+% 		name=att_query,
+% 		fill=gray,
+% 		height=2,
+% 		width=12,
+% 		depth=12
+% 	}
+% };
+
+% % Key convolution (encoder)
+% \pic[shift={(0,0,0)}] at (0,-10) {
+% 	Box={
+% 		name=att_key,
+% 		fill=\ConcatColor,
+% 		height=12,
+% 		width=2,
+% 		depth=12
+% 	}
+% };
+
+% % Purple arrow coming from right to left: key and value
+% \draw[draw=\ConcatColor, 
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (-4.8,-10) -- (4, -10);
+
+% % White arrow coming from below; query
+% \draw[draw=textcolor, 
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (5,-29.2) -- (5, -11);
+
+% % ReLu Block
+% \node[draw=textcolor,
+% 			line width=1,
+% 			fill=gray!50!background,
+% 			opacity=1, 
+% 			minimum width=3cm, 
+% 			minimum height=2cm,
+% 			rounded corners=0.2cm
+% 			] (relu) at (10,-10) {\fontsize{20}{20}\selectfont ReLU};
+
+% \draw[draw=textcolor, 
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (6,-10) -- (relu.west);
+
+% % Convolution Box
+% \pic[shift={(0,0,0)}] at (14.5,-10) {
+% 	Box={
+% 		name=att_conv,
+% 		fill=gray,
+% 		height=12,
+% 		width=2,
+% 		depth=12
+% 	}
+% };
+
+% \draw[draw=textcolor, 
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (relu.east) -- (att_conv-west);
+
+% % Sigmoid block
+% \node[draw=textcolor,
+% 			line width=1,
+% 			fill=gray!50!background,
+% 			opacity=1, 
+% 			minimum width=3cm, 
+% 			minimum height=2cm,
+% 			rounded corners=0.2cm
+% 			] (sigmoid) at (19,-10) {\fontsize{20}{20}\selectfont Sigmoid $\sigma$};
+
+% \draw[draw=textcolor,
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (att_conv-east) -- (sigmoid.west);
+
+% % Bilinear Upsampling Block
+% \node[draw=textcolor,
+% 			line width=1,
+% 			fill=\UnpoolColor!50!background,
+% 			opacity=1, 
+% 			minimum width=3cm, 
+% 			minimum height=2cm,
+% 			rounded corners=0.2cm
+% 			] (bilinear) at (24,-10) {\fontsize{20}{20}\selectfont Upsampler};
+
+% \draw[draw=textcolor,
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (sigmoid.east) -- (bilinear.west);
+
+% % Product circle
+% \draw[draw=textcolor,
+% 			fill=gray!50!background,
+% 			opacity=1, 
+% 			line width=1
+% 		] (28,-10) circle (1);
+% 		\node[text=textcolor] at (28,-10) {\fontsize{25}{25}\selectfont $\times$};
+
+% \draw[draw=textcolor,
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (bilinear.east) -- (27, -10);
+
+% \draw[draw=\ConcatColor,
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (29, -10) -- (33,-10);
+
+% % Value arrow before key convolution
+% \draw[draw=\ConcatColor, 
+% 			opacity=1, 
+% 			line width=3,
+% 			-Stealth
+% 		] (-2,-10) -- (-2, -6) -- (28, -6) -- (28, -9);
+
+% % Labels
+
+% \node[text=textcolor] at (8,-16) {\fontsize{30}{30}\selectfont Query};
+% \node[text=\ConcatColor] at (2,-12) {\fontsize{30}{30}\selectfont Key};
+% \node[text=\ConcatColor] at (2,-5) {\fontsize{30}{30}\selectfont Value};
+
+
 \end{tikzpicture}
 \end{document}

@@ -117,15 +117,17 @@
 			% Adjust the position of the image
 			\node[anchor=south] at ($(current page.south) + (0, 0.4)$) {
 				\only<1>{\includegraphics[width=\textwidth]{improved-unet-1.pdf}}%
-				\only<2>{\includegraphics[width=\textwidth]{improved-unet-2.pdf}}%
-				\only<3>{\includegraphics[width=\textwidth]{improved-unet-3.pdf}}%
+				\only<2>{\includegraphics[width=\textwidth]{improved-unet-zoom1.pdf}}%
+				\only<3>{\includegraphics[width=\textwidth]{improved-unet-zoom2.pdf}}%
+				\only<4>{\includegraphics[width=\textwidth]{improved-unet-2.pdf}}%
+				\only<5>{\includegraphics[width=\textwidth]{improved-unet-3.pdf}}%
 			};
 			% Adjust the position of the text
 			\node[align=center] at ($(current page.center) + (0, 2.5)$) {
 				\only<1>{Separable Convolutions \\ $7 \times 7$ kernels \\ Inverse
 				Bottleneck}%
-				\only<2>{\yellow{Batch Normalization}}%
-				\only<3>{\purple{Additive skip connections}}
+				\only<4>{\yellow{Batch Normalization}}%
+				\only<5>{\purple{Additive skip connections}}
 			};
 	\end{tikzpicture}
 
@@ -137,14 +139,18 @@
 
 	\frametitle{Attention U-Net}
 
-	% TODO: Also here replace figures with tikZ pictures highlighting important
-	% elements covered in the speech
-
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.8\textwidth]{attention-unet-architecture.png}
-		\includegraphics[width=0.8\textwidth]{attention-gate.png}
-	\end{figure}
+	% \begin{figure}
+	% 	\centering
+	% 	\includegraphics[width=0.8\textwidth]{attention-unet-architecture.png}
+	% 	\includegraphics[width=0.8\textwidth]{attention-gate.png}
+	% \end{figure}
+	\begin{tikzpicture}[remember picture,overlay]
+			% Adjust the position of the image
+			\node[anchor=south] at ($(current page.south) + (0, 0.4)$) {
+				\only<1>{\includegraphics[width=\textwidth]{attention-unet.pdf}}%
+				\only<2>{\includegraphics[width=\textwidth]{attention-unet-zoom.pdf}}
+			};
+	\end{tikzpicture}
 
 \end{frame}
 
