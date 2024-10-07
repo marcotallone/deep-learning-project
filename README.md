@@ -592,7 +592,7 @@ Oktay, O., Schlemper, J., Le Folgoc, L., Lee, M. C. H., Heinrich, M. P., Misawa,
 [issues-shield]: https://img.shields.io/github/issues/marcotallone/deep-learning-project.svg?style=for-the-badge
 [issues-url]: https://github.com/marcotallone/deep-learning-project/issues
 [license-shield]: https://img.shields.io/github/license/marcotallone/deep-learning-project.svg?style=for-the-badge
-[license-url]: https://github.com/marcotallone/deep-learning-project/blob/master/LICENSE.txt
+[license-url]: https://github.com/marcotallone/deep-learning-project/blob/master/LICENSE
 <!-- [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/marco-tallone-40312425b -->
 <!-- [gmail-shield]: https://img.shields.io/badge/-Gmail-black.svg?style=for-the-badge&logo=gmail&colorB=555
