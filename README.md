@@ -305,7 +305,7 @@ The first implemented U-Net model is an adaptation of the one proposed by *Ronne
 The model is schematically depicted in the figure below while the full implementation can be found in the [`classic_unet.py`](./models/classic_unet.py) script.
 
 ![Classic U-Net model](images/unet-architecture.png)
-<!-- TODO: re-draw this image in tikz as the model it's not exactly like the one in the paper -->
+<!-- ![Classic U-Net model](images/classic-unet-5.pdf) -->
 
 In short, this model consists of 4 encoder blocks and, symmetrically, 4 decoder blocks connected by a bottleneck layer.\
 Each encoder block is composed of 2 convolutional layers that perform a same convolution operation with kernels of size 3, followed by a ReLU activation function. Between one encoder block and the next the number of channels doubles every time, and a max pooling operation is then performed to reduce the spatial dimensions of the input data. The first encoder blocks, in fact, converts the 4 channels of the input images into the `n_filters` channels selected when the model is instantiated (in the original paper `n_filters=64`). The overall number of parameters in the model is of course decided by the value selected for this variable.\
