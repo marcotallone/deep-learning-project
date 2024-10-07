@@ -26,7 +26,7 @@
     <br />
     <table>
       <tr>
-        <td><a href=""><strong>View Demo</strong></a></td>
+        <td><a href="./presentation/presentation.pdf"><strong>Presentation</strong></a></td>
         <td><a href="https://github.com/marcotallone/deep-learning-project/issues"><strong>Report bug</strong></a></td>
         <td><a href="https://github.com/marcotallone/deep-learning-project/issues"><strong>Request Feature</strong></a></td>
     </table>
@@ -88,7 +88,7 @@ With the data at our disposal, we have developed the following models:
   - [`ImprovedUNet`](./models/improved_unet.py) model
   - [`AttentionUNet`](./models/attention_unet.py) model
 
-<!-- NOT DONE IN THE END: All the implemented models come with trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\ -->
+All the implemented models come with trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\
 Further details about the datasets and the implemented models are given below, after installation instructions, dependencies requirements and usage examples.
 
 ### Project Structure
@@ -178,8 +178,6 @@ conda activate pytorch
 ```
 
 In case you want to run the scripts in a HPC cluster these steps might be necessary. Refer to your cluster documentation for Python packages usage and installation. For completeness we link the relevant [documentation for the ORFEO cluster](https://orfeo-doc.areasciencepark.it/HPC/python-environment/) that we used for the project.
-
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -464,7 +462,6 @@ url={https://openreview.net/forum?id=YicbFdNTTy}
 <a id="ref7"></a>
 [7]
 Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., & Houlsby, N. (2021). An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale. International Conference on Learning Representations. <https://openreview.net/forum?id=YicbFdNTTy>
-
 
 <a id="ref8"></a>
 [8]
