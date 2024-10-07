@@ -68,7 +68,7 @@ def remove_module_prefix(state_dict):
 
 
 # Channels visualizer functions for BraTS2020 dataset --------------------------
-def display_image_channels(image: Tensor, title='Image Channels'):
+def display_image_channels(image: Tensor, title='Image Channels', flat: bool = False, save_path: str = None):
 	"""Function to display the different channels of an MRI image.
 
 	The diplayed channels are:
@@ -83,24 +83,47 @@ def display_image_channels(image: Tensor, title='Image Channels'):
 		Image to display the channels
 	title: str, optional (default='Image Channels')
 		Title of the plot
+	flat: bool, optional (default=False)
+		Display the channels as a flat grid
+	save_path: str, optional
+		Path to save the plot
 	"""
 
 	channel_names: list[str] = ['T1-weighted (T1) [C1]', 
 								'T1-weighted post contrast (T1c) [C2]', 
 								'T2-weighted (T2) [C3]', 
-								'Fluid Attenuated Inversion Recovery (FLAIR) [C4]'
+								'Fluid Attenuated Inversion\nRecovery (FLAIR) [C4]'
 								]
-	fig, axes = plt.subplots(2, 2, figsize=(10, 10))
-	for idx, ax in enumerate(axes.flatten()):
-		channel_image = image[idx, :, :]  # Transpose the array to display the channel
-		ax.imshow(channel_image, cmap='gray')
-		# ax.axis('off')
-		ax.set_xticks([])
-		ax.set_yticks([])
-		ax.set_title(channel_names[idx], fontsize=15)
-	plt.tight_layout()
-	plt.suptitle(title, fontsize=15, y=1.03)
-	plt.show()
+	
+	# Display the channels as a flat grid
+	if flat:
+		fig, ax = plt.subplots(1, 4, figsize=(15, 5))
+		for idx, ax in enumerate(ax):
+			channel_image = image[idx, :, :]
+			ax.imshow(channel_image, cmap='gray')
+			ax.set_xticks([])
+			ax.set_yticks([])
+			ax.set_title(channel_names[idx], fontsize=15)
+		# plt.suptitle(title, fontsize=15, y=1.03)
+		plt.tight_layout()
+		plt.savefig(save_path, format='png', dpi=600, transparent=True)
+		plt.close(fig)
+
+	# Display the channels as a 2x2 grid
+	else:
+		fig, axes = plt.subplots(2, 2, figsize=(10, 10))
+		for idx, ax in enumerate(axes.flatten()):
+			channel_image = image[idx, :, :]  # Transpose the array to display the channel
+			ax.imshow(channel_image, cmap='gray')
+			# ax.axis('off')
+			ax.set_xticks([])
+			ax.set_yticks([])
+			ax.set_title(channel_names[idx], fontsize=15)
+		plt.tight_layout()
+		plt.suptitle(title, fontsize=15, y=1.03)
+		# plt.show()
+		plt.savefig(save_path, format='png', dpi=600, transparent=True)
+		plt.close(fig)
 
 
 def display_mask_channels(mask: Tensor, title='Mask Channels'):
@@ -257,6 +280,10 @@ def display_scan(scan_index: int,
 	# Channels names
 	image_channels: list[str] = ['T1 [C1]', 'T1c [C2]', 'T2 [C3]', 'FLAIR [C4]']
 	mask_channels: list[str] = ['NEC [R]', 'EDEMA [G]', 'ET [B]']
+	channel_names: list[str] = ['Necrotic (NEC) [R]', 
+								'Edema (ED) [G]', 
+								'Tumour (ET) [B]'
+								]
 
 	# Build the big plot with everything
 	fig = plt.figure(figsize=(8, 6))
@@ -299,12 +326,40 @@ def display_scan(scan_index: int,
 	plt.suptitle(title, fontsize=title_fontsize, y=1)
 	fig.text(0.5, 0.9, subtitle, ha='center', fontsize=subtitle_fontsize)
 	plt.tight_layout()
+
+	# Only for presentation -----------------------------------------
+	# Plot only ground thruth mask channels and overlay in a 1x4 grid
+	# fig, axes = plt.subplots(1, 4, figsize=(15, 5))
+
+	# # Plot mask channels (1x3 grid)
+	# for idx, ax in enumerate(axes[:3]):
+	# 	rgb_mask = np.zeros((mask.shape[1], mask.shape[2], 3), dtype=np.uint8)
+	# 	rgb_mask[..., idx] = mask[idx, :, :] * 255
+	# 	ax.imshow(rgb_mask)
+	# 	# ax.axis('off')
+	# 	ax.set_xticks([])
+	# 	ax.set_yticks([])
+	# 	ax.set_title(channel_names[idx], fontsize=labels_fontsize)
+
+	# # Plot overlay (single plot)
+	# ax = axes[3]
+	# t1_image = image[0, :, :]
+	# t1_image_normalized = (t1_image - t1_image.min()) / (t1_image.max() - t1_image.min())
+	# rgb_image = np.stack([t1_image_normalized] * 3, axis=-1)
+	# color_mask = np.stack([mask[0, :, :], mask[1, :, :], mask[2, :, :]], axis=-1)
+	# rgb_image = np.where(color_mask, color_mask, rgb_image)
+	# ax.imshow(rgb_image)
+	# # ax.axis('off')
+	# ax.set_xticks([])
+	# ax.set_yticks([])
+	# ax.set_title('Overlay [RGB]', fontsize=labels_fontsize)
 	
-	if save_path:
-		plt.savefig(save_path, format='png', dpi=600, transparent=True)
-		plt.close(fig)
-	else:
-		plt.show()
+	# if save_path:
+	# 	plt.tight_layout()
+	# 	plt.savefig(save_path, format='png', dpi=600, transparent=True)
+	# 	plt.close(fig)
+	# else:
+	# 	plt.show()
 
 
 # Display animated MRI scan ----------------------------------------------------

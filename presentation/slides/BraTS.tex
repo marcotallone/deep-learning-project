@@ -3,19 +3,27 @@
 
 \begin{document}
 
-\section{Datasets} % This if you want to set the gray section title
+\section{Datasets}
 
 % Slide 1 ──────────────────────────────────────────────────────────────────────
 \begin{frame}
 
 	\frametitle{BraTS 2020 Dataset}
-    \begin{itemize}
-        \item BraTS stands for Brain Tumor Segmentation
-        \item it is composed by 155 horizontal "slices" of brain MRI images for 369 patients (volumes) 
-        \[155 \cdot 369 = 57195 \]
-        \item we used the $50\%$ most significant slices of the dataset
-        \item we used 90\% of the dataset for training and 10\% for testing
-    \end{itemize}
+
+		Segmentation task dataset
+		\begin{cbox}
+			\begin{itemize}
+					\item BraTS stands for Brain Tumor Segmentation
+					\item it is composed by $155$ horizontal "slices" of brain MRI images
+						for 369 patients (volumes): 
+					\[155 \cdot 369 = 57195 \]
+				\item we used the $50\%$ ``\itt{most significant}'' slices of the dataset
+					\item we used \azure{$90\%$} of data for \azure{training} and
+						\green{$10\%$} for \green{testing}
+			\end{itemize}
+		\end{cbox}
+
+		%TODO: side view of the brain image
 
 \end{frame}
 
@@ -24,13 +32,17 @@
     \frametitle{BraTS 2020 Dataset}
     Images have 4 channels:
         \begin{enumerate}
-            \item \textbf{T1 weighted (T1)} good for visualizing the brain but not the tumor
-            \item \textbf{T1 weighted with contrast (T1c)} taken with the same tecnique as T1 but with contrast
-            \item \textbf{T2 weighted (T2)} good for visualizing the edema
-            \item \textbf{Fluid Attenuated Inversion Recovery (FLAIR)} improves the visualization of the edema
+            \item \textbf{T1 weighted (T1)}: \gray{\itt{good for visualizing the
+						brain but not the tumor}}
+            \item \textbf{T1 weighted with contrast (T1c)}: \gray{\itt{taken
+							with the same technique as T1 but with contrast}}
+            \item \textbf{T2 weighted (T2)}: \gray{\itt{good for visualizing the
+							edema}}
+            \item \textbf{Fluid Attenuated Inversion Recovery (FLAIR)}:
+							\gray{\itt{improves the visualization of the edema}}
         \end{enumerate}
         \begin{center}
-            \includegraphics[width=0.4\textwidth]{segmentation_input.png}
+            \includegraphics[width=\textwidth]{segmentation_input2.png}
         \end{center}
 \end{frame}
 
@@ -38,14 +50,15 @@
 \begin{frame}
 
 	\frametitle{BraTS 2020 Dataset}
-    Each slice has (eventually) 3 mask labels:
+	Each slice has 3 mask labels \gray{\itt{(some might be empty)}}:
     \begin{enumerate}
-        \item Necrotic and Non-Enhancing Tumour Core (NCR/NET)
-        \item Edema (ED)
-        \item Enhancing Tumour (ET)
+			\item \bred{Necrotic and Non-Enhancing Tumor Core (NCR/NET)}
+			\item \bgreen{Edema (ED)}
+			\item \bblue{Enhancing Tumor (ET)}
     \end{enumerate}
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{segmentation-ground-truth.png}
+        % \includegraphics[width=\textwidth]{segmentation-ground-truth.png}
+			\includegraphics[width=\textwidth]{ground_truth.png}
     \end{center}
 
 \end{frame}

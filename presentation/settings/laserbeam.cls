@@ -25,6 +25,7 @@
 % Set default symbol for itemize ([triangle], [circle], [square], [ball] or {\faIcon})
 % NOTE: Use [predefined symbol] or {\faIcon} for Fontawesome5 icons
 \setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[circle]
 
 %┌────────────────────────────────────────────────────────────────────────────┐%
 %│                               Title Page                                   │%
@@ -474,6 +475,8 @@
 \usetikzlibrary{patterns,arrows.meta}
 \usetikzlibrary{shadows}
 \usetikzlibrary{external}
+\usetikzlibrary{positioning}
+\usetikzlibrary{3d}
 
 % PGFPlots
 \RequirePackage{pgfplots}

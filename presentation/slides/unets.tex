@@ -3,40 +3,15 @@
 
 \begin{document}
 
-\section{Segmentation Models} % This if you want to set the gray section title
+\section{Segmentation}
 
 
 % Slide 1 ──────────────────────────────────────────────────────────────────────
-\begin{frame}[t] % t: top alignment of the slide content
+\begin{frame}[t]
 
 	\frametitle{U-Net Models}
 
 	$3$ models for the segmentation task:
-
-	% \only<1->{
-	% \begin{cbox}
-	% 	\begin{itemize}
-	% 		\item \bft{Classic U-Net}: \itt{\gray{baseline U-Net model architecture}}
-	% 	\end{itemize}
-	% \end{cbox}
-	% }
-
-	% \only<2->{
-	% \begin{cbox}
-	% 	\begin{itemize}
-	% 		\item \bft{Improved U-Net}: \itt{\gray{small improvements, less
-	% 			parameters}}
-	% 	\end{itemize}
-	% \end{cbox}
-	% }
-
-	% \only<3->{
-	% \begin{cbox}
-	% 	\begin{itemize}
-	% 		\item \bft{Attention U-Net}: \itt{\gray{attention mechanism added}}
-	% 	\end{itemize}
-	% \end{cbox}
-	% }
 
 	\begin{itemize}
 		\setlength{\itemsep}{0.8ex}
@@ -139,13 +114,7 @@
 
 	\frametitle{Attention U-Net}
 
-	% \begin{figure}
-	% 	\centering
-	% 	\includegraphics[width=0.8\textwidth]{attention-unet-architecture.png}
-	% 	\includegraphics[width=0.8\textwidth]{attention-gate.png}
-	% \end{figure}
 	\begin{tikzpicture}[remember picture,overlay]
-			% Adjust the position of the image
 			\node[anchor=south] at ($(current page.south) + (0, 0.4)$) {
 				\only<1>{\includegraphics[width=\textwidth]{attention-unet.pdf}}%
 				\only<2>{\includegraphics[width=\textwidth]{attention-unet-zoom.pdf}}
@@ -160,18 +129,24 @@
 
 	\frametitle{Training Details}
 
-	U-Net Models training parameters:
+	U-Net models training parameters:
+	\vspace{0.2cm}
 
 	\begin{itemize}
-		\setlength{\itemsep}{2ex}
-		\item \bft{epochs}: $20$
-		\item \bft{Optimizer}: Adam \gray{(with weight decay ($1 \times 10^{-2}$))}
+		\setlength{\itemsep}{1.5ex}
+		\item \bft{Epochs}: $20$
+		\item \bft{Optimizer}: Adam \gray{(with weight decay $1 \times 10^{-2}$)}
 		\item \bft{Scheduler}: Exponential Decay \gray{($\gamma = 0.9$)}
-		\item \bft{Loss Function}: BCE with Logits Loss % TODO: formula HERE...
-		\item \bft{learning rate}: $2 \times 10^{-3}$
-		\item \bft{batch size}: $32$ \gray{(both training and validation)}
-		\item \bft{image size}: $240 \times 240$
-		\item \bft{first encoder filters}: $32$
+		\item \bft{Loss function}: BCE with Logits Loss:
+			\begin{equation*}
+				\ell(y, \hat{y}) = - \left[ 
+					y \log(\sigma(\hat{y})) + (1 - y) \log(1 - \sigma(\hat{y}))
+				\right]
+			\end{equation*}
+		\item \bft{Learning rate}: $2 \times 10^{-3}$
+		\item \bft{Batch size}: $32$ \gray{(both training and validation)}
+		\item \bft{First encoder filters}: $32$
+		\item \bft{Image size}: $240 \times 240$
 	\end{itemize}
 
 \end{frame}
@@ -225,13 +200,11 @@
 
 	\begin{figure}
 		\centering
-		\only<1>{\includegraphics[width=\textwidth]{metrics-red.png}}
-		\only<2>{\includegraphics[width=\textwidth]{metrics-green.png}}
-		\only<3>{\includegraphics[width=\textwidth]{metrics-blue.png}}
+		\only<1>{\includegraphics[width=\textwidth]{metrics-red.png}}%
+		\only<2>{\includegraphics[width=\textwidth]{metrics-green.png}}%
+		\only<3>{\includegraphics[width=\textwidth]{metrics-blue.png}}%
 		\only<4>{\includegraphics[width=\textwidth]{metrics-average.png}}
 	\end{figure}
-
-	% NOTE: Extra material: all the indexes plots of the other metrics
 
 \end{frame}
 

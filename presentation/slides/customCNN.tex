@@ -1,7 +1,7 @@
 \documentclass[../presentation.tex]{subfiles} % Parent file
 \graphicspath{{\subfix{../images/}}} % Images path
 
-\usetikzlibrary{positioning,3d}
+% \usetikzlibrary{positioning,3d}
 
 \begin{document}
 
@@ -125,19 +125,21 @@
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[t]
     
     \frametitle{Training Details}
 
-    Training parameters:
+    Costum CNN model training parameters:
     \vspace{0.2cm}
+
     \begin{itemize}
+			\setlength{\itemsep}{1.5ex}
         \item \textbf{Epochs}: $50$
-        \item \textbf{Batch size}: $64$
+				\item \textbf{Optimizer}: Adam \gray{(weight decay $1\times10^{-5}$)}
+				\item \textbf{Scheduler}: stepLR \gray{(step size $10$, gamma $0.5$)}
+        \item \textbf{Loss function}: Cross-entropy % TODO: add formula ??
         \item \textbf{Learning rate}: $1\times10^{-4}$
-        \item \textbf{Optimizer}: Adam (weight decay $1\times10^{-5}$)
-        \item \textbf{Scheduler}: stepLR (step size $10$, gamma $0.5$)
-        \item \textbf{Loss function}: Cross-entropy
+				\item \textbf{Batch size}: $64$ \gray{(both training and validation)}
         \item \textbf{Activation function}: Mish
         \item \textbf{Dropout rate}: $0.4$
         \item \textbf{Image size}: $128\times128$
@@ -150,7 +152,7 @@
     \frametitle{Training Loss and Accuracy}
 
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{loss-accuracy_customCNN.png}
+        \includegraphics[width=0.66\textwidth]{loss-accuracy_customCNN.png}
     \end{center}
 
     \small{
@@ -169,7 +171,7 @@
     \frametitle{Confidence and Test Accuracy}
 
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{confidence_customCNN.png}
+        \includegraphics[width=0.9\textwidth]{confidence_customCNN.png}
     \end{center}
 
     \small{

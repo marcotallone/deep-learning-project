@@ -1,7 +1,7 @@
 \documentclass[../presentation.tex]{subfiles} % Parent file
 \graphicspath{{\subfix{../images/}}} % Images path
 
-\usetikzlibrary{positioning,3d}
+% \usetikzlibrary{positioning,3d}
 
 \begin{document}
 
@@ -213,19 +213,19 @@
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[t]
     
     \frametitle{Training Details}
 
-    Training and model parameters:
-    \vspace{0.1cm}
+    VIT training and model parameters:
+    % \vspace{0.1cm}
     \begin{itemize}
         \item \textbf{Epochs}: $50$
-        \item \textbf{Batch size}: $64$
-        \item \textbf{Learning rate}: $1\times10^{-4}$
-        \item \textbf{Optimizer}: Adam (weight decay $1\times10^{-5}$)
-        \item \textbf{Scheduler}: stepLR (step size $10$, gamma $0.5$)
+				\item \textbf{Optimizer}: Adam \gray{(weight decay $1\times10^{-5}$)}
+				\item \textbf{Scheduler}: stepLR \gray{(step size $10$, gamma $0.5$)}
         \item \textbf{Loss function}: Cross-entropy
+        \item \textbf{Learning rate}: $1\times10^{-4}$
+				\item \textbf{Batch size}: $64$ \gray{(both training and validation)}
         \item \textbf{Activation function}: Mish
         \item \textbf{Dropout rate}: $0.2$
         \item \textbf{Image size} and \textbf{Patch size}: $128\times128$, $16\times16$
@@ -242,7 +242,7 @@
     \frametitle{Training Loss and Accuracy}
 
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{VIT_loss-accuracy.png}
+        \includegraphics[width=0.66\textwidth]{VIT_loss-accuracy.png}
     \end{center}
 
     \small{
@@ -261,7 +261,7 @@
     \frametitle{Confidence and Test Accuracy}
 
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{VIT_confidence.png}
+        \includegraphics[width=0.9\textwidth]{VIT_confidence.png}
     \end{center}
 
     \small{
