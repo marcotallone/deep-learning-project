@@ -1,7 +1,7 @@
 \documentclass[../presentation.tex]{subfiles} % Parent file
 \graphicspath{{\subfix{../images/}}} % Images path
 
-\usetikzlibrary{positioning,3d}
+% \usetikzlibrary{positioning,3d}
 
 \begin{document}
 
@@ -10,128 +10,135 @@
 \begin{frame}
 
     \frametitle{AlexNet}
-    \begin{tikzpicture}[scale=0.6, 3d view={120}{20}]
 
-        % Input layer (128x128x3)
-        \draw[fill=cyan] (0, 0, 0) -- (0, 0, 4) -- (0, 5, 4) -- (0, 5, 0) -- cycle;
-        \node[up right, rotate=43] at (0, 0, 7) {\scriptsize Input 128x128x3};
+        \vspace{-0.7cm}
+		\begin{center}
+			\includegraphics[width=\textwidth]{alexnet.png}
+		\end{center}
+        \vspace{-0.7cm}
 
-        % Convolutional layer 1 (kernel 9x9, 96 channels, stride 4)
-        \draw[fill=orange] (1.3, 0, 0) -- (1.3, 0, 3) -- (1.3, 3, 3) -- (1.3, 3, 0) -- cycle;
-        \draw[fill=orange] (1.3, 0, 0) -- (1.3, 0, 3) -- (1.6, 0, 3) -- (1.6, 0, 0) -- cycle;
-        \draw[fill=orange] (1.3, 3, 0) -- (1.3, 3, 3) -- (1.6, 3, 3) -- (1.6, 3, 0) -- cycle;
-        \draw[fill=orange] (1.6, 0, 0) -- (1.6, 0, 3) -- (1.6, 3, 3) -- (1.6, 3, 0) -- cycle;
-        \draw[fill=orange] (1.3, 0, 3) -- (1.3, 3, 3) -- (1.6, 3, 3) -- (1.6, 0, 3) -- cycle;
-        \node[up right, rotate=43] at (1.3, 0, 7) {\scriptsize Conv 9x9, stride 4};
-        \node[up right, rotate=70] at (0.9, 3, -3) {\scriptsize 96 channels};
+    %\begin{tikzpicture}[scale=0.6, 3d view={120}{20}]
 
-        % Batch normalization
-        %\coordinate (A) at (2, 0, 0);
-        %\node[up right, rotate=43] at (2, 0, 7) {\scriptsize Batch Normalization};
+    %    % Input layer (128x128x3)
+    %    \draw[fill=cyan] (0, 0, 0) -- (0, 0, 4) -- (0, 5, 4) -- (0, 5, 0) -- cycle;
+    %    \node[up right, rotate=43] at (0, 0, 7) {\scriptsize Input 128x128x3};
 
-        % Max pooling
-        \coordinate (A) at (2.2, 0, 0);
-        \coordinate (B) at (2.2, 0, 3);
-        \draw[blue] (A) -- (B) -- cycle;
-        \node[up right, rotate=43] at (2.2, 0, 7) {\scriptsize Max pooling};
+    %    % Convolutional layer 1 (kernel 9x9, 96 channels, stride 4)
+    %    \draw[fill=orange] (1.3, 0, 0) -- (1.3, 0, 3) -- (1.3, 3, 3) -- (1.3, 3, 0) -- cycle;
+    %    \draw[fill=orange] (1.3, 0, 0) -- (1.3, 0, 3) -- (1.6, 0, 3) -- (1.6, 0, 0) -- cycle;
+    %    \draw[fill=orange] (1.3, 3, 0) -- (1.3, 3, 3) -- (1.6, 3, 3) -- (1.6, 3, 0) -- cycle;
+    %    \draw[fill=orange] (1.6, 0, 0) -- (1.6, 0, 3) -- (1.6, 3, 3) -- (1.6, 3, 0) -- cycle;
+    %    \draw[fill=orange] (1.3, 0, 3) -- (1.3, 3, 3) -- (1.6, 3, 3) -- (1.6, 0, 3) -- cycle;
+    %    \node[up right, rotate=43] at (1.3, 0, 7) {\scriptsize Conv 9x9, stride 4};
+    %    \node[up right, rotate=70] at (0.9, 3, -3) {\scriptsize 96 channels};
 
-        % Convolutional layer 2 (kernel 5x5, 256 channels, stride 1)
-        \draw[fill=orange] (3.1, 0, 0) -- (3.1, 0, 2.5) -- (3.1, 2, 2.5) -- (3.1, 2, 0) -- cycle;
-        \draw[fill=orange] (3.1, 0, 0) -- (3.1, 0, 2.5) -- (3.8, 0, 2.5) -- (3.8, 0, 0) -- cycle;
-        \draw[fill=orange] (3.1, 2, 0) -- (3.1, 2, 2.5) -- (3.8, 2, 2.5) -- (3.8, 2, 0) -- cycle;
-        \draw[fill=orange] (3.8, 0, 0) -- (3.8, 0, 2.5) -- (3.8, 2, 2.5) -- (3.8, 2, 0) -- cycle;
-        \draw[fill=orange] (3.1, 0, 2.5) -- (3.1, 2, 2.5) -- (3.8, 2, 2.5) -- (3.8, 0, 2.5) -- cycle;
-        \node[up right, rotate=43] at (3.1, 0, 7) {\scriptsize Conv 5x5, stride 1};
-        \node[up right, rotate=70] at (3, 2.3, -3) {\scriptsize 256 channels};
+    %    % Batch normalization
+    %    %\coordinate (A) at (2, 0, 0);
+    %    %\node[up right, rotate=43] at (2, 0, 7) {\scriptsize Batch Normalization};
 
-        % Batch normalization
-        %\coordinate (A) at (4.4, 0, 0);
-        %\coordinate (B) at (4.4, 0, 2.5);
-        %\draw[red, dashed] (A) -- (B) -- cycle;
-        %\node[up right, rotate=43] at (4.4, 0, 7) %{\scriptsize Batch Normalization};
+    %    % Max pooling
+    %    \coordinate (A) at (2.2, 0, 0);
+    %    \coordinate (B) at (2.2, 0, 3);
+    %    \draw[blue] (A) -- (B) -- cycle;
+    %    \node[up right, rotate=43] at (2.2, 0, 7) {\scriptsize Max pooling};
 
-        % Max pooling
-        \coordinate (A) at (4.4, 0, 0);
-        \coordinate (B) at (4.4, 0, 2.5);
-        \draw[blue] (A) -- (B) -- cycle;
-        \node[up right, rotate=43] at (4.4, 0, 7) {\scriptsize Max pooling};
+    %    % Convolutional layer 2 (kernel 5x5, 256 channels, stride 1)
+    %    \draw[fill=orange] (3.1, 0, 0) -- (3.1, 0, 2.5) -- (3.1, 2, 2.5) -- (3.1, 2, 0) -- cycle;
+    %    \draw[fill=orange] (3.1, 0, 0) -- (3.1, 0, 2.5) -- (3.8, 0, 2.5) -- (3.8, 0, 0) -- cycle;
+    %    \draw[fill=orange] (3.1, 2, 0) -- (3.1, 2, 2.5) -- (3.8, 2, 2.5) -- (3.8, 2, 0) -- cycle;
+    %    \draw[fill=orange] (3.8, 0, 0) -- (3.8, 0, 2.5) -- (3.8, 2, 2.5) -- (3.8, 2, 0) -- cycle;
+    %    \draw[fill=orange] (3.1, 0, 2.5) -- (3.1, 2, 2.5) -- (3.8, 2, 2.5) -- (3.8, 0, 2.5) -- cycle;
+    %    \node[up right, rotate=43] at (3.1, 0, 7) {\scriptsize Conv 5x5, stride 1};
+    %    \node[up right, rotate=70] at (3, 2.3, -3) {\scriptsize 256 channels};
 
-        % Convolutional layer 3 (kernel 3x3, 384 channels, stride 1)
-        \draw[fill=orange] (5.2, 0, 0) -- (5.2, 0, 2) -- (5.2, 1, 2) -- (5.2, 1, 0) -- cycle;
-        \draw[fill=orange] (5.2, 0, 0) -- (5.2, 0, 2) -- (6.3, 0, 2) -- (6.3, 0, 0) -- cycle;
-        \draw[fill=orange] (5.2, 1, 0) -- (5.2, 1, 2) -- (6.3, 1, 2) -- (6.3, 1, 0) -- cycle;
-        \draw[fill=orange] (6.3, 0, 0) -- (6.3, 0, 2) -- (6.3, 1, 2) -- (6.3, 1, 0) -- cycle;
-        \draw[fill=orange] (5.2, 0, 2) -- (5.2, 1, 2) -- (6.3, 1, 2) -- (6.3, 0, 2) -- cycle;
-        \node[up right, rotate=43] at (6, 0, 7) {\scriptsize Conv 3x3, stride 1};
-        \node[up right, rotate=70] at (5, 1.2, -3) {\scriptsize 384 channels};
+    %    % Batch normalization
+    %    %\coordinate (A) at (4.4, 0, 0);
+    %    %\coordinate (B) at (4.4, 0, 2.5);
+    %    %\draw[red, dashed] (A) -- (B) -- cycle;
+    %    %\node[up right, rotate=43] at (4.4, 0, 7) %{\scriptsize Batch Normalization};
 
-        % Convolutional layer 4 (kernel 3x3, 384 channels, stride 1)
-        \draw[fill=orange] (7, 0, 0) -- (7, 0, 2) -- (7, 1, 2) -- (7, 1, 0) -- cycle;
-        \draw[fill=orange] (7, 0, 0) -- (7, 0, 2) -- (8.1, 0, 2) -- (8.1, 0, 0) -- cycle;
-        \draw[fill=orange] (7, 1, 0) -- (7, 1, 2) -- (8.1, 1, 2) -- (8.1, 1, 0) -- cycle;
-        \draw[fill=orange] (8.1, 0, 0) -- (8.1, 0, 2) -- (8.1, 1, 2) -- (8.1, 1, 0) -- cycle;
-        \draw[fill=orange] (7, 0, 2) -- (7, 1, 2) -- (8.1, 1, 2) -- (8.1, 0, 2) -- cycle;
-        \node[up right, rotate=43] at (7.6, 0, 7) {\scriptsize Conv 3x3, stride 1};
-        \node[up right, rotate=70] at (6.5, 1.2, -3) {\scriptsize 384 channels};
+    %    % Max pooling
+    %    \coordinate (A) at (4.4, 0, 0);
+    %    \coordinate (B) at (4.4, 0, 2.5);
+    %    \draw[blue] (A) -- (B) -- cycle;
+    %    \node[up right, rotate=43] at (4.4, 0, 7) {\scriptsize Max pooling};
 
-        % Batch normalization
-        %\coordinate (A) at (7.2, 0, 0);
-        %\coordinate (B) at (7.2, 0, 2);
-        %\draw[red, dashed] (A) -- (B) -- cycle;
-        %\node[up right, rotate=43] at (7.2, 0, 7) %{\scriptsize Batch Normalization};
+    %    % Convolutional layer 3 (kernel 3x3, 384 channels, stride 1)
+    %    \draw[fill=orange] (5.2, 0, 0) -- (5.2, 0, 2) -- (5.2, 1, 2) -- (5.2, 1, 0) -- cycle;
+    %    \draw[fill=orange] (5.2, 0, 0) -- (5.2, 0, 2) -- (6.3, 0, 2) -- (6.3, 0, 0) -- cycle;
+    %    \draw[fill=orange] (5.2, 1, 0) -- (5.2, 1, 2) -- (6.3, 1, 2) -- (6.3, 1, 0) -- cycle;
+    %    \draw[fill=orange] (6.3, 0, 0) -- (6.3, 0, 2) -- (6.3, 1, 2) -- (6.3, 1, 0) -- cycle;
+    %    \draw[fill=orange] (5.2, 0, 2) -- (5.2, 1, 2) -- (6.3, 1, 2) -- (6.3, 0, 2) -- cycle;
+    %    \node[up right, rotate=43] at (6, 0, 7) {\scriptsize Conv 3x3, stride 1};
+    %    \node[up right, rotate=70] at (5, 1.2, -3) {\scriptsize 384 channels};
 
-        % Convolutional layer 5 (kernel 3x3, 256 channels, stride 1)
-        \draw[fill=orange] (8.9, 0, 0) -- (8.9, 0, 2) -- (8.9, 1, 2) -- (8.9, 1, 0) -- cycle;
-        \draw[fill=orange] (8.9, 0, 0) -- (8.9, 0, 2) -- (9.6, 0, 2) -- (9.6, 0, 0) -- cycle;
-        \draw[fill=orange] (8.9, 1, 0) -- (8.9, 1, 2) -- (9.6, 1, 2) -- (9.6, 1, 0) -- cycle;
-        \draw[fill=orange] (9.6, 0, 0) -- (9.6, 0, 2) -- (9.6, 1, 2) -- (9.6, 1, 0) -- cycle;
-        \draw[fill=orange] (8.9, 0, 2) -- (8.9, 1, 2) -- (9.6, 1, 2) -- (9.6, 0, 2) -- cycle;
-        \node[up right, rotate=43] at (9.1, 0, 7) {\scriptsize Conv 3x3, stride 1};
-        \node[up right, rotate=70] at (8.7, 1.4, -3) {\scriptsize 256 channels};
+    %    % Convolutional layer 4 (kernel 3x3, 384 channels, stride 1)
+    %    \draw[fill=orange] (7, 0, 0) -- (7, 0, 2) -- (7, 1, 2) -- (7, 1, 0) -- cycle;
+    %    \draw[fill=orange] (7, 0, 0) -- (7, 0, 2) -- (8.1, 0, 2) -- (8.1, 0, 0) -- cycle;
+    %    \draw[fill=orange] (7, 1, 0) -- (7, 1, 2) -- (8.1, 1, 2) -- (8.1, 1, 0) -- cycle;
+    %    \draw[fill=orange] (8.1, 0, 0) -- (8.1, 0, 2) -- (8.1, 1, 2) -- (8.1, 1, 0) -- cycle;
+    %    \draw[fill=orange] (7, 0, 2) -- (7, 1, 2) -- (8.1, 1, 2) -- (8.1, 0, 2) -- cycle;
+    %    \node[up right, rotate=43] at (7.6, 0, 7) {\scriptsize Conv 3x3, stride 1};
+    %    \node[up right, rotate=70] at (6.5, 1.2, -3) {\scriptsize 384 channels};
 
-        % Batch normalization
-        %\coordinate (A) at (9.1, 0, 0);
-        %\coordinate (B) at (9.1, 0, 2);
-        %\draw[red, dashed] (A) -- (B) -- cycle;
-        %\node[up right, rotate=43] at (9.1, 0, 7) %{\scriptsize Batch Normalization};
+    %    % Batch normalization
+    %    %\coordinate (A) at (7.2, 0, 0);
+    %    %\coordinate (B) at (7.2, 0, 2);
+    %    %\draw[red, dashed] (A) -- (B) -- cycle;
+    %    %\node[up right, rotate=43] at (7.2, 0, 7) %{\scriptsize Batch Normalization};
 
-        % Max pooling
-        \coordinate (A) at (10, 0, 0);
-        \coordinate (B) at (10, 0, 2);
-        \draw[blue] (A) -- (B) -- cycle;
-        \node[up right, rotate=43] at (10, 0, 7) {\scriptsize Max pooling};
+    %    % Convolutional layer 5 (kernel 3x3, 256 channels, stride 1)
+    %    \draw[fill=orange] (8.9, 0, 0) -- (8.9, 0, 2) -- (8.9, 1, 2) -- (8.9, 1, 0) -- cycle;
+    %    \draw[fill=orange] (8.9, 0, 0) -- (8.9, 0, 2) -- (9.6, 0, 2) -- (9.6, 0, 0) -- cycle;
+    %    \draw[fill=orange] (8.9, 1, 0) -- (8.9, 1, 2) -- (9.6, 1, 2) -- (9.6, 1, 0) -- cycle;
+    %    \draw[fill=orange] (9.6, 0, 0) -- (9.6, 0, 2) -- (9.6, 1, 2) -- (9.6, 1, 0) -- cycle;
+    %    \draw[fill=orange] (8.9, 0, 2) -- (8.9, 1, 2) -- (9.6, 1, 2) -- (9.6, 0, 2) -- cycle;
+    %    \node[up right, rotate=43] at (9.1, 0, 7) {\scriptsize Conv 3x3, stride 1};
+    %    \node[up right, rotate=70] at (8.7, 1.4, -3) {\scriptsize 256 channels};
 
-        % Fully connected layer 1 (1024 -> 512 features)
-        \draw[fill=green] (10.7, -0.3, 0) -- (11.0, -0.3, 0) -- (11.0, 5, 0) -- (10.7, 5, 0) -- cycle;
-        \node[up right, rotate=43] at (11, 0, 7) {\scriptsize Fully connected 1024 -> 512};
+    %    % Batch normalization
+    %    %\coordinate (A) at (9.1, 0, 0);
+    %    %\coordinate (B) at (9.1, 0, 2);
+    %    %\draw[red, dashed] (A) -- (B) -- cycle;
+    %    %\node[up right, rotate=43] at (9.1, 0, 7) %{\scriptsize Batch Normalization};
 
-        % Fully connected layer 2 (512 -> 512 features)
-        \draw[fill=green] (11.8, -0.3, 0) -- (11.5, -0.3, 0) -- (11.5, 4, 0) -- (11.8, 4, 0) -- cycle;
-        \node[up right, rotate=43] at (11.6, -0.5, 5) {\scriptsize Fully connected 512 -> 512};
+    %    % Max pooling
+    %    \coordinate (A) at (10, 0, 0);
+    %    \coordinate (B) at (10, 0, 2);
+    %    \draw[blue] (A) -- (B) -- cycle;
+    %    \node[up right, rotate=43] at (10, 0, 7) {\scriptsize Max pooling};
 
-        % Dropout
-        %\coordinate (A) at (11.1, -0.3, 0);
-        %\coordinate (B) at (11.1, 5, 0);
-        %\draw[yellow, dashed] (A) -- (B) -- cycle;
-        %\node[up right, rotate=43] at (11.5, 0, 5) %{\scriptsize Dropout};
+    %    % Fully connected layer 1 (1024 -> 512 features)
+    %    \draw[fill=green] (10.7, -0.3, 0) -- (11.0, -0.3, 0) -- (11.0, 5, 0) -- (10.7, 5, 0) -- cycle;
+    %    \node[up right, rotate=43] at (11, 0, 7) {\scriptsize Fully connected 1024 -> 512};
 
-        % Fully connected layer 3 (512 -> 128 features)
-        \draw[fill=green] (12.4, -0.3, 0) -- (12.7, -0.3, 0) -- (12.7, 3.5, 0) -- (12.4, 3.5, 0) -- cycle;
-        \node[up right, rotate=43] at (13, 0, 7) {\scriptsize Fully connected 512 -> 128};
+    %    % Fully connected layer 2 (512 -> 512 features)
+    %    \draw[fill=green] (11.8, -0.3, 0) -- (11.5, -0.3, 0) -- (11.5, 4, 0) -- (11.8, 4, 0) -- cycle;
+    %    \node[up right, rotate=43] at (11.6, -0.5, 5) {\scriptsize Fully connected 512 -> 512};
 
-        % Dropout
-        %\coordinate (A) at (12.5, -0.3, 0);
-        %\coordinate (B) at (12.5, 3.5, 0);
-        %\draw[yellow, dashed] (A) -- (B) -- cycle;
-        %\node[up right, rotate=43] at (12.9, 0, 5) %{\scriptsize Dropout};
+    %    % Dropout
+    %    %\coordinate (A) at (11.1, -0.3, 0);
+    %    %\coordinate (B) at (11.1, 5, 0);
+    %    %\draw[yellow, dashed] (A) -- (B) -- cycle;
+    %    %\node[up right, rotate=43] at (11.5, 0, 5) %{\scriptsize Dropout};
 
-        % Output layer (128 features -> 4 classes)
-        \draw[fill=blue] (13.2, -0.3, 0) -- (13.5, -0.3, 0) -- (13.5, 2, 0) -- (13.2, 2, 0) -- cycle;
-        \node[up right, rotate=43] at (13.9, 0, 5) {\scriptsize Output 128 -> 4};
+    %    % Fully connected layer 3 (512 -> 128 features)
+    %    \draw[fill=green] (12.4, -0.3, 0) -- (12.7, -0.3, 0) -- (12.7, 3.5, 0) -- (12.4, 3.5, 0) -- cycle;
+    %    \node[up right, rotate=43] at (13, 0, 7) {\scriptsize Fully connected 512 -> 128};
+
+    %    % Dropout
+    %    %\coordinate (A) at (12.5, -0.3, 0);
+    %    %\coordinate (B) at (12.5, 3.5, 0);
+    %    %\draw[yellow, dashed] (A) -- (B) -- cycle;
+    %    %\node[up right, rotate=43] at (12.9, 0, 5) %{\scriptsize Dropout};
+
+    %    % Output layer (128 features -> 4 classes)
+    %    \draw[fill=blue] (13.2, -0.3, 0) -- (13.5, -0.3, 0) -- (13.5, 2, 0) -- (13.2, 2, 0) -- cycle;
+    %    \node[up right, rotate=43] at (13.9, 0, 5) {\scriptsize Output 128 -> 4};
         
-        \end{tikzpicture}
+    %    \end{tikzpicture}
 
-        Number of parameters: $4589316$\\
+        Number of parameters: $4589316$
     
 \end{frame}
 
@@ -140,8 +147,8 @@
     \frametitle{VGG}
     
     \begin{center}
-        \hspace*{-0.7cm}
-        \includegraphics[width=1.1\textwidth]{vgg_arc.png}
+        % \hspace*{-0.7cm}
+        \includegraphics[width=\textwidth]{vgg_arc.png}
     \end{center}
     
     Number of parameters: $65070916$\\
@@ -167,7 +174,7 @@
 		\begin{table}[htb]
 			\renewcommand{\arraystretch}{1.5} % Row height
 			\centering
-			\begin{tabularx}{\textwidth}{|X|x|x|x|x|}
+			\begin{tabularx}{\textwidth}{|X|c|c|c|c|}
 
 				% Header (different color)
 				\hline
