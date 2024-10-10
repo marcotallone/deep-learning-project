@@ -205,6 +205,52 @@ th {
     left: 0;
 }
 
+.overlay-container {
+    position: relative;
+    display: inline-block;
+}
+
+.overlay-stretch {
+    width: 100%;
+    height: auto;
+		transform: scale(0.9) translate(0%, -10%);
+}
+
+.overlay-text {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--textcolor);
+    padding: 10px;
+    border-radius: 5px;
+		font-size: 0.8em;
+}
+
+.loading-bar {
+    width: 300px;
+    height: 30px;
+    border: 2px solid var(--textcolor);
+    position: relative;
+    overflow: hidden;
+}
+
+.loading-bar-fill {
+    height: 100%;
+    width: 0;
+    background-color: var(--azure);
+    animation: loading 15s steps(30) infinite;
+}
+
+@keyframes loading {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
 /* U-Net Architecture ------------------------------------------------------ */
 /* .unet-container { */
 /* 	display: grid; */
