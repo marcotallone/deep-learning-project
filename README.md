@@ -370,10 +370,10 @@ In the following table a summary of the performance metrics measured for the cla
 
 | Net | Training Loss | Training accuracy | Training confidence | Test accuracy | Test confidence |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| Custom Net | 3.6 E-03 | 1.0 | 1.0 | 0.99 | 1.0 |
-| Alex | 1 E-04 | 1.0 | 1.0 | 0.92 | 1.0 |
-| VGG16 | 7.1 E-07 | 1.0 | 1.0 | 0.94 | 1.0 |
-| VIT | 0.26 | 0.9 | 0.92 | 0.88 | 0.93 |
+| Custom Net | 1.4 E-03 | 0.99 | 1.0 | 0.99 | 1.0 |
+| Alex | 1.2 E-03 | 0.99 | 1.0 | 0.90 | 0.97 |
+| VGG16 | 8.9 E-06 | 0.99 | 1.0 | 0.95 | 0.98 |
+| VIT | 0.27 | 0.9 | 0.96 | 0.88 | 0.93 |
 
 ### Segmentation Models
 
