@@ -71,7 +71,7 @@
         \draw[fill=green] (0, 3, 2) -- (0, 3, 3) -- (0, 4, 3) -- (0, 4, 2) -- cycle;
         \draw[fill=cyan] (0, 3, 3) -- (0, 3, 4) -- (0, 4, 4) -- (0, 4, 3) -- cycle;
         % Comment
-        \node[up right, rotate=43] at (0, 0, 7) {\scriptsize Input 128x128x3};
+        \node[up right, rotate=43] at (0, 0, 7.5) {\scriptsize Input 128x128x3};
 
         % Break the image into patches
         \draw[fill=cyan] (1.3, 0, 0) -- (1.8, 0, 0) -- (1.8, 0.5, 0) -- (1.3, 0.5, 0) -- cycle;
@@ -111,7 +111,7 @@
         % Transformer encoder layer
         % multi-head self attention
         \draw[fill=cyan] (6.8, 0, 0)  -- (6.8, 0, 4) -- (6.8, 4, 4) -- (6.8, 4, 0) -- cycle;
-        \node[up right, rotate=43] at (6.8, 0, 8.2) {\scriptsize Multi-head self attention}
+        \node[up right, rotate=43] at (6.8, 0, 9) {\scriptsize Multi-head self attention}
         % feedforward neural network
         \draw[fill=green] (7.1, 0, 0) -- (7.1, 0, 4) -- (7.1, 4, 4) -- (7.1, 4, 0) -- cycle;
         \draw[fill=green] (7.1, 0, 0) -- (7.1, 0, 4) -- (7.4, 0, 4) -- (7.4, 0, 0) -- cycle;
@@ -241,7 +241,7 @@
         \draw[fill=green] (11.4, 4, 0) -- (11.4, 4, 4) -- (11.7, 4, 4) -- (11.7, 4, 0) -- cycle;
         \draw[fill=green] (11.7, 0, 0) -- (11.7, 0, 4) -- (11.7, 4, 4) -- (11.7, 4, 0) -- cycle;
         \draw[fill=green] (11.4, 0, 4) -- (11.4, 4, 4) -- (11.7, 4, 4) -- (11.7, 0, 4) -- cycle;
-        \node[up right, rotate=43] at (11.7, 0, 8.4) {\scriptsize Linear Layer -> 4 classes};
+        \node[up right, rotate=43] at (11.7, 0, 9) {\scriptsize Linear Layer -> 4 classes};
     
     \end{tikzpicture}
 \end{document}
