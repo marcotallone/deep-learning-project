@@ -42,6 +42,7 @@
     <li><a href="#usage">Usage Examples</a></li>
     <li><a href="#datasets-description">Datasets Description</a></li>
     <li><a href="#models-description">Models Description</a></li>
+    <li><a href="#training-and-tuning">Training and Tuning</a></li>
     <li><a href="#performance-assessment">Performance Assessment</a></li>
     <li><a href="#conclusions">Conclusions</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -91,6 +92,12 @@ With the data at our disposal, we have developed the following models:
 All the implemented models come with trained weights foundable in the [`saved_models`](./models/saved_models) folder as well as evaluated performance metrics in the [`saved_metrics`](./models/saved_metrics) folder.\
 Further details about the datasets and the implemented models are given below, after installation instructions, dependencies requirements and usage examples.
 
+### Project Goals and Objectives
+
+The overall idea behind this project is to implement and compare different deep learning models for brain tumor classification and segmentation tasks, to understand their differencees and to highlight the trade-offs between complexity and performance.\
+More specifically, it's widely known that architectures such as **AlexNet** and **VGG-16** have been widely used in the past for image classification tasks achieving extremely good results. However, these results were obtained on large multiclass datasets (e.g. *ImageNet*) where the variability of the images is high and there are multiple possible classification labels for each image. We want to understand if the performance of these models is maintained also for more humble tasks such as the one proposed by the Brain Tumor MRI Dataset, where the distribution of the input imagees is fairly simple and the number of classes is limited to $4$. Moreover, we aim to explore the possiblity of building a simpler model for this specific task that achieves the same performance to understand if, in some cass, a simpler *ad-hoc* model can outshine more complex and well-established architectures in terms of performance.\
+The same motivations are true also for the case of the sgmentation task. Here we focused only on U-Net models architecture, strting from the first historically proposed model. With the same reasoning, we aim to ``*modernize*'' and simplify this original model to see if it's possible to further improve its performance on the obtained data.
+
 ### Project Structure
 
 The project is structured as follows:
@@ -125,7 +132,7 @@ The project is structured as follows:
 ├──📜 README.md             # This file
 ├──📁 training              # Training scripts
 │  └── unet_training.py
-└──⚙ utils                 # Utility scripts
+└──⚙ utils                  # Utility scripts
 ```
   
 ### Built With
@@ -357,6 +364,22 @@ Moreover, all of these benefits come with a limited increase in the number of pa
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- TRAINING and TUNING -->
+## Training and Tuning
+
+For what concerns the training phase of the presented models, we refer to the scripts present in the [`training/`](./training) folder as well as the dedicated slides in the [presentation](./presentation.pdf) file for the specific hyperparameters and training settings used for each model.\
+We used different training settings for each model and for each specific task. In general the choice of the training parameters and hyperparameter have been mainly driven by three factors:
+
+- maintaining as much as possible historical consistency with the original papers from which the models were inspired, especially in the cases of the **AlexNet** and **VGG-16** models (*although we recognizes that in some casese it was not possible to reproduce the exact same settings, but we attempred to be as close as possible*)
+
+- trying to improve the performance of the models by implementing some of the most recent ideas in the field of deep learning, for instance in architectures such as the **VIT** or the **Attention U-Net** models
+
+- minimizing at the same time the overall training time, mostly due to the fact that we had relatively limited resources at our disposal (*this in some case limited our ability to perform a complete hyperparameter search for each model and our faithfulness to the original papers*)
+
+In some cases we also attempted using the same hyperparameters for all the models, given a specific task, in order to have a fair comparison between them. For instance, we attempred to use the same training settings for all the classification models to obtain a more uniform comparison between our model, AlexNet and VGG but this actually resulted in a significant decrease in performance for the latter two models, hence we decided to keep their best results (*listed below*) obtained with their original hyperparameters.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- PERFORMANCE ASSESSMENT -->
 ## Performance Assessment
 
@@ -370,10 +393,10 @@ In the following table a summary of the performance metrics measured for the cla
 
 | Net | Training Loss | Training accuracy | Training confidence | Test accuracy | Test confidence |
 |:---:|:---:|:---:|:---:|:---:|:---:|
-| Custom Net | 3.6 E-03 | 1.0 | 1.0 | 0.99 | 1.0 |
-| Alex | 1 E-04 | 1.0 | 1.0 | 0.92 | 1.0 |
-| VGG16 | 7.1 E-07 | 1.0 | 1.0 | 0.94 | 1.0 |
-| VIT | 0.26 | 0.9 | 0.92 | 0.88 | 0.93 |
+| Custom Net | 1.4 E-03 | 0.99 | 1.0 | 0.99 | 1.0 |
+| Alex | 1.2 E-03 | 0.99 | 1.0 | 0.90 | 0.97 |
+| VGG16 | 8.9 E-06 | 0.99 | 1.0 | 0.95 | 0.98 |
+| VIT | 0.27 | 0.9 | 0.96 | 0.88 | 0.93 |
 
 ### Segmentation Models
 
@@ -398,8 +421,18 @@ The metrics considered are:
 <!-- CONCLUSIONS -->
 ## Conclusions
 
-In conclusion, this project aimed to develop and compare different models for the classification and segmentation of brain tumours from MRI images. The models were trained on two different datasets, the Brain Tumor MRI Dataset for the classification task and the BraTS 2020 Dataset for the segmentation task.\
-We successfully implemented and trained a CNN model and a VIT model for the classification task, achieving high accuracy and confidence on the test set. For the segmentation task, we also acheved very good results with the U-Net models, especially with the Attention U-Net model for which it was also possible to visualize the attention maps learned during the training phase.\
+In conclusion, this project aimed to develop and compare different models for the classification and segmentation of brain tumors from MRI images. The models were trained on two different datasets, the Brain Tumor MRI Dataset for the classification task and the BraTS 2020 Dataset for the segmentation task. Hence, we can now separately summarize the results obtained for each task with respect to our original goal.\
+For what concerns the classification task, we measured all the models performing basically perfectly in terms of accuracy and confidence on the training set, with the only exception beign the VIT model. However, we noticed a significant difference in term of performance on the test set. In particular, as we initially hypothesized, our smaller, *ad-hoc* model was capable to sligthly outperform the more complex AlexNet and VGG-16 models in the classification task. The obtained result might seem surprising at first, given the established background of the latter models but are actually in line with our initial consideration. For this specific and constrained classification task, we in fact showed that a reduced and specific model, with small improvements, shows better generalizing capabilities than more complex and general models.\
+A possible explanation that we give for these observations is the fact that the intrinsic complexity in the input images for this specific study is much smaller if compared to more broad classification tasks such as the ImageNet dataset. Subsequently, this implies the need for simpler model rather that more complex ones to avoid overfitting the input data and showing better generalization capabilities.\
+However, we need to keep in mind that our custom CNN model was, after all, an adapted version of the original AlexNet model. In fact, looking at the obtained results we noticed that the VIT model (*a completely different architecture*) was not able to perform as well as the others. This might be explained by multiple factors, such as the lack of data to train the model (*despite data augmentation*), the request for a more in-depth hyperparameter tuning or the need for longer training times. Togheter with these, in agreement with our previous considerations, there might also be the fact that the transformer architecture is already by itself too complex for this simple classification task. Hence, despite the fact that the VIT model is a very promising architecture for image classification, it might not be the best choice for this specific task.\
+Focusing on the segmentation task instead, in this case we did not obtained perfect metrics, but, aside from futher model improvements, this is most probably due to the higher intrinsic complexity of the task itself. Despite this consideration, the important thing to notice is that we were able to improve the performance of the original U-Net model by reducing the numer of parameters and simplifying the overall model in the improved and attention architectures. In this case, instead of showing that simpler models are better fitted for simpler tasks, we rather underlined the fact that the mere parameter count is not the only factor influencing the final performance of a model. As we showcased, small architectural changes (*together with a parameter reduction*), can actually lead to better results.\
+Nevertheless, the obtained results were not ideal in the case of the last developed model. In fact, we hoped the attention model to produce more significan attention maps at the end of the training phase, but this was not the case. In particular, it seems that the model was not able to take advantage of the lower dimensional attention gates used in the two lower encoder-decoder blocks since in most cases it produced either fully null attention maps or maps weighting all pizels with the same (*high*) intensity as the above animated image portrays. On the other hand, although the higer dimensional attention maps seems to correctly highlight important regions of the brain (*such as the tumorous ones*) with higher importance than the surrounding areas, there are still some parts of the background that are also highlighted with high weights. We found this rather confusing and we are not able to provide a clear explanation for this behaviour but we mainly suppose that one of two factors might be at play (*or a combination of them*):
+
+- the first being that the model needs to be trained for longer in order to further refine the attention maps
+
+- the second being that the background of the input brain scans is basically null everywhere (i.e. either filled with zeros or small values compared to the brain region) and hence the corresponding attention weight update might somehow not be as relevant as the brain region ones
+
+However, we understad that these are just speculations and further investigation is needed to understand the real reasons behind this behaviour.\
 As a final consideration, although we were very satisfied with our work, we would like to propose a few possible improvements or extensions of this project, starting fro some of the ideas that we did not implement (*but we might implement in the future*...). Among these we suggest:
 
 - Improving the classification models capabilities to be able to work with the original image size of 256x256 pixels rather than the downscaled 128x128 pixels images and checking if the performance improves (*even though the obtained results are already very good*) or get worse.
@@ -407,7 +440,7 @@ As a final consideration, although we were very satisfied with our work, we woul
 - Attempting transfer learning with the Vision Transformer model to see if the performance improves (*not clear from where to pick already trained models or where to apply it so might need some research*).
 - Testing out different architectures for the segmentation task and compare them with U-Nets
 - Training the U-Net models on the whole dataset rather than using just 50% of it to see if the performance improves or maybe if better attention maps are learned by the Attention U-Net model.
-- Performing a more in-depth hyperparameter tuning for the improved and Attention U-Net models (*requires more computational resources*).
+- Performing a more in-depth hyperparameter tuning for the improved and Attention U-Net models (*requires more computational resources*), especially with the aim of improving the attention maps learned by the latter.
 - Use the metadata information about patient's survival rate present in the segmentation dataset to predict the patient's life expectancy from the tumour segmentation itself. This regression task could be implemented either by extending the U-Net models with a final fully connected layer or by implementing a model that takes the U-Net predition as input and outputs the life expectancy. Such model could maybe be trained on the original masks and then tested on the predicted masks fro the U-Nets to see how good the predictions are.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
