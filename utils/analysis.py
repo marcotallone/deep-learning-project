@@ -265,8 +265,8 @@ def display_scan(scan_index: int,
 	"""
 
 	# Define title and subtitle
-	# if title is None: title = 'Brain MRI Scan'
-	# if subtitle is None: subtitle = f'Patient {patient_index} - Scan {scan_index}'
+	if title is None: title = 'Brain MRI Scan'
+	if subtitle is None: subtitle = f'Patient {patient_index} - Scan {scan_index}'
 
 	# Pick the image and mask of the scan
 	image = images[scan_index]
@@ -354,12 +354,12 @@ def display_scan(scan_index: int,
 	# ax.set_yticks([])
 	# ax.set_title('Overlay [RGB]', fontsize=labels_fontsize)
 	
-	# if save_path:
-	# 	plt.tight_layout()
-	# 	plt.savefig(save_path, format='png', dpi=600, transparent=True)
-	# 	plt.close(fig)
-	# else:
-	# 	plt.show()
+	if save_path:
+		plt.tight_layout()
+		plt.savefig(save_path, format='png', dpi=600, transparent=True)
+		plt.close(fig)
+	else:
+		plt.show()
 
 
 # Display animated MRI scan ----------------------------------------------------
