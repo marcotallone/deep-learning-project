@@ -448,7 +448,7 @@ As a final consideration, although we were very satisfied with our work, we woul
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Although this repository started as a simple university exam project, if you have a suggestion that would make this better or you attempted to implement one of the above mentioned improvements and want to share it with us, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement" or "extension".\
+Although this repository started as a simple university exam project, if you have a suggestion that would make this better or you attempted to implement one of the above mentioned improvements and want to share it with us, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement" or "extension".
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
