@@ -57,6 +57,12 @@
 	align-items: center;
 }
 
+.image-container2 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .image-item {
 	text-align: center;
 	margin-right: 100px;
@@ -250,6 +256,8 @@ th {
         width: 100%;
     }
 }
+
+
 
 /* U-Net Architecture ------------------------------------------------------ */
 /* .unet-container { */
