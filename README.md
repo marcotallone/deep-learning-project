@@ -26,7 +26,9 @@
     <br />
     <table>
       <tr>
-        <td><a href="./presentation/presentation.pdf"><strong>Presentation</strong></a></td>
+        <td><a
+href="https://marcotallone.github.io/deep-learning-project/"><strong>Live Presentation</strong></a></td>
+        <td><a href="./presentation/presentation.pdf"><strong>PDF Presentation</strong></a></td>
         <td><a href="https://github.com/marcotallone/deep-learning-project/issues"><strong>Report bug</strong></a></td>
         <td><a href="https://github.com/marcotallone/deep-learning-project/issues"><strong>Request Feature</strong></a></td>
     </table>
