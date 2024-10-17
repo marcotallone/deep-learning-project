@@ -1,0 +1,1769 @@
+<!doctype html>
+<html lang="en">
+
+
+	<!-- Head ------------------------------------------------------------------>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Brain Tumor Deep Learning</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/tokyo-night-dark.css">
+
+		<!-- CSS Styling -->
+		<link rel="stylesheet" href="style.css" />
+
+	</head>
+
+
+	<!-- Body ------------------------------------------------------------------>
+	<body>
+		<div class="reveal">
+		<div class="slides">
+
+
+		<!-- Slide 1: Title ------------------------------------------------------>
+		<section>
+			<div class="title-container">
+				<img src="./images/brain.png" alt="Project Logo" style="height: 100px; background: transparent;">
+				<h1>Multi-Model Approach for Brain Tumor<br> Classification and Segmentation</h1>
+			</div>
+
+			<p style="margin-bottom: -30px;">
+				<small style="display: block">Deep Learning Course Exam Project</small>
+				<small>SDIC Master Degree, University of Trieste (UniTS)</small>
+			</p>
+			<p style="margin-bottom: -20px;">
+			<small>October 2024</small>
+			</p>
+
+			<div class="image-container">
+				<div class="image-item">
+					<img src="./images/sdic-logo.png" height="150px" />
+				</div>
+				<div class="image-item">
+					<img src="./images/units-white.png" height="150px" />
+				</div>
+			</div>
+
+			<p>
+				<small>
+					<span class="name">Stefano Lusardi</span>
+					<span class="name">Marco Tallone</span>
+					<span class="name">Piero Zappi</span>
+				</small>
+				</small>
+			</p>
+		</section>
+
+
+		<!-- Slide 2: Table of Contents ------------------------------------------>
+		<section>
+		<section data-auto-animate>
+			<div data-id="introbar" class="slide-bar">Introduction</div>
+			<h1 data-id="introtitle" class="slide-title">Introduction</h1>
+
+			<div data-id="introcbox" class="cbox" style="text-align: center; font-style: italic;">
+				A deep learning project for brain tumor<br>
+				classification and segmentation on MRI images<br>
+				using CNN, U-Net, and VIT models.
+			</div>
+			<br>
+
+			<div class="slide-body-rel">
+				<ol>
+					<li><b>Datasets Description</b></li>
+						<!-- <ul> -->
+						<!-- 	<li style="color: var(--gray);">Brain Tumor MRI Dataset -->
+						<!-- 		<i>(classification)</i></li> -->
+						<!-- 	<li style="color: var(--gray);">BraTS2020 Dataset  -->
+						<!-- 		<i>(segmentation)</i></li> -->
+						<!-- </ul> -->
+					<li><b>Classification Task</b></li>
+						<!-- <ul> -->
+						<!-- 	<li style="color: var(--gray);">Custom CNN</li> -->
+						<!-- 	<li style="color: var(--gray);">VIT</li> -->
+						<!-- 	<li style="color: var(--gray);">AlexNet</li> -->
+						<!-- 	<li style="color: var(--gray);">VGG16</li> -->
+						<!-- </ul> -->
+					<li><b>Segmentation Task</b></li>
+						<!-- <ul> -->
+						<!-- 	<li style="color: var(--gray);">U-Net Models</li> -->
+						<!-- </ul> -->
+					<li><b>Conclusion</b></li>
+				</ol>
+			</div>
+		</section>
+		<section data-auto-animate>
+			<div data-id="introbar" class="slide-bar">Introduction</div>
+			<h1 data-id="introtitle" class="slide-title">Introduction</h1>
+
+			<div data-id="introcbox" class="cbox" style="text-align: center; font-style: italic;">
+				A deep learning project for brain tumor<br>
+				classification and segmentation on MRI images<br>
+				using CNN, U-Net, and VIT models.
+			</div>
+			<br>
+
+			<div class="slide-body-rel">
+				<ol>
+					<li><b>Datasets Description</b></li>
+						<ul>
+							<li style="color: var(--gray);">Brain Tumor MRI Dataset
+								<i>(classification)</i></li>
+							<li style="color: var(--gray);">BraTS2020 Dataset 
+								<i>(segmentation)</i></li>
+						</ul>
+					<li><b>Classification Task</b></li>
+						<!-- <ul> -->
+						<!-- 	<li style="color: var(--gray);">Custom CNN</li> -->
+						<!-- 	<li style="color: var(--gray);">VIT</li> -->
+						<!-- 	<li style="color: var(--gray);">AlexNet</li> -->
+						<!-- 	<li style="color: var(--gray);">VGG16</li> -->
+						<!-- </ul> -->
+					<li><b>Segmentation Task</b></li>
+						<!-- <ul> -->
+						<!-- 	<li style="color: var(--gray);">U-Net Models</li> -->
+						<!-- </ul> -->
+					<li><b>Conclusion</b></li>
+				</ol>
+			</div>
+		</section>
+		<section data-auto-animate>
+			<div data-id="introbar" class="slide-bar">Introduction</div>
+			<h1 data-id="introtitle" class="slide-title">Introduction</h1>
+
+			<div data-id="introcbox" class="cbox" style="text-align: center; font-style: italic;">
+				A deep learning project for brain tumor<br>
+				classification and segmentation on MRI images<br>
+				using CNN, U-Net, and VIT models.
+			</div>
+			<br>
+
+			<div class="slide-body-rel">
+				<ol>
+					<li><b>Datasets Description</b></li>
+					<li><b>Classification Task</b></li>
+						<ul>
+							<li style="color: var(--gray);">Custom CNN</li>
+							<li style="color: var(--gray);">VIT</li>
+							<li style="color: var(--gray);">AlexNet</li>
+							<li style="color: var(--gray);">VGG16</li>
+						</ul>
+					<li><b>Segmentation Task</b></li>
+					<li><b>Conclusion</b></li>
+				</ol>
+			</div>
+		</section>
+		<section data-auto-animate>
+			<div data-id="introbar" class="slide-bar">Introduction</div>
+			<h1 data-id="introtitle" class="slide-title">Introduction</h1>
+
+			<div data-id="introcbox" class="cbox" style="text-align: center; font-style: italic;">
+				A deep learning project for brain tumor<br>
+				classification and segmentation on MRI images<br>
+				using CNN, U-Net, and VIT models.
+			</div>
+			<br>
+
+			<div class="slide-body-rel">
+				<ol>
+					<li><b>Datasets Description</b></li>
+					<li><b>Classification Task</b></li>
+					<li><b>Segmentation Task</b></li>
+						<ul>
+							<li style="color: var(--gray);">U-Net Models</li>
+						</ul>
+					<li><b>Conclusion</b></li>
+				</ol>
+			</div>
+		</section>
+		<section data-auto-animate>
+			<div data-id="introbar" class="slide-bar">Introduction</div>
+			<h1 data-id="introtitle" class="slide-title">Introduction</h1>
+
+			<div data-id="introcbox" class="cbox" style="text-align: center; font-style: italic;">
+				A deep learning project for brain tumor<br>
+				classification and segmentation on MRI images<br>
+				using CNN, U-Net, and VIT models.
+			</div>
+			<br>
+
+			<div class="slide-body-rel">
+				<ol>
+					<li><b>Datasets Description</b></li>
+					<li><b>Classification Task</b></li>
+					<li><b>Segmentation Task</b></li>
+					<li><b>Conclusion</b></li>
+						<ul>
+							<li style="color: var(--gray);">Final considerations</li>
+							<li style="color: var(--gray);">Possible improvements</li>
+						</ul>
+				</ol>
+			</div>
+		</section>
+
+		</section>
+	
+
+		<!-- DATASETS ------------------------------------------------------------>
+		<section data-auto-animate>
+			<div class="cbox" style="text-align: left; margin-top: 25%;">
+				<div data-id="datasets" style="font-size: 1.5em;">Datasets</div><span>
+			</div>
+		</section>	
+
+
+		<!-- Slide 3: Brain MRI Dataset ------------------------------------------>
+		<section data-auto-animate>
+			<div  data-id="datasets" class="slide-bar">Datasets</div>
+			<h1 class="slide-title">Brain Tumor MRI Dataset</h1>
+
+			<div class="slide-body-rel">
+				<p>Classification task dataset</p>
+			</div>
+
+			<div class="cbox">
+				<ul>
+					<li>Combination of three datasets</li>
+					<li>$7023$ images of human brain MRI images</li>
+					<li/>Four classes: glioma, meningioma, no-tumor and pituitary</li>
+				</ul>
+			</div>
+
+			<img src="./images/classification_samples2.png">
+		</section>
+
+
+		<!-- Slide 4: Brain MRI Dataset ------------------------------------------>
+		<section>
+			<div class="slide-bar">Datasets</div>
+			<h1 class="slide-title">Brain Tumor MRI Dataset</h1>
+
+			<div class="cbox">
+				The dataset is separated into 
+				<span style="color:var(--azure);">training</span> 
+				and 
+				<span style="color:var(--green);">testing</span> 
+				sets with a ratio of
+				<span style="color:var(--azure);">$80\%$</span> and
+				<span style="color:var(--green);">$20\%$</span> respectively.
+			</div>
+
+			<img class="r-stretch" src="./images/class_distribution.png">
+		</section>
+
+
+		<!-- Slide 5: Data Augmentation ------------------------------------------>
+		<section>
+			<div class="slide-bar">Datasets</div>
+			<h1 class="slide-title">Resizing and Data Augmentation</h1>
+
+			<div class="warningbox">
+				<span style="color: var(--yellow);">⚠</span>
+				Images are resized to 
+				<span style="color: var(--yellow);">$128 \times 128$ pixels</span>
+				to reduce complexity
+			</div>
+			<br>
+
+			<div class="cbox">
+				Transformations applied to the images at each epoch:
+				<br>
+				<br>
+                
+				<ul style="padding-bottom: 20px;">
+					<li>Random horizontal flip</li>
+					<li>Random rotation up to 10 degrees</li>
+					<li>Random change in brightness, contrast, saturation, and hue</li>
+				</ul>
+				<br>
+
+				These transformations add variability to the dataset and help
+				the model generalize better
+			</div>
+		</section>
+
+
+		<!-- Slide 6: BraTS 2020 Dataset -->
+		<section data-auto-animate>
+			<div data-id="toptitle" class="slide-bar">Datasets</div>
+			<h1 class="slide-title">BraTS2020 Dataset</h1>
+
+			<div class="slide-body-rel">
+				<p>Segmentation task dataset</p>
+			</div>
+
+			<div class="cbox">
+				<ul>
+					<li>BraTS stands for Brain Tumor Segmentation</li>
+					<li>It is composed by 155 horizontal ”slices” of brain MRI images for
+						369 patients (volumes):
+						$$
+						155 \cdot 369 = 57\,195
+						$$
+					</li>
+					<li>We used 
+						<span style="color:var(--azure);">90%</span> of data for
+						<span style="color:var(--azure);">training</span> and
+						<span style="color:var(--green);">10%</span> for
+						<span style="color:var(--green);">testing</span>
+					</li>
+					<li>We used the 50% “<i>most significant</i>” slices of the dataset</li>
+				</ul>
+			</div>
+
+			<!-- <img data-id="seggif" src="./images/segmentation_example.gif" style="opacity: 0;"> -->
+			<!-- <img data-id="seggif" src="./images/patient1_scans.gif" style="opacity: 0;"> -->
+			<div class="image-container">
+					<img data-id="seggif" src="./images/patient1_scans.gif"
+																style="width: 70%; opacity: 0;">
+					<img data-id="segstatic" src="./images/brain-side-50.png"
+																	 style="width: 30%; opacity: 0;">
+			</div>
+
+		</section>
+		<section data-auto-animate data-transition="slide">
+			<div data-id="toptitle" class="slide-bar">Datasets</div>
+			<h1 class="slide-title">BraTS2020 Dataset</h1>
+
+			<div data-id="box" class="cbox" style="background: var(--background);
+										margin-top: -20px; margin-bottom: -20px;">
+				<ul>
+					<li>We used the 50% “<i>most significant</i>” slices of the dataset</li>
+				</ul>
+			</div>
+
+			<!-- <img data-id="seggif" class="r-stretch" src="./images/segmentation_example.gif"> -->
+			<!-- <img data-id="seggif" class="r-stretch" src="./images/patient1_scans.gif"> -->
+
+			<div class="image-container">
+					<img data-id="seggif" src="./images/patient1_scans.gif"
+																style="width: 70%; opacity: 1;">
+					<img data-id="segstatic" src="./images/brain-side-50.png"
+																	 style="width: 30%; opacity: 1;">
+			</div>
+
+		</section>
+
+
+		<!-- Slide 7: BraTS 2020 Dataset -->
+		<section>
+			<div class="slide-bar">Datasets</div>
+			<h1 class="slide-title">BraTS2020 Dataset</h1>
+
+			<div class="slide-body-rel" style="padding-bottom: 10px;">
+				<p>Images have 4 channels:</p>
+			</div>
+			<div class="slide-body-rel">
+				<ol>
+					<li><b>T1 weighted (T1)</b>:
+						<span style="color: var(--gray);">
+							good for visualizing the brain but not the tumor
+						</span>
+					</li>
+					<li><b>T1 weighted with contrast (T1c)</b>:
+						<span style="color: var(--gray);">
+							taken with the same technique as T1 but with contrast
+						</span>
+					</li>
+					<li><b>T2 weighted (T2)</b>:
+						<span style="color: var(--gray);">
+							good for visualizing the edema
+						</span>
+					</li>
+					<li><b>Fluid Attenuated Inversion Recovery (FLAIR)</b>:
+						<span style="color: var(--gray);">
+							improves the visualization of the edema
+						</span>
+					</li>
+				</ol>
+			</div>
+
+			<img src="./images/segmentation_input2.png" style="margin-top: -20px;">
+		</section>
+
+
+		<!-- Slide 8: BraTS 2020 Dataset -->
+		<section>
+			<div class="slide-bar">Datasets</div>
+			<h1 class="slide-title">BraTS2020 Dataset</h1>
+
+			<div class="slide-body-rel">
+				<p>Each slice has 3 mask labels
+					<span style="color: var(--gray);"><i>(some might be empty)</i></span>:
+				</p>
+			</div>
+			<div class="slide-body-rel">
+				<ol>
+					<li>
+						<span style="color: var(--red);"><b>
+							Necrotic and Non-Enhancing Tumor Core (NCR/NET)
+						</b></span>
+					</li>
+					<li>
+						<span style="color: var(--green);"><b>
+							Edema (ED)
+						</b></span>
+					</li>
+					<li>
+						<span style="color: var(--blue);"><b>
+							Enhancing Tumor (ET)
+						</b></span>
+					</li>
+				</ol>
+			</div>
+
+			<img src="./images/ground_truth.png">
+		</section>
+
+
+		<!-- CLASSIFICATION ------------------------------------------------------------>
+		<section data-auto-animate>
+			<div class="cbox" style="text-align: left; margin-top: 25%;">
+				<div data-id="classification" style="font-size: 1.5em;">Classification</div><span>
+			</div>
+		</section>	
+
+
+		<!-- Slide 9: Performance Assessment -->
+		<section data-auto-animate>
+			<div data-id="classification" class="slide-bar">Classification</div>
+			<h1 class="slide-title">Performance Assessment</h1>
+
+			<div class="cbox" style="margin-bottom: 15px; font-size: 0.75em;
+									padding-bottom: 15px; padding-top: 15px;">
+				<b>Loss Function</b>: Cross-entropy loss
+				$$
+				L(y,\hat{y}) = - \sum_{i=1}^{N} y_i \log(\hat{y}_i)
+				$$
+			</div>
+			<div class="cbox" style="margin-bottom: 15px; font-size: 0.75em;
+									padding-bottom: 15px; padding-top: 15px;">
+				<b>Accuracy</b>: Number of correct predictions divided by total
+				number of predictions
+			</div>
+			<div class="cbox" style="margin-bottom: 15px; font-size: 0.75em;
+									padding-bottom: 15px; padding-top: 15px;">
+				<b>Confidence</b>: Given by the softmax applied to the net output
+				$$
+				S(x_i) = \frac{e^{x_i}}{\sum_{j=1}^{N} e^{x_j}}
+				$$
+			</div>
+
+		</section>
+
+
+		<!-- Slide 10: Custom CNN Architecture  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Custom CNN Architecture</h1>
+
+			<img src="./images/cnn.png" class="r-stretch" style="margin-bottom:
+								-20px;">
+			
+			<div class="slide-body-rel">
+				Number of parameters: $3\,001\,156$
+			</div>
+
+		</section>
+
+
+
+		<!-- Slide 11: Training Details  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Details</h1>
+
+			<div class="slide-body-rel">
+				Costum CNN model training parameters:
+			</div>
+			<br>
+			<div class="slide-body-rel">
+				<ul class="wide-ul">
+					<li>Epochs: 50</li>
+					<li>Optimizer: Adam
+						<span style="color: var(--gray);">(weight decay $1 \times
+							10^{-5}$)</span>
+					</li>
+					<li>Scheduler: stepLR
+						<span style="color: var(--gray);">(step size $10$, gamma $0.5$)</span>
+					</li>
+					<li>Loss function: Cross-entropy</li>
+					<li>Learning rate: $1 \times 10^{-4}$</li>
+					<li>Batch size: 64
+						<span style="color: var(--gray);">(both training and validation)</span>
+					</li>
+					<li>Activation function: <code>Mish</code></li>
+					<li>Dropout rate: $0.4$</li>
+					<li>Image size: $128 \times 128$</li>
+				</ul>
+			</div>
+		</section>
+
+
+		<!-- Slide 12: Training Loss and Accuracy  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Loss and Accuracy</h1>
+
+			<img src="./images/loss-accuracy_customCNN.png" class="r-stretch">
+
+			<div class="cbox">
+				<ul>
+					<li>Final training loss: $1.4 \cdot 10^{-3}$</li>
+					<li>Final training accuracy: $99.9\%$</li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 13: Confidence and Test Accuracy  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Confidence and Test Accuracy</h1>
+
+			<img src="./images/confidence_customCNN.png" class="r-stretch">	
+
+			<div class="cbox">
+				<ul>
+					<li>Final training confidence: $99.9\%$</li>
+					<li>Final test confidence: $99.9\%$</li>
+					<li><span style="color: var(--red);">Final test accuracy:
+										$99.0\%$</span></li>
+				</ul>
+
+		</section>
+
+
+		<!-- Slide 14: VIT Architecture  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">VIT Architecture</h1>
+			
+			 <img src="./images/vit.png" class="r-stretch" style="margin-bottom:
+								-20px;">
+
+			<div class="slide-body-rel">
+				Number of parameters: $21\,459\,460$
+			</div>
+
+		</section>
+
+
+		<!-- Slide 15: Training Details  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Details</h1>
+			
+<!-- Training Details -->
+<!-- VIT training and model parameters: -->
+<!-- • Epochs: 50 -->
+<!-- • Optimizer: Adam (weight decay 1 × 10−5) -->
+<!-- • Scheduler: stepLR (step size 10, gamma 0.5) -->
+<!-- • Loss function: Cross-entropy -->
+<!-- • Learning rate: 1 × 10−4 -->
+<!-- • Batch size: 64 (both training and validation) -->
+<!-- • Activation function: Mish -->
+<!-- • Dropout rate: 0.2 -->
+<!-- • Image size and Patch size: 128 × 128, 16 × 16 -->
+<!-- • Number of heads: 8 -->
+<!-- • Number of layers: 10 -->
+<!-- • Patch embedding dimension: 512 -->
+<!-- • Feedforward dimension: 1024 -->
+
+			<div class="slide-body-rel">
+				VIT model training parameters:
+			</div>
+			<br>
+			<div class="slide-body-rel">
+				<ul style="font-size: 0.97em;">
+					<li>Epochs: 50</li>
+					<li>Optimizer: Adam
+						<span style="color: var(--gray);">(weight decay $1 \times
+							10^{-5}$)</span>
+					</li>
+					<li>Scheduler: stepLR
+						<span style="color: var(--gray);">(step size $10$, gamma $0.5$)</span>
+					</li>
+					<li>Loss function: Cross-entropy</li>
+					<li>Learning rate: $1 \times 10^{-4}$</li>
+					<li>Batch size: 64
+						<span style="color: var(--gray);">(both training and validation)</span>
+					</li>
+					<li>Activation function: <code>Mish</code></li>
+					<li>Dropout rate: $0.2$</li>
+					<li>Image size and Patch size: $128 \times 128$, $16 \times 16$</li>
+					<li>Number of heads: 8</li>
+					<li>Number of layers: 10</li>
+					<li>Patch embedding dimension: 512</li>
+					<li>Feedforward dimension: 1024</li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 16: Training Loss and Accuracy  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Loss and Accuracy</h1>
+
+			<img src="./images/VIT_loss-accuracy.png" class="r-stretch">
+
+			<div class="cbox">
+				<ul>
+					<li>Final training loss: $0.27$</li>
+					<li>Final training accuracy: $90\%$</li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 17: Confidence and Test Accuracy  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Confidence and Test Accuracy</h1>
+
+			<img src="./images/VIT_confidence.png" class="r-stretch">
+
+			<div class="cbox">
+				<ul>
+					<li>Final training confidence: $96\%$</li>
+					<li>Final test confidence: $93\%$</li>
+					<li><span style="color: var(--red);">Final test accuracy:
+										$88\%$</span></li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 18: AlexNet Architecture  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">AlexNet Architecture</h1>
+
+			<img src="./images/alexnet.png" class="r-stretch" style="margin-bottom:
+								-20px;">
+
+			<div class="slide-body-rel">
+				Number of parameters: $4\,589\,316$
+			</div>
+
+		</section>
+
+
+		<!-- Slide 19: VGG16 Architecture  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">VGG16 Architecture</h1>
+
+			<img src="./images/vgg_arc.png" class="r-stretch" style="margin-bottom:
+								20px;">
+
+			<div class="slide-body-rel">
+				Number of parameters: $65\,070\,916$<br>
+
+				Dropout rate: $0.5$
+			</div>
+
+		</section>
+
+
+		<!-- Slide 20: Setup Differences	-->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Setup Differences</h1>
+
+			<table style="margin-bottom: 30px;">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Data augmentation</th>
+                <th>Scheduler</th>
+								<th>Activation</th>
+								<th>L2 regularization</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>CustomCNN</td>
+								<td>Yes ✅</td>
+								<td>Yes ✅</td>
+								<td>Mish</td>
+								<td>Yes ✅</td>
+            </tr>
+            <tr>
+							<td>AlexNet</td>
+							<td>No ❌</td>
+							<td>Yes ✅</td>
+							<td>ReLU</td>
+							<td>Yes ✅</td>
+            </tr>
+						<tr>
+							<td>VGG16</td>
+							<td>No ❌</td>
+							<td>No ❌</td>
+							<td>ReLU</td>
+							<td>No ❌</td>
+						</tr>
+						<tr>
+							<td>VIT</td>
+							<td>Yes ✅</td>
+							<td>Yes ✅</td>
+							<td>Mish</td>
+							<td>Yes ✅</td>
+						</tr>
+        </tbody>
+			</table>
+
+			<div class="cbox">
+				<ul>
+					<li>All the other hyperparameters and settings are the same
+						for all models
+						<span style="color: var(--gray);"><i>(batch size, optimizer, epochs,
+								etc…)</i></span>
+					</li>
+					<li>Note that the
+						<span style="color: var(--green);">
+							CustomCNN is the one with less parameters ($3\,001\,156$)
+						</span>
+						while 
+						<span style="color: var(--red);">
+							VGG16 is the one with more parameters ($65\,070\,916$)
+						</span>
+					</li>
+					<li>VGG16 also has the
+						<span style="color: var(--red);">highest dropout rate ($0.5$)</span>
+					</li>
+				</ul>
+			</div>
+		</section>
+
+
+		<!-- Slide 21: Training Loss and Accuracy for AlexNet  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Loss and Accuracy for AlexNet</h1>
+
+			<img src="./images/alex_loss_acc.png" class="r-stretch">
+
+			<div class="cbox">
+				<ul>
+					<li>Final training loss: $1.2 \cdot 10^{-3}$</li>
+					<li>Final training accuracy: $99.9\%$</li>
+				</ul>
+
+		</section>
+
+
+		<!-- Slide 22: Confidence and Test Accuracy for AlexNet  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Confidence and Test Accuracy for AlexNet</h1>
+
+			<img src="./images/ale_conf.png" class="r-stretch">
+			
+			<div class="cbox">
+				<ul>
+					<li>Final training confidence: $99.9\%$</li>
+					<li>Final test confidence: $96.5\%$</li>
+					<li><span style="color: var(--red);">Final test accuracy:
+										$90\%$</span></li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 23: Training Loss and Accuracy for VGG16  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Loss and Accuracy for VGG16</h1>
+
+			<img src="./images/vgg.png" class="r-stretch">
+
+			<div class="cbox">
+				<ul>
+					<li>Final training loss: $8.9 \cdot 10^{-6}$</li>
+					<li>Final training accuracy: $99.9\%$</li>
+				</ul>
+			
+		</section>
+
+
+		<!-- Slide 24: Confidence and Test Accuracy for VGG16  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Confidence and Test Accuracy for VGG16</h1>
+
+			<img src="./images/conf_vgg.png" class="r-stretch">
+
+			<div class="cbox">
+				<ul>
+					<li>Final training confidence: $100\%$</li>
+					<li>Final test confidence: $98\%$</li>
+					<li><span style="color: var(--red);">Final test accuracy:
+										$95\%$</span></li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 25: Training Performance Comparison  -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Training Performance Comparison</h1>
+
+<!-- Model -->
+<!-- Loss -->
+<!-- Accuracy -->
+<!-- Confidence -->
+<!-- CustomCNN -->
+<!-- 1.4 · 10−3 -->
+<!-- 99% -->
+<!-- 100% -->
+<!-- AlexNet -->
+<!-- 1.2 · 10−3 -->
+<!-- 99% -->
+<!-- 99.9% -->
+<!-- VGG16 -->
+<!-- 8.9 · 10−6 -->
+<!-- 99% -->
+<!-- 100% -->
+<!-- VIT -->
+<!-- 0.27 -->
+<!-- 90% -->
+<!-- 96.1% -->
+
+			<table style="margin-bottom: 50px; margin-top: 100px;">
+        <thead>
+            <tr>
+                <th>Model</th>
+								<th>Loss</th>
+								<th>Accuracy</th>
+								<th>Confidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>CustomCNN</td>
+								<td>$1.4 \cdot 10^{-3}$</td>
+								<td>$99\%$</td>
+								<td>$100\%$</td>
+						</tr>
+						<tr>
+							<td>AlexNet</td>
+							<td>$1.2 \cdot 10^{-3}$</td>
+							<td>$99\%$</td>
+							<td>$99.9\%$</td>
+						</tr>
+						<tr>
+							<td>VGG16</td>
+							<td>$8.9 \cdot 10^{-6}$</td>
+							<td>$99\%$</td>
+							<td>$100\%$</td>
+						</tr>
+						<tr>
+							<td>VIT</td>
+							<td>$0.27$</td>
+							<td>$90\%$</td>
+							<td>$96.1\%$</td>
+						</tr>
+				</tbody>
+			</table>
+
+			<div class="warningbox">
+				<span style="color: var(--yellow);">⚠</span>
+				Note that these are the values reached during the
+				<span style="color: var(--yellow);"><b>last epoch</b></span>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 26: Focus on Accuracy -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Focus on Accuracy</h1>
+
+			<img src="./images/accuracy_compared.png" class="r-stretch">
+
+		</section>
+
+
+		<!-- Slide 27: Test Performance Comparison -->
+		<section>
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Test Performance Comparison</h1>
+
+			<table style="margin-bottom: 50px; margin-top: 100px;">
+				<thead>
+						<tr>
+								<th>Model</th>
+								<th>Accuracy</th>
+								<th>Confidence</th>
+						</tr>
+				</thead>
+				<tbody>
+						<tr>
+								<td>CustomCNN</td>
+								<td>$99\%$</td>
+								<td>$100\%$</td>
+						</tr>
+						<tr>
+							<td>AlexNet</td>
+							<td>$90\%$</td>
+							<td>$96.5\%$</td>
+						</tr>
+						<tr>
+							<td>VGG16</td>
+							<td>$95\%$</td>
+							<td>$98.0\%$</td>
+						</tr>
+						<tr>
+							<td>VIT</td>
+							<td>$88\%$</td>
+							<td>$93.3\%$</td>
+						</tr>
+				</tbody>
+			</table>
+
+			<div class="warningbox">
+				<span style="color: var(--yellow);">⚠</span>
+				Note that these are the values reached after the
+				<span style="color: var(--yellow);"><b>last epoch</b></span>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 28: Visualizing the 1^st layer filters: CustomCNN -->
+		<section data-transition="fade">
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Visualizing the 1<sup>st</sup> layer filters:
+				CustomCNN</h1>
+
+			<img src="./images/cnn_conv.png" class="r-stretch">
+
+		</section>
+
+
+		<!-- Slide 29: Visualizing the 1^st layer filters: AlexNet -->
+		<section data-transition="fade">
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Visualizing the 1<sup>st</sup> layer filters:
+				AlexNet</h1>
+
+			<img src="./images/alex_conv.png" class="r-stretch">
+
+		</section>
+
+
+		<!-- Slide 30: Visualizing the 1^st layer filters: VGG16 -->
+		<section data-transition="fade">
+			<div class="slide-bar">Classification</div>
+			<h1 class="slide-title">Visualizing the 1<sup>st</sup> layer filters:
+				VGG16</h1>
+
+			<img src="./images/vgg_conv.png" class="r-stretch">
+
+		</section>
+
+
+		<!-- SEGMENTATION ------------------------------------------------------------>
+		<section data-auto-animate>
+			<div class="cbox" style="text-align: left; margin-top: 25%;">
+				<div data-id="segtitle" style="font-size: 1.5em;">Segmentation</div><span>
+			</div>
+		</section>	
+
+
+		<!-- Slide 31: U-Net Models -->
+		<section data-auto-animate>
+			<div data-id="segtitle" class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">U-Net Models</h1>
+
+			<div class="slide-body-rel">
+				<p>$3$ models for the segmentation task:</p>
+			</div>
+			<div class="slide-body-rel">
+				<ul>
+					<li><b>Classic U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							baseline U-Net model architecture
+						</span>
+					</li>
+				</ul>
+		</section>
+		<section data-auto-animate>
+			<div data-id="segtitle" class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">U-Net Models</h1>
+
+			<div class="slide-body-rel">
+				<p>$3$ models for the segmentation task:</p>
+			</div>
+			<div class="slide-body-rel">
+				<ul>
+					<li><b>Classic U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							baseline U-Net model architecture
+						</span>
+					</li>
+					<li><b>Improved U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							small improvements, fewer parameters
+						</span>
+					</li>
+				</ul>
+		</section>
+		<section data-auto-animate>
+			<div data-id="segtitle" class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">U-Net Models</h1>
+
+			<div class="slide-body-rel">
+				<p>$3$ models for the segmentation task:</p>
+			</div>
+			<div class="slide-body-rel">
+				<ul>
+					<li><b>Classic U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							baseline U-Net model architecture
+						</span>
+					</li>
+					<li><b>Improved U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							small improvements, fewer parameters
+						</span>
+					</li>
+					<li><b>Attention U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							attention mechanism added
+						</span>
+					</li>
+				</ul>
+		</section>
+		<section data-auto-animate>
+			<div data-id="segtitle" class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">U-Net Models</h1>
+
+			<div class="slide-body-rel">
+				<p>$3$ models for the segmentation task:</p>
+			</div>
+			<div class="slide-body-rel">
+				<ul>
+					<li><b>Classic U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							baseline U-Net model architecture
+						</span>
+					</li>
+					<li><b>Improved U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							small improvements, fewer parameters
+						</span>
+					</li>
+					<li><b>Attention U-Net</b>:
+						<span style="color: var(--gray); font-style: italic;">
+							attention mechanism added
+						</span>
+					</li>
+				</ul>
+			</div>
+
+			<img src="./images/parameters_vs_filters.png" style="margin-top: -50px;
+								transform: scale(0.9);">
+		</section>
+
+
+		<!-- Slide 32: Classic U-Net -->
+
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Classic U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/classic-unet-1.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Classic U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/classic-unet-2.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Classic U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/classic-unet-3.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Classic U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/classic-unet-4.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Classic U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/classic-unet-5.png"> -->
+		<!-- </section> -->
+
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Classic U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/classic-unet-1.png">
+						<div class="overlay-text">
+							Input: $4$ channels<br>
+							Output: $3$ channels
+							[
+							<span style="color: red;">R</span>
+							<span style="color: yellowgreen;">G</span>
+							<span style="color: dodgerblue;">B</span>
+							]
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Classic U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/classic-unet-2.png">
+						<div class="overlay-text">
+							<span style="color: var(--yellow);">
+								$3 \times 3$ convolutions<br>
+								ReLU activations
+							</span>
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Classic U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/classic-unet-3.png">
+						<div class="overlay-text">
+							<span style="color: var(--red);">
+								$2 \times 2$ max pooling
+							</span>
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Classic U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/classic-unet-4.png">
+						<div class="overlay-text">
+							<span style="color: var(--azure);">
+								$2 \times$ bilinear upsampling
+							</span>
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Classic U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/classic-unet-5.png">
+						<div class="overlay-text">
+							<span style="color: var(--purple);">
+								Skip connections: concatenation
+							</span>
+						</div>
+				</div>
+		</section>
+
+
+		<!-- Slide 33: Improved U-Net -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Improved U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/improved-unet-1.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Improved U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/improved-unet-zoom1.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Improved U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/improved-unet-zoom2.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Improved U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/improved-unet-2.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Improved U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/improved-unet-3.png"> -->
+		<!-- </section> -->
+
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Improved U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/improved-unet-1.png">
+						<div class="overlay-text" style="transform: translate(-50%, -35%);">
+							$7 \times 7$ kernels<br>
+							Inverse bottleneck<br>
+							Separable convolutions
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Improved U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/improved-unet-zoom1.png">
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Improved U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/improved-unet-zoom2.png">
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Improved U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/improved-unet-2.png">
+						<div class="overlay-text">
+							<span style="color: var(--yellow);">
+								Batch normalization
+							</span>
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Improved U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/improved-unet-3.png">
+						<div class="overlay-text">
+							<span style="color: var(--purple);">
+								Additive skip connections
+							</span>
+						</div>
+				</div>
+		</section>
+
+
+		<!-- Slide 34: Attention U-Net -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Attention U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/attention-unet.png"> -->
+		<!-- </section> -->
+		<!-- <section data-transition="none"> -->
+		<!-- 	<div class="slide-bar">Segmentation</div> -->
+		<!-- 	<h1 class="slide-title">Attention U-Net</h1> -->
+		<!-- 	<img class="r-stretch" src="./images/attention-unet-zoom.png"> -->
+		<!-- </section> -->
+
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Attention U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/attention-unet.png">
+						<div class="overlay-text">
+							Attention gates
+						</div>
+				</div>
+		</section>
+		<section data-transition="none">
+				<div class="slide-bar">Segmentation</div>
+				<h1 class="slide-title">Attention U-Net</h1>
+				<div class="overlay-container">
+						<img class="overlay-stretch" src="./images/attention-unet-zoom.png">
+				</div>
+		</section>
+
+
+		<!-- Slide 35: Training Details -->
+		<section>
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Training Details</h1>
+
+<!-- 			U-Net models training parameters: -->
+<!-- • Epochs: 20 -->
+<!-- • Optimizer: Adam (with weight decay 1 × 10−2) -->
+<!-- • Scheduler: Exponential Decay (γ = 0.9) -->
+<!-- • Loss function: BCE with Logits Loss: -->
+<!-- ℓ(y, ˆy) = −[y log(σ(ˆy)) + (1 −y) log(1 −σ(ˆy))] -->
+<!-- • Learning rate: 2 × 10−3 -->
+<!-- • Batch size: 32 (both training and validation) -->
+<!-- • First encoder filters: 32 -->
+<!-- • Image size: 240 × 240 -->
+			
+			<div class="slide-body-rel">
+				U-Net models training parameters:
+			</div>
+			<br>
+			<div class="slide-body-rel">
+				<ul style="font-size: 0.97em;" class="wide-ul">
+					<li>Epochs: 20</li>
+					<li>Optimizer: Adam
+						<span style="color: var(--gray);">(with weight decay $1 \times 10^{-2}$)</span>
+					</li>
+					<li>Scheduler: Exponential Decay
+						<span style="color: var(--gray);">(gamma $0.9$)</span>
+					</li>
+					<li>Loss function: BCE with Logits Loss:
+						$$
+						\ell(y, \hat{y}) = -[y \log(\sigma(\hat{y})) + (1 - y) \log(1 - \sigma(\hat{y}))]
+						$$
+					</li>
+					<li>Learning rate: $2 \times 10^{-3}$</li>
+					<li>Batch size: 32
+						<span style="color: var(--gray);">(both training and validation)</span>
+					</li>
+					<li>First encoder filters: 32</li>
+					<li>Image size: $240 \times 240$</li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 36: Visualizing a prediction -->
+		<section data-transition="none">
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Visualizing a prediction</h1>
+
+			<img src="./images/segmentation-prediction.png" 
+					 style="transform: scale(0.8); margin-top: -50px;">
+			<img src="./images/segmentation-ground-truth.png"
+					 style="transform: scale(0.8); margin-top: -100px;">
+
+		</section>
+		<section data-transition="none">
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Visualizing a prediction</h1>
+
+			<img src="./images/segmentation-bin-prediction.png" 
+					 style="transform: scale(0.8); margin-top: -50px;">
+			<img src="./images/segmentation-ground-truth.png"
+					 style="transform: scale(0.8); margin-top: -100px;">
+
+		</section>
+
+
+		<!-- Slide 37: Performance Assessment -->
+		<section data-transition="none">
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Performance Assessment</h1>
+
+				<div class="formula-container">
+						<div class="formula">
+								$$\text{Dice} = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Dice Coefficient
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									“overlap” metric
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Precision} = \frac{TP}{TP + FP}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Precision
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quality
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Recall} = \frac{TP}{TP + FN}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Recall
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quantity
+								</span>
+						</div>
+				</div>
+
+				<img src="./images/metrics-red.png" style="margin-top: -10px;">
+		</section>
+		<section data-transition="none">
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Performance Assessment</h1>
+
+				<div class="formula-container">
+						<div class="formula">
+								$$\text{Dice} = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Dice Coefficient
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									“overlap” metric
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Precision} = \frac{TP}{TP + FP}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Precision
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quality
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Recall} = \frac{TP}{TP + FN}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Recall
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quantity
+								</span>
+						</div>
+				</div>
+
+				<img src="./images/metrics-green.png" style="margin-top: -10px;">
+		</section>
+		<section data-transition="none">
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Performance Assessment</h1>
+
+				<div class="formula-container">
+						<div class="formula">
+								$$\text{Dice} = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Dice Coefficient
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									“overlap” metric
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Precision} = \frac{TP}{TP + FP}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Precision
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quality
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Recall} = \frac{TP}{TP + FN}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Recall
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quantity
+								</span>
+						</div>
+				</div>
+
+				<img src="./images/metrics-blue.png" style="margin-top: -10px;">
+		</section>
+		<section data-transition="none">
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Performance Assessment</h1>
+
+				<div class="formula-container">
+						<div class="formula">
+								$$\text{Dice} = \frac{2 \times |X \cap Y|}{|X| + |Y|}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Dice Coefficient
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									“overlap” metric
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Precision} = \frac{TP}{TP + FP}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Precision
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quality
+								</span>
+						</div>
+						<div class="formula">
+								$$\text{Recall} = \frac{TP}{TP + FN}$$
+								<span style="color: var(--gray); font-style: italic;">
+									Recall
+								</span><br>
+								<span style="color: var(--azure); font-style: italic;">
+									prediction quantity
+								</span>
+						</div>
+				</div>
+
+				<img src="./images/metrics-average.png" style="margin-top: -10px;">
+		</section>
+
+
+		<!-- Slide 38: Visualizing Attention Maps -->
+		<section>
+			<div class="slide-bar">Segmentation</div>
+			<h1 class="slide-title">Visualizing Attention Maps</h1>
+
+			<img src="./images/attention-maps-io.gif" class="r-stretch"
+																								style="margin-top: 10%;">
+			
+			<!-- <div class="loading-bar"> -->
+			<!-- 		<div class="loading-bar-fill"></div> -->
+			<!-- </div> -->
+
+		</section>
+
+
+		<!-- CONCLUSION ------------------------------------------------------------>
+		<section data-auto-animate>
+			<div class="cbox" style="text-align: left; margin-top: 25%;">
+				<div data-id="conclusion" style="font-size: 1.5em;">Conclusion</div><span>
+			</div>
+		</section>	
+
+
+		<!-- Slide 39: Conclusion -->
+		<section data-auto-animate>
+			<div data-id="conclusion" class="slide-bar">Conclusion</div>
+			<h1 class="slide-title">Conclusion</h1>
+
+			<div class="image-container">
+				<img src="./images/params_vs_accuracy.png" style="width: 50%;">
+				<img src="./images/params_vs_accuracy2.png" style="width: 50%;">
+			</div>
+		
+		</section>
+
+
+		<section data-auto-animate>
+			<div data-id="conclusion" class="slide-bar">Conclusion</div>
+			<h1 class="slide-title">Conclusion</h1>
+
+
+			<div class="slide-body-rel">
+				Possible improvements:
+			</div>
+			<br>
+			<div class="slide-body-rel">
+				<ul style="font-size: 0.97em;" class="wide-ul">
+					<li>Use original image size for better classification results</li>
+					<li>Use larger dataset to train the VIT model</li>
+					<li>Enlarge the VIT model for better performance</li>
+					<li>Attempt transfer learning with VIT model</li>
+					<li>Test different architectures for the segmentation task</li>
+					<li>Fully exploit segmentation dataset</li>
+					<li>Perform complete hyperparameter search for the segmentation models</li>
+					<li>Use metadata information to predict patient’s survival days</li>
+				</ul>
+			</div>
+
+		</section>
+
+
+		<!-- Slide 40: References -->
+		<section>
+			<div class="slide-bar">References</div>
+			<h1 class="slide-title">References</h1>
+
+		<div class="slide-body-re">
+			
+			<!-- Only first author for space reasons -->
+    <ol class="references">
+        <li>B. H. Menze et al. 
+					<i>"The Multimodal Brain Tumor Image Segmentation Benchmark (BRATS)"</i>, 
+					IEEE Transactions on Medical Imaging 34(10), 
+					1993-2024 (2015) 
+					DOI: 10.1109/TMI.2014.2377694
+				</li>
+				<li>S. Bakas et al. 
+					<i>"Advancing The Cancer Genome Atlas glioma MRI collections with expert segmentation labels and radiomic features"</i>, 
+					Nature Scientific Data, 4:170117 (2017) 
+					DOI: 10.1038/sdata.2017.117
+				</li>
+				<li>S. Bakas et al. 
+					<i>"Identifying the Best Machine Learning Algorithms for Brain Tumor Segmentation, Progression Assessment, and Overall Survival Prediction in the BRATS Challenge"</i>, 
+					arXiv preprint arXiv:1811.02629 (2018)
+				</li>
+				<li>S. Bakas et al. 
+					<i>"Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-GBM collection"</i>, 
+					The Cancer Imaging Archive, 2017 
+					DOI: 10.7937/K9/TCIA.2017.KLXWJJ1Q
+				</li>
+				<li>S. Bakas et al. 
+					<i>"Segmentation Labels and Radiomic Features for the Pre-operative Scans of the TCGA-LGG collection"</i>, 
+					The Cancer Imaging Archive, 2017 
+					DOI: 10.7937/K9/TCIA.2017.GJQ7R0EF
+				</li>
+				<li>Alex Krizhevsky et al. 
+					<i>"ImageNet classification with deep convolutional neural networks"</i>, 
+					Commun. ACM 60, 6 (June 2017), 84–90, 
+					<a href="https://doi.org/10.1145/3065386">
+						https://doi.org/10.1145/3065386
+					</a>
+				</li>
+
+    </ol>
+		</div>
+		</section>
+		<section>
+			<div class="slide-bar">References</div>
+			<h1 class="slide-title">References</h1>
+
+		<div class="slide-body-re">
+			
+			<!-- Only first author for space reasons -->
+			<ol class="references" start="7" style="counter-reset: reference-counter 6
+								 !important;">
+				<li>A. Dosovitskiy et al. 
+					<i>"An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale"</i>, 
+					International Conference on Learning Representations 
+					<a href="https://openreview.net/forum?id=YicbFdNTTy">
+						http://openreview.net/forum?id=YicbFdNTTy
+					</a>
+				</li>
+        <li>Omer, A.A.M.
+					<i>"Image Classification Based on Vision Transformer"</i>,
+					Journal of Computer and Communications, 12, 49-59 (2024)
+					<a href="https://doi.org/10.4236/jcc.2024.124005">
+						https://doi.org/10.4236/jcc.2024.124005
+					</a>
+				</li>
+				<li>Ronneberger, O., Fischer, P., & Brox, T.
+					<i>"U-Net: Convolutional Networks for Biomedical Image Segmentation"</i>,
+					In Nassir Navab, Joachim Hornegger, William M. Wells, & Alejandro F. Frangi (Eds.),
+					Medical Image Computing and Computer-Assisted Intervention -- MICCAI 2015, 234–241
+					<a href="https://doi.org/10.1007/978-3-319-24574-4_28">
+						https://doi.org/10.1007/978-3-319-24574-4_28
+					</a>
+				</li>
+				<li>Chollet, F.
+					<i>"Xception: Deep Learning with Depthwise Separable Convolutions"</i>,
+					CoRR, abs/1610.02357
+					<a href="http://arxiv.org/abs/1610.02357">
+						http://arxiv.org/abs/1610.02357
+					</a>
+				</li>
+				<li>Liu, Z., Mao, H., Wu, C.-Y., Feichtenhofer, C., Darrell, T., & Xie,
+					S.
+					<i>"A ConvNet for the 2020s"</i>,
+					arXiv preprint arXiv:2201.03545
+					<a href="https://arxiv.org/abs/2201.03545">
+						https://arxiv.org/abs/2201.03545
+					</a>
+				</li>
+				<li>Sandler, M. et al.
+					<i>"Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation"</i>,
+					CoRR, abs/1801.04381
+					<a href="http://arxiv.org/abs/1801.04381">
+						http://arxiv.org/abs/1801.04381
+					</a>
+				</li>
+				<li>Oktay, O. et al.
+					<i>"Attention U-Net: Learning Where to Look for the Pancreas"</i>,
+					CoRR, abs/1804.03999
+					<a href="http://arxiv.org/abs/1804.03999">
+						http://arxiv.org/abs/1804.03999
+					</a>
+				</li>
+    </ol>
+		</div>
+
+		</section>
+
+
+		</div>
+		</div>
+
+
+		<!-- Plugins and more ---------------------------------------------------->
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			Reveal.initialize({ plugins: [RevealMath.KaTeX] });
+		</script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom,
+					RevealMath ]
+			});
+		</script>
+
+
+	</body>
+</html>
+
+
+
+<!-- Deleted ------------------------------------------------------------------>
+
+		<!-- Slide ?: Classic U-Net Model ---------------------------------------->
+		<!-- <section> -->
+		<!-- 	<div class="slide-bar">Segmentation Task</div> -->
+		<!-- 	<h2 class="slide-title">Classic U-Net Model</h2> -->
+		<!---->
+		<!-- 	<div class="unet-container slide-body"> -->
+		<!-- 		<div class="input-image"> -->
+		<!-- 			<span> -->
+		<!-- 				240 × 240 -->
+		<!-- 			</span> -->
+		<!-- 			<span style="margin: 0px 0px 160px 0px;"> -->
+		<!-- 				Input MRI Scans -->
+		<!-- 			</span> -->
+		<!-- 		</div> -->
+		<!-- 		<div class="layer encoder11"><span>240 × 240</span></div> -->
+		<!-- 		<div class="layer encoder12"><span>240 × 240</span></div> -->
+		<!-- 		<div class="layer encoder21"><span>120 × 120</span></div> -->
+		<!-- 		<div class="layer encoder22"><span>120 × 120</span></div> -->
+		<!-- 		<div class="layer encoder23"><span>120 × 120</span></div> -->
+		<!-- 		<div class="layer encoder31"><span>60 × 60</span></div> -->
+		<!-- 		<div class="layer encoder32"><span>60 × 60</span></div> -->
+		<!-- 		<div class="layer encoder33"><span>60 × 60</span></div> -->
+		<!-- 		<div class="layer encoder41"><span>30²</span></div> -->
+		<!-- 		<div class="layer encoder42"><span>30²</span></div> -->
+		<!-- 		<div class="layer encoder43"><span>30²</span></div> -->
+		<!-- 		<div class="layer bottle51"><span>30²</span></div> -->
+		<!-- 		<div class="layer bottle52"><span>30²</span></div> -->
+		<!-- 		<div class="layer bottle53"><span>30²</span></div> -->
+		<!-- 		<div class="layer decoder41"><span>60²</span></div> -->
+		<!-- 		<div class="layer decoder42"><span>60²</span></div> -->
+		<!-- 		<div class="layer decoder43"><span>60²</span></div> -->
+		<!-- 		<div class="layer decoder31"><span>120²</span></div> -->
+		<!-- 		<div class="layer decoder32"><span>120²</span></div> -->
+		<!-- 		<div class="layer decoder33"><span>120²</span></div> -->
+		<!-- 		<div class="layer decoder21"><span>240²</span></div> -->
+		<!-- 		<div class="layer decoder22"><span>240²</span></div> -->
+		<!-- 		<div class="layer decoder23"><span>240²</span></div> -->
+		<!-- 		<div class="layer decoder11"><span>240²</span></div> -->
+		<!-- 		<div class="layer decoder12"><span>240²</span></div> -->
+		<!-- 		<div class="layer decoder13"><span>240²</span></div> -->
+		<!-- 		<div class="output-image"> -->
+		<!-- 			<span> -->
+		<!-- 				240 × 240 -->
+		<!-- 			</span> -->
+		<!-- 			<span style="margin: 0px 0px 93px 0px;"> -->
+		<!-- 				Output Segmentation Images -->
+		<!-- 			</span> -->
+		<!-- 				<div class="channel red"></div> -->
+		<!-- 				<div class="channel green"></div> -->
+		<!-- 				<div class="channel blue"></div> -->
+		<!-- 		</div> -->
+		<!-- 	</div> -->
+		<!---->
+		<!-- </section> -->
