@@ -38,7 +38,7 @@ href="https://marcotallone.github.io/deep-learning-project/"><strong>Live Presen
 <div style="width: 360px; text-align: center; border: 2px solid currentColor; padding: 10px 10px 10px 10px; border-radius: 10px; margin: auto;">
   <h4>📑 Table of Contents</h4>
   <ul style="list-style-type: none; padding: 0;">
-    <li><a href="#students-info">Students Info</a></li>
+    <li><a href="#authors-info">Authors Info</a></li>
     <li><a href="#about-the-project">About The Project</a></li>
     <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage Examples</a></li>
@@ -55,14 +55,14 @@ href="https://marcotallone.github.io/deep-learning-project/"><strong>Live Presen
 </div>
 </br>
 
-<!-- STUDENTS INFO-->
-## Students Info
+<!-- AUTHORS INFO-->
+## Authors Info
 
-| Name | Surname | Student ID | UniTS mail | Google mail | Master |
-|:---:|:---:|:---:|:---:|:---:|:---:|
-| Stefano | Lusardi | SM3600001 | <stefano.lusardi@studenti.units.it> | <stefanosadde@gmail.com> | **SDIC** |
-| Marco | Tallone | SM3600002 | <marco.tallone@studenti.units.it> | <marcotallone85@gmail.com> | **SDIC** |
-| Piero | Zappi | SM3600004 | <piero.zappi@studenti.units.it> | <piero.z.2001@gmail.com> | **SDIC** |
+| Name | Surname | GitHub |
+|:---:|:---:|:---:|
+| Stefano | Lusardi | [onafetsidraul](https://github.com/onafetsidrasul) |
+| Marco | Tallone | [marcotallone](https://github.com/marcotallone) |
+| Piero | Zappi | [PieroZ01](https://github.com/PieroZ01) |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
